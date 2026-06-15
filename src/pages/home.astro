@@ -1,0 +1,275 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeMark from '../components/HomeMark.astro';
+import CoreMark from '../components/CoreMark.astro';
+import { withBase, RELEASES, LINKS, SITE } from '../data/site';
+
+const title = 'Qortium Home | Wallets, nodes, and QDN browsing in preview';
+const description =
+  'Qortium Home is a focused desktop and Android app for wallets, node status, QDN browsing, and account-aware tabs. Preview status and security caveats included.';
+
+const wallets = [
+  'Create and load encrypted wallet backups on desktop and Android.',
+  'Wallets stay locked after a restart and are unlocked per session — never persisted unlocked.',
+  'Select, unlock, lock, and remove wallets from the account list.',
+];
+
+const nodes = [
+  'Live node status: sync phase, target height, blocks remaining, sync %, and peer counts.',
+  'Switch between a local node, Previewnet network discovery, or one saved custom node.',
+  'Install the latest Core prerelease straight from GitHub.',
+  'Install a managed Java 17 runtime when system Java is missing.',
+  'Start and stop a Home-created desktop Previewnet Core, with Core log paths surfaced.',
+];
+
+const qdn = [
+  'Browse QDN services, names, and resources via qdn:// URLs.',
+  'Render APP and WEBSITE resources directly in a tab.',
+  'View IMAGE / THUMBNAIL / QCHAT_IMAGE and AUDIO / VOICE / PODCAST / VIDEO media.',
+  'Read JSON / METADATA / BLOG / MESSAGE resources.',
+  'Download DOCUMENT / FILE / FILES / ATTACHMENT resources.',
+  'Inspect read-only node API endpoints such as /admin/status.',
+  'Use qdn://*/name to list every public service registered to a name.',
+];
+
+const shell = [
+  'Session-only tabs, each with its own independent history.',
+  'Per-tab selected wallet shown as an avatar or initial, so the active account is always visible.',
+  'Back / Forward navigation per tab — a familiar browser shape.',
+];
+
+const accountActions = [
+  'Approve QDN APP / WEBSITE publish requests.',
+  'Approve resource delete and group join requests.',
+  'Approve group chat and direct private chat requests.',
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Qortium Home',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Linux, macOS, Windows, Android',
+  license: RELEASES.home.license,
+  url: SITE.origin + withBase('/home'),
+  description:
+    'A focused desktop and Android app for Qortium wallets, node status, and QDN browsing, with session tabs and approval-gated account actions.',
+  sameAs: [LINKS.homeRepo],
+};
+---
+<BaseLayout title={title} description={description} path="/home" jsonLd={jsonLd}>
+  <!-- 1. HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="card__mark" style="margin-bottom:1rem;"><HomeMark size={56} title="Qortium Home" /></span>
+      <p class="eyebrow">Qortium Home · {RELEASES.home.license}</p>
+      <h1>A focused front end for wallets, nodes, and QDN</h1>
+      <p class="lede measure">
+        Qortium Home is a browser-like shell for account management, node status,
+        and QDN browsing — a narrow, tab-based front end rather than a giant
+        portal. It opens qdn:// resources, watches your node, and gates every
+        account action through the wallet selected in the active tab.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/downloads')}>Download preview</a>
+        <a class="btn btn--ghost" href={LINKS.homeRepo}>Open qortium-home</a>
+      </div>
+      <ul class="pills" aria-label="At a glance">
+        <li>Desktop &amp; Android</li>
+        <li>Encrypted wallet backups</li>
+        <li>Node status</li>
+        <li>qdn:// browsing</li>
+        <li>Approval-gated actions</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2. PROMINENT WARNING -->
+  <section class="section--tight section--soft">
+    <div class="container">
+      <div class="notice notice--warn">
+        <h3>Preview maturity — read before testing</h3>
+        <p class="muted" style="margin:0;">
+          Qortium Home is in active early development. The wallet and signing
+          flows have <strong>not</strong> had a production security review.
+          <strong>Do not use wallets that hold meaningful funds yet.</strong>
+          Treat this as testnet tooling: create throwaway wallets, point them at
+          Previewnet, and expect rough edges.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. WHAT IT DOES TODAY -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">What it does today</p>
+      <h2>Real features in the current preview</h2>
+      <p class="lede measure">
+        This is the actual shipped surface — not a roadmap. Four areas:
+        wallets, nodes, QDN browsing, and the browser-like shell that ties them
+        together.
+      </p>
+
+      <div class="grid grid--2" style="margin-top:2rem;">
+        <div class="card">
+          <span class="card__tag">Wallets</span>
+          <h3>Encrypted backups, locked by default</h3>
+          <ul class="muted" style="margin:0;padding-left:1.1rem;">
+            {wallets.map((w) => <li>{w}</li>)}
+          </ul>
+        </div>
+
+        <div class="card">
+          <span class="card__tag" style="display:inline-flex;align-items:center;gap:0.4rem;">
+            Nodes
+            <span class="mark-pair"><span class="sep">·</span><CoreMark size={18} title="Qortium Core" /></span>
+          </span>
+          <h3>Status, runtime, and Core management</h3>
+          <ul class="muted" style="margin:0;padding-left:1.1rem;">
+            {nodes.map((n) => <li>{n}</li>)}
+          </ul>
+        </div>
+
+        <div class="card">
+          <span class="card__tag">QDN browsing</span>
+          <h3>Open qdn:// services and resources</h3>
+          <ul class="muted" style="margin:0;padding-left:1.1rem;">
+            {qdn.map((q) => <li>{q}</li>)}
+          </ul>
+        </div>
+
+        <div class="card">
+          <span class="card__tag">Browser shell</span>
+          <h3>Session tabs with per-tab history</h3>
+          <ul class="muted" style="margin:0;padding-left:1.1rem;">
+            {shell.map((s) => <li>{s}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ACCOUNT-AWARE ACTIONS -->
+  <section class="section--tight section--soft">
+    <div class="container">
+      <div class="grid grid--2" style="align-items:start;">
+        <div>
+          <p class="eyebrow">Account-aware actions</p>
+          <h2>Bridged requests, approved by you</h2>
+          <p class="muted measure">
+            QDN apps and websites can ask the active account to do things through
+            the <code>qdnRequest</code> bridge. Every request surfaces for
+            explicit user approval, and bridged write actions only run when the
+            node is <strong>local</strong> with a saved API key. Nothing is
+            signed silently.
+          </p>
+        </div>
+        <div class="card">
+          <span class="card__tag">Approval-gated via qdnRequest</span>
+          <ul class="muted" style="margin:0.6rem 0 0;padding-left:1.1rem;">
+            {accountActions.map((a) => <li>{a}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PREVIEW LIMITS -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Preview limits</p>
+      <h2>What Previewnet mode can and cannot do</h2>
+      <div class="notice notice--accent">
+        <h3>Network discovery is read-only</h3>
+        <p class="muted" style="margin:0;">
+          Previewnet network discovery uses public read-only APIs only — status,
+          peer discovery, QDN browsing, and read-only API inspection. It is a
+          lens onto the network, not a control surface.
+        </p>
+      </div>
+      <div class="grid grid--2" style="margin-top:1.25rem;--gap:1rem;">
+        <div class="feature">
+          <span class="feature__icon" aria-hidden="true">◆</span>
+          <div>
+            <strong>Writes need your own node</strong>
+            <p class="muted" style="margin:0;">Write, admin, and private endpoints require a local Core or a user-controlled custom node — not the shared public APIs.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <span class="feature__icon" aria-hidden="true">⛁</span>
+          <div>
+            <strong>No key leaves your machine</strong>
+            <p class="muted" style="margin:0;">In Previewnet mode, Home does not send the local API key. Bridged write actions stay tied to a local node you control.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <span class="feature__icon" aria-hidden="true">▤</span>
+          <div>
+            <strong>No first-party direct-chat UI</strong>
+            <p class="muted" style="margin:0;">Direct chat exists as a bridged, approval-gated request — there is no built-in Home chat interface yet.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <span class="feature__icon" aria-hidden="true">◷</span>
+          <div>
+            <strong>No generic signing workflow</strong>
+            <p class="muted" style="margin:0;">There is no general-purpose transaction-signing workflow yet. Account actions are limited to the specific bridged requests above.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. INTEROPERABILITY -->
+  <section class="section--tight section--soft">
+    <div class="container">
+      <div class="card notice--accent" style="border-left-width:4px;">
+        <p class="eyebrow" style="margin-bottom:0.4rem;">Interoperability</p>
+        <h2 style="margin-bottom:0.4rem;">Divergence, with selective interoperability</h2>
+        <p class="muted measure">
+          The desktop and Android QDN browsing surfaces can read Qortal QDN data
+          from a public Qortal node. Qortium pursues different goals and
+          tradeoffs than Qortal — but the data layers stay selectively
+          interoperable rather than walled off.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. PLATFORMS -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Platforms</p>
+      <h2>Builds for desktop and Android</h2>
+      <p class="muted measure">
+        Binaries are published on GitHub Releases. This site routes you there —
+        it never hosts the files.
+      </p>
+      <ul class="pills" aria-label="Available builds" style="margin-top:1rem;">
+        {RELEASES.home.platforms.map((p) => <li>{p}</li>)}
+      </ul>
+      <p class="muted" style="margin-top:1rem;">
+        Android ships a debug APK and a release APK (Capacitor);
+        desktop covers Linux AppImage (x64 / arm64), macOS DMG, and a Windows
+        x64 portable build.
+      </p>
+    </div>
+  </section>
+
+  <!-- 8. FINAL CTA -->
+  <section class="section--tight section--soft">
+    <div class="container cta-band">
+      <h2>Download the preview or read the source</h2>
+      <p class="muted measure" style="margin-inline:auto;">
+        Test with throwaway wallets on Previewnet. No production readiness is
+        implied.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/downloads')}>Download preview</a>
+        <a class="btn btn--ghost" href={LINKS.homeRepo}>Open qortium-home</a>
+        <a class="btn btn--ghost" href={withBase('/docs')}>Docs &amp; sources</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

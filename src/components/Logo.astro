@@ -1,0 +1,8 @@
+---
+// Brand logo = the Qortium Core mark. Thin wrapper over CoreMark so the brand
+// stays in one place; use CoreMark/HomeMark directly for product-specific spots.
+import CoreMark from './CoreMark.astro';
+interface Props { size?: number; title?: string; class?: string; }
+const { size = 26, title = 'Qortium', class: cls = '' } = Astro.props;
+---
+<CoreMark size={size} title={title} class={cls} />

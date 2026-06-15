@@ -1,0 +1,258 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase, RELEASES, LINKS } from '../data/site';
+
+const title = 'Qortium FAQ | Fork, Previewnet, safety, governance';
+const description =
+  'Answers to common questions about Qortium: the Qortal fork, Previewnet, Home safety for funds, auto-updates, the trust network, and where to start.';
+
+// Each answer is a list of inline parts so the Q&A stays data-driven while
+// still allowing base-aware internal links and external repo links.
+type Part =
+  | { t: 'text'; v: string }
+  | { t: 'strong'; v: string }
+  | { t: 'code'; v: string }
+  | { t: 'link'; v: string; href: string };
+
+type QA = { q: string; a: Part[] };
+
+const tx = (v: string): Part => ({ t: 'text', v });
+const st = (v: string): Part => ({ t: 'strong', v });
+const cd = (v: string): Part => ({ t: 'code', v });
+const ln = (v: string, href: string): Part => ({ t: 'link', v, href });
+
+const faqs: QA[] = [
+  {
+    q: 'What is Qortium?',
+    a: [
+      tx('Qortium is a stripped-down, cleaned-up fork of Qortal Core paired with a focused companion app, '),
+      st('Qortium Home'),
+      tx(', for wallets, node status, and QDN browsing. It is preview software aimed at builders who want a clearer chain baseline and an explicit roadmap. See '),
+      ln('Core', withBase('/core')),
+      tx(' and '),
+      ln('Home', withBase('/home')),
+      tx(' for each surface.'),
+    ],
+  },
+  {
+    q: 'Is Qortium a fork of Qortal?',
+    a: [
+      tx(`Yes. Qortium Core starts from Qortal Core — the Java node, chain processing, local APIs, networking, and build tooling — then removes inherited assumptions and project-specific naming to leave a leaner baseline. It is preview software licensed ${RELEASES.core.license}. The source is public at `),
+      ln('qortium-core', LINKS.coreRepo),
+      tx('.'),
+    ],
+  },
+  {
+    q: 'Why split from Qortal at all?',
+    a: [
+      tx('The goal is a cleaner foundation: neutral '),
+      cd('NATIVE'),
+      tx(' asset naming, removal of the inherited QORT genesis asset from the main chain, the ability to bootstrap without a pre-created native asset, and cleaned-up historical triggers. That makes the chain easier to read, adapt, and build on without carrying assumptions Qortium does not need. The '),
+      ln('Why Qortium', withBase('/why')),
+      tx(' page goes deeper.'),
+    ],
+  },
+  {
+    q: 'Is Qortium trying to replace Qortal?',
+    a: [
+      tx('No. Qortium pursues different goals and tradeoffs — a narrower scope and a different design direction — not a "Qortal but better" replacement. The relationship is best read as '),
+      st('divergence with selective interoperability'),
+      tx(': shared ancestry, separate networks, and deliberate read-only bridges where they make sense. The '),
+      ln('comparison page', withBase('/compare')),
+      tx(' lays out the differences candidly.'),
+    ],
+  },
+  {
+    q: 'What does Qortium Home do today?',
+    a: [
+      tx('Home is an early-preview desktop and Android app. It manages encrypted wallet backups (locked after restart, unlocked per session), shows node status (sync phase, height, blocks remaining, peer counts), can install and run a Home-created desktop Previewnet Core, and browses QDN via '),
+      cd('qdn://'),
+      tx(' URLs with session-only tabs. Account actions are approval-gated through the selected tab. Full detail is on the '),
+      ln('Home page', withBase('/home')),
+      tx('.'),
+    ],
+  },
+  {
+    q: 'Is Qortium Home safe for real funds?',
+    a: [
+      tx('No. Home is in active early development and its wallet and signing flows have '),
+      st('not'),
+      tx(' had a production security review. Do not load wallets with meaningful funds. Treat it as preview tooling for testing against Previewnet, not as a custody-grade wallet.'),
+    ],
+  },
+  {
+    q: 'What is Previewnet?',
+    a: [
+      tx("Previewnet is Qortium's preview network for testing. A local Core exposes its API on port "),
+      cd('24891'),
+      tx(', and Home can use Previewnet network discovery — public, read-only APIs for status, peer discovery, and QDN browsing. Because Qortium is not Qortal, do not cite public Qortal gateways as evidence for Qortium resources. See '),
+      ln('Downloads', withBase('/downloads')),
+      tx(' to get a build.'),
+    ],
+  },
+  {
+    q: 'How does Qortium differ from Qortal Hub?',
+    a: [
+      tx('Qortal Hub is a broad primary interface — chat, wallet, publishing, hosted access, and Reticulum voice — built around the QORT service coin. Qortium Home is deliberately narrower: a browser-like shell centered on wallets, node status, and QDN browsing, without a built-in chat or generic transaction-signing workflow yet. The '),
+      ln('comparison', withBase('/compare')),
+      tx(' covers scope and governance side by side.'),
+    ],
+  },
+  {
+    q: 'Can Qortium interact with Qortal QDN data?',
+    a: [
+      tx('Yes, in a limited, read-only way. The latest Home preview notes say desktop and Android QDN apps can read Qortal QDN data from a public Qortal node. This is the "selective interoperability" side of Qortium\'s divergence — reading shared data, not merging the networks.'),
+    ],
+  },
+  {
+    q: 'Does Qortium already have a native asset and mainnet economy?',
+    a: [
+      tx('No. Qortium uses neutral '),
+      cd('NATIVE'),
+      tx(' asset naming and removes the inherited QORT genesis asset from the main chain, allowing bootstrap without a pre-created native asset. There is no promised mainnet economy — the focus is a clean, experimentable baseline, and economic specifics are intentionally left open.'),
+    ],
+  },
+  {
+    q: 'How do auto-updates work?',
+    a: [
+      tx('Auto-updates are '),
+      st('disabled by default'),
+      tx('. When enabled, the mechanism is a QDN-pinned binary plus an on-chain manifest that must be approved within a configured developer group before it is adopted. That keeps the update path transparent and gated rather than silent. See '),
+      ln('Core', withBase('/core')),
+      tx(' for the design notes.'),
+    ],
+  },
+  {
+    q: 'What is the trust network?',
+    a: [
+      tx('Qortium documents an on-chain account-trust network with Aura-style trust tiers used in minting. The aim is to reduce the influence of farm accounts on participation, using on-chain trust relationships rather than '),
+      st('biometrics or a central identity'),
+      tx('. It is a documented direction, not a finished system.'),
+    ],
+  },
+  {
+    q: 'Is there a lite-node roadmap?',
+    a: [
+      tx('Yes. The plan is peer-backed derived data — lite clients served by existing peers rather than a separate class of lite servers. The current limits of that approach are admitted openly in the Core docs rather than glossed over.'),
+    ],
+  },
+  {
+    q: 'What governance is documented publicly, and what is still unspecified?',
+    a: [
+      tx('The mechanics are documented: on-chain chain-parameter updates, configurable dev-group IDs, bootstrap-friendly null-owned public dev and minting groups, and manifest approval within a configured developer group. What is '),
+      st('not'),
+      tx(' yet fully specified is the formal public governance roster and approval threshold — treat that as open. The '),
+      ln('comparison page', withBase('/compare')),
+      tx(' flags this caveat.'),
+    ],
+  },
+  {
+    q: 'Where should I start: Core, Home, or docs?',
+    a: [
+      tx('If you want to read the design and run a node, start with '),
+      ln('Core', withBase('/core')),
+      tx(' and the '),
+      ln('docs', withBase('/docs')),
+      tx('. If you want to click around wallets and QDN browsing, start with '),
+      ln('Home', withBase('/home')),
+      tx('. Either way, grab a build from '),
+      ln('Downloads', withBase('/downloads')),
+      tx(' — understanding first, downloads second.'),
+    ],
+  },
+];
+
+const plain = (a: Part[]): string => a.map((p) => p.v).join('');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: plain(f.a) },
+  })),
+};
+---
+<BaseLayout title={title} description={description} path="/faq" jsonLd={jsonLd}>
+  <style>
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.1rem 1.25rem;
+      margin-bottom: 0.9rem;
+      background: var(--bg);
+      box-shadow: var(--shadow-sm);
+    }
+    details[open] { border-color: var(--line-strong); }
+    summary {
+      cursor: pointer;
+      font-weight: 680;
+      letter-spacing: -0.018em;
+      font-size: clamp(1.05rem, 1rem + 0.4vw, 1.25rem);
+      color: var(--ink);
+      padding: 0.9rem 0;
+    }
+    summary:hover { color: var(--accent-ink); }
+    details[open] summary { margin-bottom: 0.1rem; }
+    .faq-answer { color: var(--ink-soft); padding-bottom: 0.9rem; max-width: 68ch; }
+    .faq-answer p:last-child { margin-bottom: 0; }
+  </style>
+
+  <!-- HERO -->
+  <section class="section--tight section--soft">
+    <div class="container">
+      <p class="eyebrow">Qortium · FAQ</p>
+      <h1>Frequently asked questions</h1>
+      <p class="lede measure">
+        Candid answers about the Qortal fork, Previewnet, what Home can and cannot do safely,
+        auto-updates, the trust network, and where to begin. Qortium is preview software — the
+        answers say so where it matters.
+      </p>
+    </div>
+  </section>
+
+  <!-- QUESTIONS -->
+  <section class="section">
+    <div class="container">
+      <div style="max-width:760px;margin-inline:auto;">
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div class="faq-answer">
+              <p>
+                {f.a.map((p) =>
+                  p.t === 'link' ? (
+                    <a href={p.href}>{p.v}</a>
+                  ) : p.t === 'strong' ? (
+                    <strong>{p.v}</strong>
+                  ) : p.t === 'code' ? (
+                    <code>{p.v}</code>
+                  ) : (
+                    <>{p.v}</>
+                  )
+                )}
+              </p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section--tight section--soft">
+    <div class="container cta-band">
+      <h2>Still deciding? Compare, read, or download</h2>
+      <p class="muted measure" style="margin-inline:auto;">
+        Understand the differences first, then pick a surface and grab a preview build.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/compare')}>Qortium vs Qortal</a>
+        <a class="btn btn--ghost" href={withBase('/core')}>Core</a>
+        <a class="btn btn--ghost" href={withBase('/home')}>Home</a>
+        <a class="btn btn--ghost" href={withBase('/downloads')}>Download preview</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

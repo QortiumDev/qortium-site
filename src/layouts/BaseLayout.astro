@@ -1,0 +1,153 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE, withBase } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path of this page, e.g. "/why" — used for canonical + OG url. */
+  path?: string;
+  /** Optional JSON-LD object(s) to embed. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  ogImage?: string;
+}
+const { title, description, path = '/', jsonLd, ogImage } = Astro.props;
+
+// Canonical / OG absolute URL = gateway origin + base-aware path.
+const canonical = SITE.origin + withBase(path);
+const ogImg = SITE.origin + withBase(ogImage ?? SITE.ogImage);
+const fullTitle = title.includes('Qortium') ? title : `${title} · Qortium`;
+const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Resolve display settings before first paint (avoids a flash).
+         Embedded in Home/Hub (Core injects _qdnContext === "render" plus
+         _qdnTheme/_qdnAccent/_qdnTextSize and ?theme/?accent/?textSize): mirror
+         the host's theme, accent, and text size. Standalone: theme follows the
+         saved manual toggle, else the system (prefers-color-scheme); accent and
+         text size stay at our defaults. Live host changes are handled by the
+         Header script and always apply (they are never blocked by a manual toggle). -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var ACCENTS = ['green','blue','orange','purple','red','teal','cyan','pink','yellow'];
+        var SIZES = ['extra-small','small','medium','large','extra-large','huge'];
+        function normTheme(v) {
+          v = typeof v === 'string' ? v.trim().toLowerCase() : '';
+          return v === 'dark' || v === 'light' ? v : null;
+        }
+        function inList(v, list) {
+          v = typeof v === 'string' ? v.trim().toLowerCase() : '';
+          return list.indexOf(v) >= 0 ? v : null;
+        }
+        var qp = null;
+        try { qp = new URLSearchParams(location.search); } catch (e) {}
+        function q() {
+          if (!qp) return null;
+          for (var i = 0; i < arguments.length; i++) {
+            var x = qp.get(arguments[i]);
+            if (x != null) return x;
+          }
+          return null;
+        }
+        var embedded = window._qdnContext === 'render';
+
+        // Theme: saved manual choice first (standalone authority + survives reload);
+        // else host theme when embedded; else unset → system handles it.
+        var manual = null;
+        try { manual = normTheme(localStorage.getItem('theme')); } catch (e) {}
+        if (manual) {
+          root.setAttribute('data-theme', manual);
+        } else if (embedded) {
+          var ht = normTheme(q('theme', 'qdnTheme')) || normTheme(window._qdnTheme);
+          if (ht) root.setAttribute('data-theme', ht);
+        }
+
+        // Accent + text size: host-driven, applied only when embedded.
+        if (embedded) {
+          var ac = inList(q('accent', 'qdnAccent'), ACCENTS) || inList(window._qdnAccent, ACCENTS);
+          if (ac) root.setAttribute('data-accent', ac);
+          var ts = inList(q('textSize', 'text-size', 'qdnTextSize'), SIZES) ||
+            inList(window._qdnTextSize, SIZES);
+          if (ts) root.setAttribute('data-text-size', ts);
+        }
+      })();
+    </script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <meta name="theme-color" content="#4f5bd5" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Qortium" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImg} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImg} />
+
+    {jsonLdList.map((obj) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(obj)} />
+    ))}
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Live release versions: fill any <ReleaseTag> (data-release) elements from
+         the GitHub Releases API at page load. Uses /releases?per_page=1 because
+         these are prereleases (excluded by /releases/latest). Fails silently —
+         tags stay hidden if GitHub is unreachable. Works in a browser, Hub, or Home. -->
+    <script is:inline>
+      (function () {
+        var els = Array.prototype.slice.call(document.querySelectorAll('[data-release]'));
+        if (!els.length) return;
+        var repos = {};
+        els.forEach(function (el) { repos[el.getAttribute('data-release')] = true; });
+        Object.keys(repos).forEach(function (repo) {
+          fetch('https://api.github.com/repos/' + repo + '/releases?per_page=1', {
+            headers: { Accept: 'application/vnd.github+json' },
+          })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+              var tag = data && data[0] && data[0].tag_name;
+              if (typeof tag !== 'string' || !tag) return;
+              els
+                .filter(function (el) { return el.getAttribute('data-release') === repo; })
+                .forEach(function (el) {
+                  var prefix = el.getAttribute('data-release-prefix') || '';
+                  var suffix = el.getAttribute('data-release-suffix') || '';
+                  el.textContent = '';
+                  if (prefix) el.appendChild(document.createTextNode(prefix));
+                  if (el.hasAttribute('data-release-code')) {
+                    var c = document.createElement('code');
+                    c.textContent = tag;
+                    el.appendChild(c);
+                  } else {
+                    el.appendChild(document.createTextNode(tag));
+                  }
+                  if (suffix) el.appendChild(document.createTextNode(suffix));
+                  el.hidden = false;
+                });
+            })
+            .catch(function () {});
+        });
+      })();
+    </script>
+  </body>
+</html>

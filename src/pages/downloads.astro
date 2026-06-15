@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CoreMark from '../components/CoreMark.astro';
+import HomeMark from '../components/HomeMark.astro';
+import ReleaseTag from '../components/ReleaseTag.astro';
+import { withBase, RELEASES, PREVIEWNET } from '../data/site';
+
+const title = 'Qortium downloads | Current preview releases and status';
+const description =
+  'Download current Qortium Core and Qortium Home preview releases, check supported platforms, and review maturity notes before testing.';
+
+const products = [
+  {
+    kind: 'core' as const,
+    ...RELEASES.core,
+    blurb:
+      'The Java node and chain processing — a stripped-down fork of Qortal Core with build tooling, local APIs, and a single-node testnet.',
+  },
+  {
+    kind: 'home' as const,
+    ...RELEASES.home,
+    blurb:
+      'The desktop and Android shell for wallets, node status, and QDN browsing. It can install and run a local Previewnet Core for you.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Qortium downloads',
+  description,
+  url: 'https://qortal.link' + withBase('/downloads'),
+};
+---
+<BaseLayout title={title} description={description} path="/downloads" jsonLd={jsonLd}>
+  <!-- 1. INTRO -->
+  <section class="section--tight">
+    <div class="container">
+      <p class="eyebrow">Downloads &amp; status</p>
+      <h1>Preview releases</h1>
+      <p class="lede measure">
+        Binaries live on GitHub Releases. This page is the explanatory and routing
+        layer — it is not a binary host. Pick a product, check supported platforms
+        and maturity, then follow the link to the official release page.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. PROMINENT WARNING -->
+  <section class="section--tight">
+    <div class="container">
+      <div class="notice notice--warn">
+        <h3>Preview software — read before you download</h3>
+        <p class="muted" style="margin:0;">
+          These are early preview builds for testing only. Qortium Home has
+          <strong> not</strong> had a production security review, and wallet and
+          signing flows are still maturing. Do not load wallets with meaningful
+          funds. Treat everything here as experimental.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. PRODUCT CARDS -->
+  <section class="section--tight">
+    <div class="container">
+      <div class="grid grid--2">
+        {products.map((p) => (
+          <div class="card stack">
+            <div class="btn-row" style="justify-content:space-between;align-items:flex-start;">
+              <div class="btn-row" style="gap:0.6rem;align-items:center;">
+                <span style="display:inline-flex;color:var(--accent);">
+                  {p.kind === 'core' ? <CoreMark size={30} title={p.name} /> : <HomeMark size={30} title={p.name} />}
+                </span>
+                <h2 style="margin:0;">{p.name}</h2>
+              </div>
+              <ReleaseTag class="badge badge--preview" repo={p.repoSlug} />
+            </div>
+            <p class="muted" style="margin:0;">{p.blurb}</p>
+            <p class="muted" style="margin:0;font-size:0.9rem;">
+              License <code>{p.license}</code>
+            </p>
+            <div>
+              <p class="eyebrow" style="margin-bottom:0.5rem;">Supported platforms</p>
+              <ul class="pills" style="margin:0;">
+                {p.platforms.map((plat) => <li>{plat}</li>)}
+              </ul>
+            </div>
+            <div class="btn-row">
+              <a class="btn btn--primary" href={p.releases}>Get {p.name} releases</a>
+              <a class="btn btn--ghost" href={p.repo}>Source repo</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. BEFORE YOU TEST -->
+  <section class="section--soft section">
+    <div class="container">
+      <p class="eyebrow">Before you test</p>
+      <h2>A few things worth knowing</h2>
+      <ol class="steps measure" style="margin-top:1.5rem;">
+        <li>
+          <strong>Verify the source.</strong> Download only from the official GitHub
+          Releases pages linked above. The Core asset is published as
+          <code>{RELEASES.core.asset}</code>; treat anything from other origins as
+          untrusted.
+        </li>
+        <li>
+          <strong>Let Home bootstrap a Core if you want one.</strong> Qortium Home can
+          install the latest Core prerelease and a managed Java 17 runtime, then start
+          and stop a desktop Previewnet Core for you — so you do not have to build from
+          source first.
+        </li>
+        <li>
+          <strong>Know what Previewnet discovery can do.</strong> Previewnet network
+          discovery is read-only: status, peer discovery, and QDN browsing. Write,
+          admin, and private endpoints need a local Core (or your own custom node).
+          Home does not send a local API key in Previewnet mode.
+        </li>
+        <li>
+          <strong>Keep funds out.</strong> This is preview software under active
+          development. Use throwaway accounts and no meaningful balances until a
+          release explicitly says otherwise.
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 5. PREVIEWNET NOTE -->
+  <section class="section--tight">
+    <div class="container">
+      <div class="notice notice--accent measure">
+        <h3>Previewnet</h3>
+        <p class="muted" style="margin:0;">
+          Qortium is not Qortal — do not point Previewnet tooling at public Qortal
+          gateways, and do not cite them as evidence for Qortium resources. A local
+          Core exposes its API at <code>http://localhost:{PREVIEWNET.localApiPort}</code>,
+          and the Previewnet QDN publish name is <code>{PREVIEWNET.publishName}</code>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CLOSING CTA -->
+  <section class="section--soft section--tight">
+    <div class="container cta-band">
+      <h2>Read the details before testing</h2>
+      <p class="muted measure" style="margin-inline:auto;">
+        Understand each surface and the docs first; the binaries will still be there.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/home')}>Explore Home</a>
+        <a class="btn btn--ghost" href={withBase('/core')}>Explore Core</a>
+        <a class="btn btn--ghost" href={withBase('/docs')}>Docs &amp; sources</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

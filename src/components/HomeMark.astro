@@ -1,0 +1,9 @@
+---
+// Qortium Home mark — line-art house with thick interior, vectorized from
+// qortium-home-protoicon-thick-interior.png. currentColor fill.
+interface Props { size?: number; title?: string; class?: string; }
+const { size = 26, title = "Qortium Home", class: cls = "" } = Astro.props;
+---
+<svg class={cls} width={size} height={size} viewBox="0 0 512 512" role="img" aria-label={title}>
+  <path d="M 129 76 L 2 152 1 331 L 1 511 256 511 L 511 511 511 331 L 511 152 384 76 C 314 34, 257 0, 257 0 C 256 0, 198 34, 129 76 M 134 86 L 13 159 12 329 L 12 500 256 500 L 500 500 500 330 L 500 159 405 102 C 353 71, 298 38, 283 30 L 256 13 134 86 M 200 219 L 143 253 143 367 L 143 481 167 481 L 190 481 190 380 L 190 280 223 260 C 241 249, 256 241, 257 241 C 257 241, 272 249, 290 260 L 323 280 323 380 L 323 481 347 481 L 370 481 370 367 L 370 253 315 220 C 285 202, 260 187, 259 186 C 257 185, 251 189, 200 219" fill="currentColor" fill-rule="evenodd" />
+</svg>

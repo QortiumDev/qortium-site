@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ReleaseTag from '../components/ReleaseTag.astro';
+import { withBase, LINKS, RELEASES } from '../data/site';
+
+const title = 'Why Qortium exists | Cleaner baseline, narrower scope';
+const description =
+  'Learn why Qortium forked from Qortal, what assumptions it changes, and why builders, QDN developers, and experienced users may care.';
+
+const principles = [
+  {
+    h: 'Cleaner baseline for builders',
+    p: 'Core keeps the useful Qortal foundation but strips inherited complexity and project-specific assumptions: neutral NATIVE asset naming, no inherited QORT genesis asset on the main chain, bootstrap without a pre-created native asset, and cleaned-up historical triggers. The goal is a foundation that is easier to understand, adapt, and turn into your own chain.',
+  },
+  {
+    h: 'Focused, QDN-native UX',
+    p: 'Qortium Home is a browser-like shell for wallets, node status, and QDN browsing — not a giant portal. A broad portal/social platform scope is explicitly out of the first direction; the surface stays small and the QDN browsing experience stays central.',
+  },
+  {
+    h: 'Documented design rigor',
+    p: 'Both repos keep plain-language changelogs aimed at non-developers first, and Core ships docs for chain-design, trust, lite-node, QDN, cross-chain, and upstream comparison. The roadmap is written down rather than implied.',
+  },
+  {
+    h: 'Governance & anti-farm experimentation',
+    p: 'Core documents an on-chain account-trust network with Aura-style trust tiers to reduce farm-account influence in minting — no biometrics and no central identity. The formal public governance roster and thresholds are not yet fully specified, so treat that part as open.',
+  },
+  {
+    h: 'Lite-node direction',
+    p: 'The plan is peer-backed derived data served by ordinary peers rather than separate lite servers. Current limits are admitted openly; this is a documented direction, not a finished feature.',
+  },
+  {
+    h: 'Interoperability signal',
+    p: 'Latest Home preview notes say desktop and Android QDN apps can read Qortal QDN data from a public Qortal node. The relationship is divergence with selective interoperability, not an airtight break.',
+  },
+];
+
+const jsonLdReal = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'Why Qortium exists',
+  description,
+};
+---
+<BaseLayout title={title} description={description} path="/why" jsonLd={jsonLdReal}>
+  <!-- 1. HERO / INTRO -->
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Why Qortium</p>
+      <h1>A cleaner baseline, a narrower scope, an explicit roadmap</h1>
+      <p class="lede measure">
+        The most honest way to frame Qortium is not "Qortal, but better." It is a
+        cleaner baseline, a deliberately narrower scope, and a roadmap that is
+        written down rather than implied. Qortium shares ancestry with Qortal and
+        keeps selective interoperability — it pursues a different set of goals and
+        tradeoffs.
+      </p>
+      <div class="btn-row" style="margin-top:1.5rem;">
+        <a class="btn btn--primary" href={LINKS.coreDocs}>Explore the docs</a>
+        <a class="btn btn--ghost" href={withBase('/compare')}>Read the differences</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE FORK RATIONALE -->
+  <section class="section section--soft">
+    <div class="container prose">
+      <p class="eyebrow">The fork rationale</p>
+      <h2>A fork cleanup with a documentation habit and a chain-builder orientation</h2>
+      <p>
+        Qortium Core frames itself as a fork <em>cleanup</em> effort, not a
+        feature race. It starts from Qortal Core — a mature node with chain
+        processing, local APIs, networking, and build tooling — and then keeps the
+        useful foundation while removing inherited complexity and project-specific
+        assumptions. The result is meant to be easier for other teams to read,
+        reason about, and adapt into their own chain.
+      </p>
+      <p>
+        Concretely, the cleanup neutralizes Qortal-specific naming (moving to a
+        neutral <code>NATIVE</code> asset), removes the inherited QORT genesis
+        asset from the main chain, allows a chain to bootstrap without a
+        pre-created native asset, and cleans historical triggers carried forward
+        from upstream. None of this is presented as a value judgment about Qortal;
+        it is the work required to make the codebase a comfortable starting point
+        for a fresh chain.
+      </p>
+      <p class="muted">
+        That cleanup is paired with a strong documentation habit. Core maintains a
+        human-readable changelog aimed at non-developers and a docs set covering
+        chain design, trust, lite-node, QDN, cross-chain, upstream comparison, and
+        development. The transparency — what changed, why, and what is still open —
+        is the credibility asset.{' '}
+        <ReleaseTag repo={RELEASES.core.repoSlug} prefix="Current preview: " suffix="." code />
+      </p>
+    </div>
+  </section>
+
+  <!-- 3. DESIGN PRINCIPLES -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Design principles</p>
+      <h2>What Qortium optimizes for</h2>
+      <p class="lede measure">
+        A handful of consistent choices explain most of the divergence. Each is a
+        documented direction, with maturity stated plainly.
+      </p>
+      <div class="grid grid--2" style="margin-top:2rem;">
+        {principles.map((item) => (
+          <div class="card">
+            <h3>{item.h}</h3>
+            <p class="muted">{item.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. NOT A REPLACEMENT -->
+  <section class="section--tight section--soft">
+    <div class="container">
+      <div class="notice notice--accent">
+        <h3>Not a replacement</h3>
+        <p class="muted" style="margin:0;">
+          Qortium is not a scorched-earth break from Qortal and does not claim to
+          supersede it. It is divergence <strong>with</strong> selective
+          interoperability: overlapping ancestry, different goals and tradeoffs,
+          and a Home app that can still read Qortal QDN data from a public Qortal
+          node. Qortium is preview software — Qortium Home has not had a production
+          security review, so do not use wallets with meaningful funds yet.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CLOSING CTA -->
+  <section class="section--tight">
+    <div class="container cta-band">
+      <h2>Compare the two, then dig into each surface</h2>
+      <p class="muted measure" style="margin-inline:auto;">
+        The comparison page lays out core design, scope, governance, and roadmap
+        with caveats where public sources are incomplete. Core and Home pages cover
+        the details of each surface.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/compare')}>See the full comparison</a>
+        <a class="btn btn--ghost" href={withBase('/core')}>Explore Core</a>
+        <a class="btn btn--ghost" href={withBase('/home')}>Explore Home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

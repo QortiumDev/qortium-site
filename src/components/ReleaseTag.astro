@@ -1,0 +1,25 @@
+---
+// A version tag fetched LIVE in the browser from the GitHub Releases API by the
+// inline script in BaseLayout. Renders hidden by default and is revealed +
+// filled only if the latest tag loads — so if GitHub is unreachable (or JS is
+// off) nothing is shown and surrounding prose still reads correctly.
+//
+//   <ReleaseTag repo="QortiumDev/qortium-core" class="badge badge--preview" />
+//   <ReleaseTag repo="..." prefix="Current preview: " suffix="." code />
+interface Props {
+  repo: string;          // GitHub "owner/name"
+  prefix?: string;       // text shown before the tag once loaded
+  suffix?: string;       // text shown after the tag once loaded
+  code?: boolean;        // wrap the tag in <code>
+  class?: string;
+}
+const { repo, prefix, suffix, code, class: cls } = Astro.props;
+---
+<span
+  class={cls}
+  data-release={repo}
+  data-release-prefix={prefix}
+  data-release-suffix={suffix}
+  data-release-code={code ? '' : undefined}
+  hidden
+></span>

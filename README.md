@@ -30,8 +30,8 @@ straight to `compare/index.html` with no redirect.
 
 ## Pages
 
-`/` Home · `/why` · `/compare` (the load-bearing comparison) · `/core` ·
-`/home` · `/downloads` · `/docs` · `/faq`.
+`/` Overview · `/compare` (the load-bearing comparison) · `/core` · `/home` ·
+`/chat` · `/trust` · `/downloads`.
 
 ## Editing content / facts
 

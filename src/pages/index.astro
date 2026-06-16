@@ -3,29 +3,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Logo from '../components/Logo.astro';
 import CoreMark from '../components/CoreMark.astro';
 import HomeMark from '../components/HomeMark.astro';
-import ReleaseTag from '../components/ReleaseTag.astro';
-import { withBase, RELEASES, LINKS } from '../data/site';
+import ChatMark from '../components/ChatMark.astro';
+import TrustMark from '../components/TrustMark.astro';
+import { withBase, LINKS } from '../data/site';
 
-const title = 'Qortium | A cleaner chain baseline and focused QDN home';
+const title = 'Qortium | A simpler foundation for blockchains';
 const description =
-  'Qortium is a stripped-down fork of Qortal Core with a focused companion app for wallets, nodes, and QDN browsing. Explore the differences, docs, and preview releases.';
+  'Qortium is a streamlined foundation for blockchains, grown out of Qortal, with one app, Qortium Home, for your wallet, the network, and content.';
 
 const reasons = [
   {
-    h: 'Cleaner baseline for builders',
-    p: 'Qortium Core is a stripped-down, cleaned-up fork meant to reduce inherited complexity and project-specific assumptions — a chain foundation easier to understand, adapt, and build on.',
+    h: 'A cleaner foundation',
+    p: 'Qortium trims Qortal down to a simpler base that is easier to understand and to build a new chain on.',
   },
   {
-    h: 'Focused QDN-native UX',
-    p: 'Qortium Home is a browser-like shell for wallets, node status, and QDN browsing — not a giant portal. Account actions are approval-gated through the selected tab.',
+    h: 'Everything in one app',
+    p: 'Qortium Home gives you wallets, the network, and content in one place.',
   },
   {
-    h: 'Documented design rigor',
-    p: 'Both repos keep plain-language changelogs aimed at non-developers first. Core docs cover chain-builder, trust, lite-node, and upstream comparison topics. The roadmap is written down.',
-  },
-  {
-    h: 'Governance experimentation',
-    p: 'Qortium documents an on-chain account-trust network and Aura-style trust-tier minting — exploring participation models beyond inherited assumptions, without biometrics or central identity.',
+    h: 'No coin forced on you',
+    p: 'A new chain starts with no built-in coin; the community decides if one is ever added.',
   },
 ];
 
@@ -36,7 +33,7 @@ const jsonLd = [
     name: 'Qortium',
     url: 'https://qortal.link/Qortium',
     description:
-      'Qortium is a stripped-down fork of Qortal Core with a companion app for wallets, nodes, and QDN browsing.',
+      'Qortium is a streamlined foundation for blockchains, grown out of Qortal, with one app for your wallet, the network, and content.',
     sameAs: [LINKS.coreRepo, LINKS.homeRepo],
   },
   {
@@ -52,78 +49,28 @@ const jsonLd = [
   <section class="hero">
     <div class="container hero__grid">
       <div>
-        <p class="eyebrow">Qortium · preview</p>
-        <h1>A cleaner chain baseline with a focused QDN home</h1>
-        <p class="lede">
-          Qortium is a stripped-down fork of Qortal Core with a companion app for
-          wallets, nodes, and QDN browsing. Built for preview testing, chain
-          experimentation, and an explicit roadmap.
+        <h1>A simpler foundation for blockchains</h1>
+        <p class="lede measure">
+          Qortium is a streamlined foundation for blockchains, grown out of
+          Qortal, with one simple app, Qortium Home, for your wallet, the
+          network, and decentralized content.
         </p>
         <div class="btn-row">
-          <a class="btn btn--primary" href={withBase('/compare')}>Read the differences</a>
-          <a class="btn btn--ghost" href={withBase('/downloads')}>Try the preview releases</a>
+          <a class="btn btn--primary" href={withBase('/downloads')}>Join Previewnet</a>
+          <a class="btn btn--ghost" href={withBase('/compare')}>Compare</a>
         </div>
-        <ul class="pills" aria-label="At a glance">
-          <li>Fork of Qortal Core</li>
-          <li>Wallets · nodes · QDN</li>
-          <li>Preview-first</li>
-          <li>Documented in plain language</li>
-        </ul>
       </div>
-      <div class="hero__art" aria-hidden="true">
-        <div style="display:grid;place-items:center;width:min(360px,80vw);aspect-ratio:1;border:1px solid var(--line);border-radius:24px;background:var(--bg-soft);box-shadow:var(--shadow-md);">
-          <Logo size={150} class="hero-mark" />
-        </div>
+      <div class="hero__frame" aria-hidden="true">
+        <Logo size={150} class="hero-mark" />
       </div>
     </div>
   </section>
 
-  <!-- 2. SHORT EVIDENCE BLOCK -->
-  <section class="section--tight section--soft">
-    <div class="container">
-      <div class="grid grid--2" style="--gap:1rem;">
-        <div class="feature">
-          <span class="feature__icon" aria-hidden="true">⑂</span>
-          <div>
-            <strong>Forked ancestry</strong>
-            <p class="muted" style="margin:0;">Starts from Qortal Core, then removes inherited assumptions not needed for a fresh baseline.</p>
-          </div>
-        </div>
-        <div class="feature">
-          <span class="feature__icon" aria-hidden="true">◆</span>
-          <div>
-            <strong>Cleanup goal</strong>
-            <p class="muted" style="margin:0;">Neutral naming, cleaned-up history triggers, and a builder-facing documentation set.</p>
-          </div>
-        </div>
-        <div class="feature">
-          <span class="feature__icon" aria-hidden="true">▤</span>
-          <div>
-            <strong>Focused UI</strong>
-            <p class="muted" style="margin:0;">Qortium Home centers wallets, node status, and QDN browsing with approval-gated actions.</p>
-          </div>
-        </div>
-        <div class="feature">
-          <span class="feature__icon" aria-hidden="true">◷</span>
-          <div>
-            <strong>Preview status</strong>
-            <p class="muted" style="margin:0;">Real preview builds exist — but Home is not security-reviewed for meaningful funds.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. WHY IT EXISTS -->
+  <!-- 2. WHY -->
   <section class="section">
     <div class="container">
-      <p class="eyebrow">Why it exists</p>
-      <h2>Not "Qortal, but better." A narrower scope and an explicit roadmap.</h2>
-      <p class="lede measure">
-        The angle is a cleaner baseline, a narrower scope, and a more explicit
-        roadmap — overlapping ancestry with Qortal, but a different design direction.
-      </p>
-      <div class="grid grid--2" style="margin-top:2rem;">
+      <h2>Why Qortium exists</h2>
+      <div class="grid grid--2">
         {reasons.map((r) => (
           <div class="card">
             <h3>{r.h}</h3>
@@ -131,96 +78,53 @@ const jsonLd = [
           </div>
         ))}
       </div>
-      <div class="btn-row" style="margin-top:1.5rem;">
-        <a class="btn btn--ghost" href={withBase('/why')}>Why Qortium →</a>
-      </div>
     </div>
   </section>
 
-  <!-- 4. COMPARE TEASER -->
-  <section class="section--tight section--soft">
-    <div class="container">
-      <div class="card notice--accent" style="border-left-width:4px;">
-        <p class="eyebrow" style="margin-bottom:0.4rem;">Qortium vs Qortal</p>
-        <h2 style="margin-bottom:0.4rem;">Different goals and tradeoffs — not a replacement</h2>
-        <p class="muted measure">
-          Qortium comes from Qortal ancestry but pursues a different balance of
-          scope, assumptions, and documentation. The comparison page lays out core
-          design, UI scope, governance, auto-updates, participation models, and
-          roadmap — with caveats where public sources are incomplete.
-        </p>
-        <div class="btn-row" style="margin-top:1rem;">
-          <a class="btn btn--primary" href={withBase('/compare')}>See the full comparison</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. PRODUCT SPLIT -->
+  <!-- 3. LIVE NOW ON PREVIEWNET -->
   <section class="section">
     <div class="container">
-      <p class="eyebrow">Two surfaces</p>
-      <h2>Qortium Core and Qortium Home</h2>
-      <div class="grid grid--2" style="margin-top:1.5rem;">
+      <h2>Live now on Previewnet</h2>
+      <p class="lede measure">
+        Qortium is already running on Previewnet — a live network for testing and
+        shaping the protocol, though not yet a permanent mainnet. There's no coin
+        by choice; whether to add one is an open decision for the community.
+      </p>
+      <p class="measure">
+        This is the moment to get involved — join Previewnet, try it out, and help
+        decide where Qortium goes next.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/downloads')}>Join Previewnet</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. PRODUCT SPLIT -->
+  <section class="section">
+    <div class="container">
+      <h2>Core, Home, Chat, Trust</h2>
+      <div class="grid grid--4">
         <a class="card card--link" href={withBase('/core')}>
           <span class="card__mark"><CoreMark size={40} title="Qortium Core" /></span>
-          <span class="card__tag">Chain layer · {RELEASES.core.license}</span>
           <h3>Qortium Core</h3>
-          <p class="muted">The Java node and chain processing: a stripped-down fork with chain-builder docs, a trust-network model, a lite-node plan, and QDN-pinned auto-updates.</p>
-          <span aria-hidden="true">Explore Core →</span>
+          <p class="muted">The network software, the chain itself, open source.</p>
         </a>
         <a class="card card--link" href={withBase('/home')}>
           <span class="card__mark"><HomeMark size={40} title="Qortium Home" /></span>
-          <span class="card__tag">App · {RELEASES.home.license}</span>
           <h3>Qortium Home</h3>
-          <p class="muted">A focused desktop and Android app for wallets, node status, and QDN browsing, with session tabs and approval-gated account actions.</p>
-          <span aria-hidden="true">Explore Home →</span>
+          <p class="muted">A desktop and Android app for your wallet, the network, and content.</p>
         </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. STATUS BLOCK -->
-  <section class="section--tight section--soft">
-    <div class="container">
-      <div class="notice notice--warn">
-        <h3>Preview maturity — read before testing</h3>
-        <p class="muted" style="margin:0;">
-          Qortium Home is in active early development. Wallet and signing flows have
-          <strong> not</strong> had a production security review. Do not use wallets
-          with meaningful funds yet.{' '}
-          <ReleaseTag repo={RELEASES.core.repoSlug} prefix="Current Core release: " suffix="." code />
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7. CREDIBILITY -->
-  <section class="section">
-    <div class="container center">
-      <p class="eyebrow">Documented, not hand-waved</p>
-      <h2>Changelogs, docs, repos, and release notes</h2>
-      <p class="lede measure" style="margin-inline:auto;">
-        Both major repos maintain human-readable changelogs aimed at
-        non-developers first. That transparency is the credibility asset.
-      </p>
-      <div class="btn-row" style="justify-content:center;margin-top:1.5rem;">
-        <a class="btn btn--ghost" href={LINKS.coreRepo}>qortium-core</a>
-        <a class="btn btn--ghost" href={LINKS.homeRepo}>qortium-home</a>
-        <a class="btn btn--ghost" href={withBase('/docs')}>Docs &amp; sources</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. FINAL CTA -->
-  <section class="section--tight section--soft">
-    <div class="container cta-band">
-      <h2>Compare, read the docs, or download a preview</h2>
-      <p class="muted measure" style="margin-inline:auto;">Understanding first. Downloads second. No overstated production readiness.</p>
-      <div class="btn-row">
-        <a class="btn btn--primary" href={withBase('/compare')}>Read the differences</a>
-        <a class="btn btn--ghost" href={withBase('/why')}>Why Qortium</a>
-        <a class="btn btn--ghost" href={withBase('/downloads')}>Download preview</a>
+        <a class="card card--link" href={withBase('/chat')}>
+          <span class="card__mark"><ChatMark size={40} title="Qortium Chat" /></span>
+          <h3>Qortium Chat</h3>
+          <p class="muted">Private and public group chat that runs inside Home.</p>
+        </a>
+        <a class="card card--link" href={withBase('/trust')}>
+          <span class="card__mark"><TrustMark size={40} title="Qortium Trust" /></span>
+          <h3>Qortium Trust</h3>
+          <p class="muted">See and build account reputation, inside Home.</p>
+        </a>
       </div>
     </div>
   </section>

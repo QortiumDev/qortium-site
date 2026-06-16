@@ -1,60 +1,42 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CoreMark from '../components/CoreMark.astro';
-import ReleaseTag from '../components/ReleaseTag.astro';
-import { withBase, RELEASES, LINKS } from '../data/site';
+import { withBase, LINKS } from '../data/site';
 
-const title = 'Qortium Core | Fork cleanup, trust network, lite-node direction';
-const description =
-  'Explore Qortium Core, its builder-facing docs, trust-network model, lite-node plan, preview releases, and cleanup of inherited assumptions.';
+const title = 'Qortium Core';
+const description = 'The network software — the chain itself, built to be understood and easy to launch your own from.';
 
 const cleanup = [
   {
-    h: 'Neutral NATIVE asset naming',
-    p: 'The native asset is referred to generically as NATIVE rather than carrying a project-specific ticker through the codebase, so the baseline reads as a chain template instead of one fixed coin.',
+    h: 'No coin to start',
+    p: 'A new Qortium chain begins with no coin of its own — none made or handed out in advance.',
   },
   {
-    h: 'No inherited QORT genesis asset',
-    p: 'The inherited QORT genesis asset is removed from the main chain. A new deployment is not pre-seeded with an upstream service coin it did not choose.',
+    h: 'Use it without owning a coin',
+    p: 'With no coin, transactions are secured by a small bit of work from your own device, so anyone can transact.',
   },
   {
-    h: 'Bootstrap without a pre-created asset',
-    p: 'The chain can bootstrap without a pre-created native asset, which lets a fresh deployment define its own economics rather than inheriting them by default.',
+    h: 'A coin only by community vote',
+    p: 'Anyone can create their own assets freely, but the chain has no coin for fees unless the development group votes to add one.',
   },
   {
-    h: 'Neutralized Qortal-specific naming',
-    p: 'Qortal-specific names and labels are neutralized across the node so the foundation is easier to read, adapt, and rename for a new chain.',
-  },
-  {
-    h: 'Cleaned historical triggers',
-    p: 'Historical activation triggers carried forward from upstream are cleaned up, reducing dead conditionals and assumptions tied to another chain’s timeline.',
-  },
-  {
-    h: 'Builder-facing documentation',
-    p: 'A documentation set covers chain-design, trust, lite-node, QDN, cross-chain, upstream comparison, and development — aimed at people building on the chain.',
+    h: 'A cleaner, documented base',
+    p: 'Qortium clears out Qortal-specific assumptions and explains the rest in plain language.',
   },
 ];
 
 const directions = [
   {
-    icon: '◇',
-    h: 'Account-trust network + trust-tier minting',
-    p: 'An on-chain account-trust network feeds an Aura-style trust-tier minting model intended to reduce the influence of farmed accounts — without biometrics and without a central identity authority.',
+    h: 'Community-approved updates',
+    p: 'Updates are off by default and only apply after the community approves them, so no one can push software to you silently.',
   },
   {
-    icon: '◷',
-    h: 'Lite-node plan',
-    p: 'Rather than standing up separate lite servers, the plan is peer-backed derived data served by ordinary nodes. The current limits of this approach are admitted in the docs rather than glossed over.',
+    h: 'Open, community-driven governance',
+    p: 'The development group is open to anyone. The direction: admins approve updates and the fee coin, while members vote admins in or out — kept fair by trust scores.',
   },
   {
-    icon: '⚙',
-    h: 'On-chain chain-parameter updates',
-    p: 'Selected chain parameters are designed to be updatable through on-chain transactions, moving configuration that would otherwise require coordinated hard restarts toward a recorded, reviewable path.',
-  },
-  {
-    icon: '◆',
-    h: 'QDN-pinned auto-updates',
-    p: 'Disabled by default. When enabled, an update is a QDN-pinned binary plus an on-chain manifest approved in a configured dev group. Bootstrap-friendly null-owned public dev and minting groups and configurable dev-group IDs keep this workable on a fresh network.',
+    h: 'Changes by vote, not by force',
+    p: 'Important network settings can change through on-chain votes instead of forced restarts.',
   },
 ];
 
@@ -70,37 +52,27 @@ const jsonLd = {
 };
 ---
 <BaseLayout title={title} description={description} path="/core" jsonLd={jsonLd}>
-  <!-- 1. HERO -->
   <section class="hero">
     <div class="container">
-      <span class="card__mark" style="margin-bottom:1rem;"><CoreMark size={56} title="Qortium Core" /></span>
-      <p class="eyebrow">Qortium Core · {RELEASES.core.license}</p>
-      <h1>A chain foundation built to be understood and adapted</h1>
+      <div class="hero-head">
+        <CoreMark size={44} title="Qortium Core" />
+        <h1>The network software — the chain itself</h1>
+      </div>
       <p class="lede measure">
-        Qortium Core is the Java node and blockchain processing layer: local APIs,
-        peer networking, build tooling, and an early but deliberate documentation
-        set. It starts from Qortal ancestry and works to strip out assumptions a
-        fresh chain has no reason to carry.
+        Qortium Core is a cleaned-up evolution of Qortal, made to be easy to
+        understand and to launch your own chain from.
       </p>
-      <div class="btn-row" style="margin-top:1.4rem;">
-        <ReleaseTag class="badge badge--preview badge--dot" repo={RELEASES.core.repoSlug} prefix="Preview " />
-        <span class="badge">Java node · chain processing</span>
-        <span class="badge">{RELEASES.core.license}</span>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={LINKS.coreRepo}>Open qortium-core</a>
+        <a class="btn btn--ghost" href={LINKS.coreDocs}>Docs</a>
       </div>
     </div>
   </section>
 
-  <!-- 2. CLEANER BASELINE -->
-  <section class="section section--soft">
+  <section class="section">
     <div class="container">
-      <p class="eyebrow">Cleaner baseline</p>
-      <h2>Start from Qortal ancestry, then remove inherited assumptions</h2>
-      <p class="lede measure">
-        The goal is not "Qortal, but better." It is a baseline that is easier to
-        read and adapt, with project-specific defaults peeled away so the chain
-        can be made your own.
-      </p>
-      <div class="grid grid--2" style="margin-top:2rem;">
+      <h2>A clean starting point</h2>
+      <div class="grid grid--2">
         {cleanup.map((c) => (
           <div class="card">
             <h3>{c.h}</h3>
@@ -111,91 +83,22 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- 3. DESIGN DIRECTIONS -->
   <section class="section">
     <div class="container">
-      <p class="eyebrow">Design directions</p>
-      <h2>Where the chain layer is heading</h2>
-      <p class="lede measure">
-        These are documented directions, not finished guarantees. Several are
-        partial or experimental today; the docs are candid about what is settled
-        and what is not.
-      </p>
-      <div class="grid grid--2" style="margin-top:2rem;">
+      <h2>Where the chain is heading</h2>
+      <div class="grid grid--2">
+        <a class="card card--link" href={withBase('/trust')}>
+          <h3>Built-in account reputation</h3>
+          <p class="muted">
+            Accounts earn reputation that shapes their minting and voting — see Trust.
+          </p>
+        </a>
         {directions.map((d) => (
           <div class="card">
-            <div class="feature">
-              <span class="feature__icon" aria-hidden="true">{d.icon}</span>
-              <div>
-                <h3 style="margin-bottom:0.35rem;">{d.h}</h3>
-                <p class="muted" style="margin:0;">{d.p}</p>
-              </div>
-            </div>
+            <h3>{d.h}</h3>
+            <p class="muted">{d.p}</p>
           </div>
         ))}
-      </div>
-
-      <div class="notice notice--accent">
-        <h3>Governance is treated as open</h3>
-        <p class="muted" style="margin:0;">
-          A formal public administrator roster and approval threshold are
-          <strong> not yet fully specified</strong>. The dev-group plumbing exists
-          — null-owned public dev and minting groups and configurable dev-group
-          IDs — but who administers updates, and at what threshold, is treated
-          as an open question rather than a finalized claim.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. TRY IT -->
-  <section class="section section--soft">
-    <div class="container">
-      <p class="eyebrow">Try it</p>
-      <h2>Build the node and run a local single-node testnet</h2>
-      <p class="lede measure">
-        Core is preview software for testing and chain experimentation, not a
-        production deployment. The fastest way to see it is a local testnet.
-      </p>
-      <ol class="steps" style="margin-top:1.5rem;max-width:60ch;">
-        <li>
-          <strong>Prerequisites.</strong> Install <strong>Java 17+</strong> and
-          <strong>Maven</strong>. No other toolchain is required to compile the node.
-        </li>
-        <li>
-          <strong>Build the node.</strong> Run <code>./build.sh</code> from the
-          repository root to compile Qortium Core.
-        </li>
-        <li>
-          <strong>Start a local testnet.</strong> Run <code>./testnet/start.sh</code>,
-          then <code>./testnet/status.sh --wait</code> to wait until the single node
-          is ready.
-        </li>
-        <li>
-          <strong>Reach the API.</strong> The local testnet exposes its API at
-          <code>http://localhost:24891</code> for inspection and experimentation.
-        </li>
-      </ol>
-      <div class="btn-row" style="margin-top:1.5rem;">
-        <a class="btn btn--ghost" href={LINKS.coreDocs}>Read the docs</a>
-        <a class="btn btn--ghost" href={withBase('/downloads')}>Download options</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. CTA -->
-  <section class="section--tight">
-    <div class="container cta-band">
-      <h2>Read the source, the docs, and the release notes</h2>
-      <p class="muted measure" style="margin-inline:auto;">
-        Understanding first. Binaries live on GitHub Releases; this site is the
-        routing and explanation layer, not a binary host.
-      </p>
-      <div class="btn-row">
-        <a class="btn btn--primary" href={LINKS.coreRepo}>Open qortium-core</a>
-        <a class="btn btn--ghost" href={LINKS.coreDocs}>Read the docs</a>
-        <a class="btn btn--ghost" href={LINKS.coreReleases}>Preview releases</a>
-        <a class="btn btn--ghost" href={withBase('/downloads')}>Downloads</a>
       </div>
     </div>
   </section>

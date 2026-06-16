@@ -1,109 +1,75 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ReleaseTag from '../components/ReleaseTag.astro';
-import { withBase, RELEASES, LINKS, PREVIEWNET } from '../data/site';
+import { withBase } from '../data/site';
 
-const title = 'Qortium vs Qortal | Technical, UX, governance, and roadmap differences';
-const description =
-  'A sourced comparison of Qortium and Qortal across core design, interface scope, governance, auto-updates, participation models, and roadmap direction.';
+const title = 'Qortium vs Qortal';
+const description = 'How Qortium and Qortal compare in plain terms.';
 
 const rows = [
   {
-    dim: 'Overall framing',
-    qortium:
-      'Working name for a stripped-down, cleaned-up fork of Qortal Core — a narrower baseline rather than a full platform.',
-    qortal:
-      'Publicly framed as a full decentralized infrastructure platform and economic system.',
+    dim: 'Overall',
+    qortium: 'A streamlined protocol that grew out of Qortal — a foundation for chains, still in preview.',
+    qortal: 'A full, live platform and coin economy.',
   },
   {
-    dim: 'Technical focus',
-    qortium:
-      'Reducing inherited complexity and assumptions: chain-builder docs, lite-node planning, trust-network docs, and upstream comparison notes.',
-    qortal:
-      'Broad platform capabilities — Q-Apps, hosted access, and ecosystem breadth.',
+    dim: 'App',
+    qortium: 'Home: a simple app for your wallet, the network, and content.',
+    qortal: 'Hub: chat, wallet, publishing, hosted access, and voice.',
   },
   {
-    dim: 'UI scope',
-    qortium:
-      'Qortium Home centers wallets, node status, QDN browsing, browser-style tabs, and approval-gated actions. A large portal/social scope is out of scope initially.',
-    qortal:
-      'Qortal Hub is the primary interface, centring chat, wallet, publishing, hosted access, and Reticulum voice.',
+    dim: 'Coin',
+    qortium: "Starts with no coin of its own; you don't need to buy anything to use it, and a coin is added only by community vote.",
+    qortal: 'Built around the QORT coin and its economy.',
   },
   {
-    dim: 'Product maturity',
-    qortium:
-      'Home is in active early development and explicitly warns against meaningful funds until broader review and testing.',
-    qortal:
-      'Hub is the current primary interface with public downloads and a more user-ready surface.',
+    dim: 'Names',
+    qortium: 'Choose and change your primary name anytime, even if you own several.',
+    qortal: 'Your first name is fixed, and owning more names locks it.',
   },
   {
-    dim: 'Hosted access',
-    qortium:
-      'No public hosted-access path was found in the repos; this is UNSPECIFIED in current public sources.',
-    qortal:
-      'Hub and Qortal Go offer hosted access.',
+    dim: 'Apps per name',
+    qortium: 'Publish many apps or sites under one name, each with its own icon.',
+    qortal: "Effectively one or two per name, all using the name's avatar.",
   },
   {
-    dim: 'Auto-updates',
-    qortium:
-      'Disabled by default; relies on a pinned QDN binary plus on-chain manifest approval in a configured dev group.',
-    qortal:
-      'On-chain developer approval; currently pulls a signed qortal.jar from GitHub, with a future QDN-git path planned.',
+    dim: 'Selling names',
+    qortium: 'Sell a name privately to one person, or give one for free that they choose to accept — no sniping.',
+    qortal: 'Sales are public, so anyone can buy first.',
   },
   {
-    dim: 'Governance posture',
-    qortium:
-      'Bootstrap-friendly null-owned public dev/minting groups, configurable dev-group IDs, and on-chain chain-parameter updates. A formal public admin roster/threshold is NOT clearly specified.',
-    qortal:
-      'Documents dev-group control, but official pages are internally inconsistent — one says 60% approval, another says 40% / 5 of 11 admins.',
+    dim: 'Groups',
+    qortium: 'Groups can be renamed and sold, including private sales.',
+    qortal: "Group names are fixed and groups can't be sold.",
   },
   {
-    dim: 'Native asset model',
-    qortium:
-      'Neutral NATIVE naming; removes the inherited QORT genesis asset from the main chain and allows bootstrap without a pre-created native asset.',
-    qortal:
-      'Centers the QORT service coin and its network economy.',
+    dim: 'Deleting content',
+    qortium: 'You can remove your content from the network.',
+    qortal: 'No built-in way to delete published content.',
   },
   {
-    dim: 'Participation / anti-Sybil',
-    qortium:
-      'On-chain account-trust network plus Aura-style trust tiers, aimed at reducing farm-account influence.',
-    qortal:
-      'Sponsorship into minting, with blocks-minted and leveling as core participation signals.',
+    dim: 'Content ratings',
+    qortium: 'Rate any published content, built into the core, so the best rises to the top.',
+    qortal: 'Only limited ratings, built on top of polls.',
   },
   {
-    dim: 'Roadmap emphasis',
-    qortium:
-      'Lite nodes, trust policies, chain-parameter governance, preview/mobile QDN workflows, and a cleaner baseline.',
-    qortal:
-      'Onboarding, hosted access, communications, Q-Apps, a GitHub replacement, and broad platform usage.',
+    dim: 'Account reputation',
+    qortium: "Built-in reputation from on-chain ratings adjusts how much each account's minting and votes count, and resists fake accounts.",
+    qortal: 'Uses sponsorship and minting levels.',
   },
   {
-    dim: 'Interface licensing',
-    qortium: `Qortium Home is licensed ${RELEASES.home.license}.`,
-    qortal: 'Qortal Hub is licensed GPL-3.0.',
+    dim: 'Updates',
+    qortium: 'Off by default; an update only applies after the community approves it — nothing is pushed to you silently.',
+    qortal: 'Updates are approved by its developer group.',
   },
   {
-    dim: 'Interoperability signal',
-    qortium:
-      'The latest Home preview notes say it can read Qortal QDN data from a public Qortal node.',
-    qortal:
-      'Documents its own QDN and Hub surfaces; not framed from the Qortium side.',
-  },
-];
-
-const takeaways = [
-  {
-    h: 'Qortium is a fork with a narrower philosophy',
-    p: 'Qortium comes from Qortal ancestry but chooses a different balance of scope, assumptions, and documentation. The goal is a cleaner, easier-to-reason-about baseline — not a bigger platform.',
+    dim: 'Private group chat',
+    qortium: 'Private group chats are encrypted automatically — no keys to manage.',
+    qortal: 'Encrypts in the app and shares group keys over its network.',
   },
   {
-    h: 'Qortium Home is intentionally narrower than Qortal Hub',
-    p: 'Home deliberately stays a focused shell for wallets, node status, and QDN browsing with approval-gated actions. Qortal Hub spans chat, publishing, hosted access, and voice as its core surface.',
-  },
-  {
-    h: 'Qortium is a preview project; Qortal presents a more user-ready surface',
-    p: 'Qortium Home is in active early development with preview builds. Qortal Hub ships as the current primary interface with public downloads and a broader, more polished feature set.',
+    dim: 'Chat history',
+    qortium: 'Keep your chat history as long as you want; the default is about a day.',
+    qortal: 'Messages are dropped after about a day.',
   },
 ];
 
@@ -111,51 +77,24 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: 'Qortium vs Qortal',
-  description,
+  description: 'How Qortium and Qortal compare in plain terms.',
   about: ['Qortium', 'Qortal'],
   url: 'https://qortal.link/Qortium/compare',
 };
 ---
 <BaseLayout title={title} description={description} path="/compare" jsonLd={jsonLd}>
-  <!-- 1. HERO / FRAMING -->
   <section class="section">
     <div class="container">
-      <p class="eyebrow">Qortium vs Qortal</p>
-      <h1>Different goals and tradeoffs — not a replacement</h1>
+      <h1>Different goals, not a replacement</h1>
       <p class="lede measure">
-        Qortium comes from Qortal ancestry, but it pursues a different balance of
-        scope, assumptions, and documentation. This page lays out where the two
-        diverge — and stays candid where public sources are incomplete.
+        Qortium and Qortal share a starting point but aim at different things. Here's how they compare.
       </p>
-      <p class="muted measure">
-        Read this as a comparison of <strong>different design directions</strong>,
-        not a "which one wins" scoreboard. Qortium is preview software; some
-        Qortal details below are documented inconsistently in public sources, and
-        we flag those rather than smoothing them over. Where a Qortium capability
-        has no public evidence yet, it is marked <em>unspecified</em> instead of
-        guessed.
-      </p>
-      <ul class="pills" aria-label="Comparison scope">
-        <li>Core design</li>
-        <li>Interface scope</li>
-        <li>Governance</li>
-        <li>Auto-updates</li>
-        <li>Participation</li>
-        <li>Roadmap</li>
-      </ul>
     </div>
   </section>
 
-  <!-- 2. THE COMPARISON TABLE -->
-  <section class="section--tight section--soft">
+  <section class="section">
     <div class="container">
-      <p class="eyebrow">Side by side</p>
-      <h2>Twelve dimensions of difference</h2>
-      <p class="muted measure">
-        Each cell is a concise summary of the publicly observable position. Cells
-        marked unspecified mean no public source was found, not that a feature is
-        impossible.
-      </p>
+      <h2>Where they differ</h2>
       <div class="table-wrap">
         <table>
           <thead>
@@ -176,84 +115,12 @@ const jsonLd = {
           </tbody>
         </table>
       </div>
-      <p class="muted" style="font-size:0.9rem;">
-        Sources are the public Qortium repositories and changelogs alongside
-        Qortal's official material. Qortium ≠ Qortal: Previewnet resources are not
-        served from public Qortal gateways.
-      </p>
-    </div>
-  </section>
-
-  <!-- 3. WHAT THE SITE SAYS / TAKEAWAYS -->
-  <section class="section">
-    <div class="container">
-      <p class="eyebrow">What the site says</p>
-      <h2>Reading the comparison honestly</h2>
-      <div class="grid grid--2" style="margin-top:1.5rem;">
-        {takeaways.map((t) => (
-          <div class="card">
-            <h3>{t.h}</h3>
-            <p class="muted">{t.p}</p>
-          </div>
-        ))}
-        <div class="card notice--accent" style="border-left-width:4px;box-shadow:none;">
-          <h3>Governance precision matters — and can be checked</h3>
-          <p class="muted">
-            Qortium does not yet publish a formal admin roster or approval
-            threshold, so treat its governance as open. On the Qortal side,
-            official pages disagree — one says 60% approval, another says 40% (5 of
-            11 admins) — so we avoid over-anchoring on any single number. Both
-            chains expose this on-chain: the dev group is group id 1, and its
-            current admins and approval threshold can be checked live through each
-            network's API rather than taken from a page.
-          </p>
-        </div>
-      </div>
-
-      <div class="notice notice--warn" style="margin-top:1.5rem;">
-        <h3>Preview maturity — read before testing</h3>
-        <p class="muted" style="margin:0;">
-          Qortium Home is in active early development and has <strong>not</strong>
-          had a production security review of wallet or signing flows. Do not use
-          wallets with meaningful funds yet. Previewnet local API runs on port
-          <code>{PREVIEWNET.localApiPort}</code>.{' '}
-          <ReleaseTag repo={RELEASES.core.repoSlug} prefix="Current Core preview: " suffix="." code />
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. SELECTIVE INTEROPERABILITY NOTE -->
-  <section class="section--tight section--soft">
-    <div class="container">
-      <div class="card" style="border-left:4px solid var(--accent);">
-        <p class="eyebrow" style="margin-bottom:0.4rem;">Divergence, with selective interoperability</p>
-        <p class="muted measure" style="margin:0;">
-          Divergence does not mean isolation. The latest Qortium Home preview notes
-          report that its desktop and Android QDN browsing can read Qortal QDN data
-          from a public Qortal node. The relationship is a different baseline with
-          selective interoperability — not a clean break, and not a replacement.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. CTA -->
-  <section class="section--tight">
-    <div class="container cta-band">
-      <h2>Go deeper on either layer</h2>
-      <p class="muted measure" style="margin-inline:auto;">
-        Read the chain layer, the companion app, or grab a preview build. The
-        website explains and routes; binaries live on GitHub Releases.
+      <p class="muted measure">
+        Qortium can adopt Qortal's more advanced features — like voice chat or
+        Reticulum — later; the focus now is the foundation and community governance.
       </p>
       <div class="btn-row">
-        <a class="btn btn--primary" href={withBase('/core')}>Qortium Core</a>
-        <a class="btn btn--ghost" href={withBase('/home')}>Qortium Home</a>
-        <a class="btn btn--ghost" href={withBase('/downloads')}>Preview downloads</a>
-      </div>
-      <div class="btn-row" style="justify-content:center;margin-top:1rem;">
-        <a class="btn btn--sm btn--ghost" href={LINKS.coreRepo}>qortium-core</a>
-        <a class="btn btn--sm btn--ghost" href={LINKS.qortalSite}>qortal.org</a>
+        <a class="btn btn--primary" href={withBase('/downloads')}>Join Previewnet</a>
       </div>
     </div>
   </section>

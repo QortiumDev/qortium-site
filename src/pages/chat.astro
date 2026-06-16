@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ChatMark from '../components/ChatMark.astro';
+import { CHAT, LINKS, withBase } from '../data/site';
+
+const title = 'Qortium Chat';
+const description = 'Private and public group chat that runs inside Qortium Home.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Qortium Chat',
+  applicationCategory: 'CommunicationApplication',
+  operatingSystem: 'Runs in Qortium Home (desktop & Android)',
+  license: CHAT.license,
+  url: CHAT.repo,
+  description: 'Private and public group chat that runs inside Qortium Home.',
+  sameAs: [CHAT.repo],
+};
+---
+<BaseLayout title={title} description={description} path="/chat" jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-head">
+        <ChatMark size={44} title="Qortium Chat" />
+        <h1>Private and public group chat</h1>
+      </div>
+      <p class="lede measure">
+        Qortium Chat is an app that runs inside Home for private and public group
+        chat — your messages stay encrypted and you never juggle keys.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/downloads')}>Get Qortium Home</a>
+        <a class="btn btn--ghost" href={LINKS.chatRepo}>Source repo</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What it does</h2>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>Private groups, encrypted for you</h3>
+          <p class="muted">
+            Closed group chats are encrypted automatically — you never have to
+            handle keys.
+          </p>
+        </div>
+        <div class="card">
+          <h3>No messages sent in the clear</h3>
+          <p class="muted">
+            Messages in a private group can't be sent unencrypted.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Public chat is back</h3>
+          <p class="muted">
+            Qortium brings back the open, public chat room.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Keep your history</h3>
+          <p class="muted">
+            Choose how long your chats are kept — the default is about a day, and
+            you can save them longer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Inside the app</h2>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>Its own app, not locked in</h3>
+          <p class="muted">
+            Chat isn't built into Home, so anyone can make their own version —
+            and your keys stay in Home.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Start minting from chat</h3>
+          <p class="muted">
+            Right from a group you can start minting (earning by helping run the
+            chain); Home handles your keys for you.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Get started</h2>
+      <div class="card">
+        <p class="muted">
+          Open Chat inside Qortium Home.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href={LINKS.chatRepo}>Source repo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

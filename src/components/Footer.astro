@@ -1,41 +1,18 @@
 ---
 import Logo from './Logo.astro';
-import { NAV, LINKS, withBase } from '../data/site';
+import { withBase } from '../data/site';
 ---
 <footer class="site-footer">
   <div class="container">
-    <div class="site-footer__grid">
-      <div>
-        <a href={withBase('/')} class="brand" style="margin-bottom: 0.8rem;">
-          <Logo size={24} />
-          <span>Qortium</span>
-        </a>
-        <p class="muted" style="font-size: 0.92rem; max-width: 32ch;">
-          A cleaner chain baseline with a focused QDN home. Preview-first, documented in plain language.
-        </p>
-      </div>
-      <div>
-        <h4>Site</h4>
-        <ul>
-          {NAV.map((item) => (
-            <li><a href={withBase(item.href)}>{item.label}</a></li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h4>Source</h4>
-        <ul>
-          <li><a href={LINKS.coreRepo}>qortium-core</a></li>
-          <li><a href={LINKS.homeRepo}>qortium-home</a></li>
-          <li><a href={LINKS.coreChangelog}>Changelog</a></li>
-          <li><a href={LINKS.coreDocs}>Docs</a></li>
-          <li><a href={LINKS.coreReleases}>Releases</a></li>
-        </ul>
-      </div>
+    <div class="site-footer__brand">
+      <a href={withBase('/')} class="brand">
+        <Logo size={22} />
+        <span>Qortium</span>
+      </a>
+      <span class="muted">A cleaner chain baseline with a focused QDN home.</span>
     </div>
     <div class="site-footer__bottom">
-      <span>Preview software · not security-reviewed for funds · Qortium ≠ Qortal.</span>
-      <span>Built on QDN.</span>
+      <span>Preview software — reviewed and tested, not yet formally audited. Qortium ≠ Qortal.</span>
     </div>
   </div>
 </footer>

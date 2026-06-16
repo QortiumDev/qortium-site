@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TrustMark from '../components/TrustMark.astro';
+import { TRUST, LINKS, withBase } from '../data/site';
+
+const title = 'Qortium Trust';
+const description =
+  'Account reputation the whole network agrees on, built from ratings on the chain — no biometrics, no outside service.';
+
+const highlights = [
+  {
+    h: 'Reputation the whole network agrees on',
+    p: 'Accounts rate each other on the chain, and everyone sees the same result — no biometrics, no outside services.',
+  },
+  {
+    h: 'Reputation, not rewritten history',
+    p: 'Your minting record isn’t changed; reputation just raises or lowers how much your votes and ratings count.',
+  },
+  {
+    h: 'Only abusive accounts are blocked',
+    p: 'Only accounts flagged as suspicious are blocked from minting.',
+  },
+  {
+    h: 'Hard to fake',
+    p: 'You can’t boost your own reputation with fake accounts.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Qortium Trust',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Runs in Qortium Home (desktop & Android)',
+  license: TRUST.license,
+  url: TRUST.repo,
+  description:
+    'Account reputation the whole network agrees on, built from ratings on the chain — no biometrics, no outside service.',
+  sameAs: [TRUST.repo],
+};
+---
+<BaseLayout title={title} description={description} path="/trust" jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-head">
+        <TrustMark size={44} title="Qortium Trust" />
+        <h1>Account reputation the whole network agrees on</h1>
+      </div>
+      <p class="lede measure">
+        Qortium Trust shows account reputation that the whole network agrees on —
+        built from ratings on the chain, with no biometrics and no outside service.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/downloads')}>Get Qortium Home</a>
+        <a class="btn btn--ghost" href={LINKS.trustRepo}>Source repo</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What it does</h2>
+      <div class="grid grid--2">
+        {highlights.map((c) => (
+          <div class="card">
+            <h3>{c.h}</h3>
+            <p class="muted">{c.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Inside the network</h2>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>Accounts rate each other</h3>
+          <p class="muted">Reputation is built from ratings people sign on the chain.</p>
+        </div>
+        <div class="card">
+          <h3>Trust starts with active participants</h3>
+          <p class="muted">
+            It roots in the people currently running the chain, not a fixed authority.
+          </p>
+        </div>
+        <div class="card">
+          <h3>More trust, more say</h3>
+          <p class="muted">More trusted accounts carry more weight in votes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Get started</h2>
+      <div class="card">
+        <p class="muted">
+          Open Trust inside Qortium Home (<code>{TRUST.qdnResource}</code>).
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href={LINKS.trustRepo}>Source repo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

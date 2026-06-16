@@ -38,13 +38,12 @@ export const SITE = {
 
 /** Primary navigation (label + internal path). */
 export const NAV: { label: string; href: string }[] = [
-  { label: 'Why Qortium', href: '/why' },
-  { label: 'Qortium vs Qortal', href: '/compare' },
+  { label: 'Compare', href: '/compare' },
   { label: 'Core', href: '/core' },
   { label: 'Home', href: '/home' },
+  { label: 'Chat', href: '/chat' },
+  { label: 'Trust', href: '/trust' },
   { label: 'Downloads', href: '/downloads' },
-  { label: 'Docs', href: '/docs' },
-  { label: 'FAQ', href: '/faq' },
 ];
 
 /** External repositories / sources. Keep these as the only place URLs live. */
@@ -55,6 +54,14 @@ export const LINKS = {
   homeReleases: 'https://github.com/QortiumDev/qortium-home/releases',
   coreChangelog: 'https://github.com/QortiumDev/qortium-core/blob/main/QORTIUM-CHANGELOG.md',
   coreDocs: 'https://github.com/QortiumDev/qortium-core/tree/main/docs',
+  coreChatEncryptionDoc:
+    'https://github.com/QortiumDev/qortium-core/blob/main/docs/chat/private-group-chat-encryption.md',
+  coreTrustDoc:
+    'https://github.com/QortiumDev/qortium-core/blob/main/docs/trust/account-trust-network.md',
+  coreAuraMintingDoc:
+    'https://github.com/QortiumDev/qortium-core/blob/main/docs/trust/aura-trust-tier-minting.md',
+  chatRepo: 'https://github.com/QortiumDev/qortium-chat',
+  trustRepo: 'https://github.com/QortiumDev/qortium-trust',
   qortalSite: 'https://qortal.org',
   qortalHub: 'https://github.com/Qortal/Qortal-Hub',
 } as const;
@@ -87,6 +94,42 @@ export const RELEASES = {
       'Android APK',
     ],
   },
+} as const;
+
+/**
+ * Qortium Chat is a QDN Q-App, NOT a GitHub-release download. It ships via QDN
+ * (published as a QDN APP resource), runs inside Qortium Home, and has no release
+ * binary/asset/tag to link. So it is deliberately kept OUT of RELEASES: do not
+ * give it `releases`/`asset`/`platforms` fields and do NOT use <ReleaseTag> for
+ * it. Downloads/Docs should route it to its repo + "open it inside Qortium Home",
+ * never to a GitHub releases binary.
+ */
+export const CHAT = {
+  name: 'Qortium Chat',
+  repoSlug: 'QortiumDev/qortium-chat',
+  repo: LINKS.chatRepo,
+  license: '0BSD',
+  artifact: 'QDN Q-App',
+  qdnResource: 'qdn://APP/Chat/Chat',
+  runsInside: 'Qortium Home',
+} as const;
+
+/**
+ * Qortium Trust — same shape/rules as CHAT: a first-pass QDN Q-App explorer for
+ * the on-chain account-trust network (browses trust data; can submit RATE_ACCOUNT
+ * ratings via Home, read-only in a plain browser), NOT a GitHub-release download.
+ * No <ReleaseTag>, no releases link; route to the repo + "open inside Qortium
+ * Home". The substantive subject (the trust network itself) is a Core feature —
+ * see LINKS.coreTrustDoc / LINKS.coreAuraMintingDoc.
+ */
+export const TRUST = {
+  name: 'Qortium Trust',
+  repoSlug: 'QortiumDev/qortium-trust',
+  repo: LINKS.trustRepo,
+  license: '0BSD',
+  artifact: 'QDN Q-App',
+  qdnResource: 'qdn://APP/Trust/Trust',
+  runsInside: 'Qortium Home',
 } as const;
 
 /** Previewnet facts. */

@@ -61,31 +61,27 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         }
         var embedded = window._qdnContext === 'render';
 
-        // Host display settings (theme/accent/text size) arrive as query params /
-        // injected vars only on the FIRST render. This is a multi-page site, so
-        // each nav is a full page reload — persist them and re-apply on every load
-        // so they survive navigation, not just the first page.
-
-        // Theme: an explicit manual toggle wins; else the latest host theme,
-        // remembered across navigations. Standalone (not embedded): manual only.
+        // Host display settings (theme/accent/text size) reach us as QUERY PARAMS
+        // — on the first render from Home, and on the internal links we rewrite
+        // (see Header) so they ride along through navigation. We deliberately
+        // IGNORE the injected window._qdn* vars: Core fills them with its OWN
+        // defaults (light / medium / green) on any param-less request, which would
+        // clobber the real settings on every page change. localStorage keeps the
+        // last real values as a fallback.
         var manual = normTheme(lsGet('theme'));
-        var hostTheme = normTheme(q('theme', 'qdnTheme')) || normTheme(window._qdnTheme);
-        if (hostTheme) lsSet('qdnTheme', hostTheme);
-        var theme = manual || (embedded ? (hostTheme || normTheme(lsGet('qdnTheme'))) : null);
+        var qpTheme = normTheme(q('theme', 'qdnTheme'));
+        var qpAccent = inList(q('accent', 'qdnAccent'), ACCENTS);
+        var qpSize = inList(q('textSize', 'text-size', 'qdnTextSize'), SIZES);
+        if (qpTheme) lsSet('qdnTheme', qpTheme);
+        if (qpAccent) lsSet('qdnAccent', qpAccent);
+        if (qpSize) lsSet('qdnTextSize', qpSize);
+
+        var theme = manual || qpTheme || (embedded ? normTheme(lsGet('qdnTheme')) : null);
         if (theme) root.setAttribute('data-theme', theme);
-
-        // Accent + text size: host-driven; persist the latest and re-apply on
-        // every embedded page load.
         if (embedded) {
-          var hostAccent = inList(q('accent', 'qdnAccent'), ACCENTS) || inList(window._qdnAccent, ACCENTS);
-          if (hostAccent) lsSet('qdnAccent', hostAccent);
-          var accent = hostAccent || inList(lsGet('qdnAccent'), ACCENTS);
+          var accent = qpAccent || inList(lsGet('qdnAccent'), ACCENTS);
           if (accent) root.setAttribute('data-accent', accent);
-
-          var hostSize = inList(q('textSize', 'text-size', 'qdnTextSize'), SIZES) ||
-            inList(window._qdnTextSize, SIZES);
-          if (hostSize) lsSet('qdnTextSize', hostSize);
-          var size = hostSize || inList(lsGet('qdnTextSize'), SIZES);
+          var size = qpSize || inList(lsGet('qdnTextSize'), SIZES);
           if (size) root.setAttribute('data-text-size', size);
         }
       })();

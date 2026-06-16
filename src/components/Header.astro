@@ -54,6 +54,7 @@ function isCurrent(href: string) {
         var next = effective === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
         try { localStorage.setItem('theme', next); } catch (e) {}
+        updateNavLinks();
       });
     }
 
@@ -71,6 +72,38 @@ function isCurrent(href: string) {
     function applyTheme(v) { var t = norm(v); if (t) { root.setAttribute('data-theme', t); lsSet('qdnTheme', t); } }
     function applyAccent(v) { var a = inList(v, ACCENTS); if (a) { root.setAttribute('data-accent', a); lsSet('qdnAccent', a); } }
     function applyTextSize(v) { var s = inList(v, SIZES); if (s) { root.setAttribute('data-text-size', s); lsSet('qdnTextSize', s); } }
+
+    // This is a multi-page site: every nav is a full reload, and Core injects its
+    // default display settings (light/medium/green) on any param-less request. To
+    // keep the host's theme/accent/text size across pages, carry the current
+    // settings as query params on internal links — Core honours ?theme/?accent/
+    // ?textSize. Re-run whenever the settings change.
+    function updateNavLinks() {
+      var pairs = [];
+      var t = root.getAttribute('data-theme');
+      var a = root.getAttribute('data-accent');
+      var s = root.getAttribute('data-text-size');
+      if (t) pairs.push('theme=' + encodeURIComponent(t));
+      if (a) pairs.push('accent=' + encodeURIComponent(a));
+      if (s) pairs.push('textSize=' + encodeURIComponent(s));
+      var qs = pairs.join('&');
+      var links = document.querySelectorAll('a[href^="./"]');
+      for (var i = 0; i < links.length; i++) {
+        var el = links[i];
+        var base = el.getAttribute('data-href');
+        if (base == null) { base = el.getAttribute('href'); el.setAttribute('data-href', base); }
+        var hashIdx = base.indexOf('#');
+        var hash = hashIdx >= 0 ? base.slice(hashIdx) : '';
+        var pathPart = (hashIdx >= 0 ? base.slice(0, hashIdx) : base).split('?')[0];
+        if (pathPart !== './' && !/\.html$/.test(pathPart)) continue; // page links only
+        el.setAttribute('href', pathPart + (qs ? '?' + qs : '') + hash);
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateNavLinks);
+    } else {
+      updateNavLinks();
+    }
 
     window.addEventListener('message', function (event) {
       var d = event.data;
@@ -91,6 +124,7 @@ function isCurrent(href: string) {
           applyTextSize(d.textSize != null ? d.textSize : d.qdnTextSize);
           break;
       }
+      updateNavLinks();
     });
   })();
 </script>

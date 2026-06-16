@@ -65,9 +65,12 @@ function isCurrent(href: string) {
       v = typeof v === 'string' ? v.trim().toLowerCase() : '';
       return list.indexOf(v) >= 0 ? v : null;
     }
-    function applyTheme(v) { var t = norm(v); if (t) root.setAttribute('data-theme', t); }
-    function applyAccent(v) { var a = inList(v, ACCENTS); if (a) root.setAttribute('data-accent', a); }
-    function applyTextSize(v) { var s = inList(v, SIZES); if (s) root.setAttribute('data-text-size', s); }
+    // Persist host changes too, so they survive this multi-page site's full-page
+    // navigations (the pre-paint script in BaseLayout re-applies them on load).
+    function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    function applyTheme(v) { var t = norm(v); if (t) { root.setAttribute('data-theme', t); lsSet('qdnTheme', t); } }
+    function applyAccent(v) { var a = inList(v, ACCENTS); if (a) { root.setAttribute('data-accent', a); lsSet('qdnAccent', a); } }
+    function applyTextSize(v) { var s = inList(v, SIZES); if (s) { root.setAttribute('data-text-size', s); lsSet('qdnTextSize', s); } }
 
     window.addEventListener('message', function (event) {
       var d = event.data;

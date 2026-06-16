@@ -47,6 +47,8 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           v = typeof v === 'string' ? v.trim().toLowerCase() : '';
           return list.indexOf(v) >= 0 ? v : null;
         }
+        function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+        function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
         var qp = null;
         try { qp = new URLSearchParams(location.search); } catch (e) {}
         function q() {
@@ -59,24 +61,32 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         }
         var embedded = window._qdnContext === 'render';
 
-        // Theme: saved manual choice first (standalone authority + survives reload);
-        // else host theme when embedded; else unset → system handles it.
-        var manual = null;
-        try { manual = normTheme(localStorage.getItem('theme')); } catch (e) {}
-        if (manual) {
-          root.setAttribute('data-theme', manual);
-        } else if (embedded) {
-          var ht = normTheme(q('theme', 'qdnTheme')) || normTheme(window._qdnTheme);
-          if (ht) root.setAttribute('data-theme', ht);
-        }
+        // Host display settings (theme/accent/text size) arrive as query params /
+        // injected vars only on the FIRST render. This is a multi-page site, so
+        // each nav is a full page reload — persist them and re-apply on every load
+        // so they survive navigation, not just the first page.
 
-        // Accent + text size: host-driven, applied only when embedded.
+        // Theme: an explicit manual toggle wins; else the latest host theme,
+        // remembered across navigations. Standalone (not embedded): manual only.
+        var manual = normTheme(lsGet('theme'));
+        var hostTheme = normTheme(q('theme', 'qdnTheme')) || normTheme(window._qdnTheme);
+        if (hostTheme) lsSet('qdnTheme', hostTheme);
+        var theme = manual || (embedded ? (hostTheme || normTheme(lsGet('qdnTheme'))) : null);
+        if (theme) root.setAttribute('data-theme', theme);
+
+        // Accent + text size: host-driven; persist the latest and re-apply on
+        // every embedded page load.
         if (embedded) {
-          var ac = inList(q('accent', 'qdnAccent'), ACCENTS) || inList(window._qdnAccent, ACCENTS);
-          if (ac) root.setAttribute('data-accent', ac);
-          var ts = inList(q('textSize', 'text-size', 'qdnTextSize'), SIZES) ||
+          var hostAccent = inList(q('accent', 'qdnAccent'), ACCENTS) || inList(window._qdnAccent, ACCENTS);
+          if (hostAccent) lsSet('qdnAccent', hostAccent);
+          var accent = hostAccent || inList(lsGet('qdnAccent'), ACCENTS);
+          if (accent) root.setAttribute('data-accent', accent);
+
+          var hostSize = inList(q('textSize', 'text-size', 'qdnTextSize'), SIZES) ||
             inList(window._qdnTextSize, SIZES);
-          if (ts) root.setAttribute('data-text-size', ts);
+          if (hostSize) lsSet('qdnTextSize', hostSize);
+          var size = hostSize || inList(lsGet('qdnTextSize'), SIZES);
+          if (size) root.setAttribute('data-text-size', size);
         }
       })();
     </script>

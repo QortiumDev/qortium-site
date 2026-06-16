@@ -9,7 +9,10 @@ import { fileURLToPath } from 'node:url';
 // with the QORTIUM_SITE_ prefix.
 const DEFAULT_NODE_API_URL = 'http://127.0.0.1:24891';
 const DEFAULT_NAME = 'Qortium';
-const DEFAULT_IDENTIFIER = 'Qortium';
+// Publish as the name's DEFAULT website (served at qdn://WEBSITE/Qortium). A
+// non-default identifier breaks multi-page navigation, because Core's renderer
+// only re-attaches ?identifier to asset tags, not to <a> links.
+const DEFAULT_IDENTIFIER = 'default';
 const DEFAULT_TITLE = 'Qortium';
 const DEFAULT_SERVICE = 'WEBSITE';
 const DEFAULT_DESCRIPTION = 'Qortium — a cleaner chain baseline with a focused QDN home.';

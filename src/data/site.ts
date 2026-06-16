@@ -36,7 +36,7 @@ export const SITE = {
 } as const;
 
 /** Public gateway path used only for absolute meta URLs (canonical/OG/JSON-LD). */
-const PUBLIC_PATH = '/Qortium';
+const PUBLIC_PATH = '/Qortium/Qortium';
 
 /**
  * Absolute URL for canonical / Open Graph / JSON-LD meta tags only. In-page

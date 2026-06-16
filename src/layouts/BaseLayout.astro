@@ -68,7 +68,6 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         // defaults (light / medium / green) on any param-less request, which would
         // clobber the real settings on every page change. localStorage keeps the
         // last real values as a fallback.
-        var manual = normTheme(lsGet('theme'));
         var qpTheme = normTheme(q('theme', 'qdnTheme'));
         var qpAccent = inList(q('accent', 'qdnAccent'), ACCENTS);
         var qpSize = inList(q('textSize', 'text-size', 'qdnTextSize'), SIZES);
@@ -76,13 +75,23 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         if (qpAccent) lsSet('qdnAccent', qpAccent);
         if (qpSize) lsSet('qdnTextSize', qpSize);
 
-        var theme = manual || qpTheme || (embedded ? normTheme(lsGet('qdnTheme')) : null);
-        if (theme) root.setAttribute('data-theme', theme);
         if (embedded) {
+          // Embedded in Home/Hub: the HOST owns theme, accent, and text size and
+          // re-applies them on every page load. Follow the host for all three (and
+          // hide our standalone theme toggle via [data-embedded]) — a local
+          // override would just flip back to the host's value on the next page.
+          root.setAttribute('data-embedded', '');
+          var theme = qpTheme || normTheme(lsGet('qdnTheme'));
+          if (theme) root.setAttribute('data-theme', theme);
           var accent = qpAccent || inList(lsGet('qdnAccent'), ACCENTS);
           if (accent) root.setAttribute('data-accent', accent);
           var size = qpSize || inList(lsGet('qdnTextSize'), SIZES);
           if (size) root.setAttribute('data-text-size', size);
+        } else {
+          // Standalone browser: the manual toggle is the only authority; otherwise
+          // the OS preference applies via CSS.
+          var manual = normTheme(lsGet('theme'));
+          if (manual) root.setAttribute('data-theme', manual);
         }
       })();
     </script>

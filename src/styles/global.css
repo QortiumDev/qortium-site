@@ -275,6 +275,8 @@ td strong { color: var(--ink); }
   transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
 .theme-toggle:hover { color: var(--ink); border-color: var(--ink-soft); background: var(--bg-soft); }
+/* Embedded in Home/Hub the host controls the theme, so hide the local toggle. */
+:root[data-embedded] .theme-toggle { display: none; }
 .theme-toggle svg { width: 18px; height: 18px; display: block; }
 /* Show the icon for the CURRENT theme: moon in light, sun in dark — covers both
    the system default and an explicit override. */

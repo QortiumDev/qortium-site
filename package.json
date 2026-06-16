@@ -9,7 +9,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "qdn:publish": "node scripts/publish-qdn.mjs",
+    "qdn:publish:build": "astro build && node scripts/publish-qdn.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.1.0",

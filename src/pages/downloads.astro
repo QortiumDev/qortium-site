@@ -5,7 +5,7 @@ import HomeMark from '../components/HomeMark.astro';
 import ChatMark from '../components/ChatMark.astro';
 import TrustMark from '../components/TrustMark.astro';
 import ReleaseTag from '../components/ReleaseTag.astro';
-import { withBase, RELEASES, CHAT, TRUST } from '../data/site';
+import { withBase, RELEASES, CHAT, TRUST, absUrl } from '../data/site';
 
 const title = 'Qortium downloads';
 const description = 'Qortium Core and Home preview releases.';
@@ -28,7 +28,7 @@ const jsonLd = {
   '@type': 'CollectionPage',
   name: 'Qortium downloads',
   description,
-  url: 'https://qortal.link' + withBase('/downloads'),
+  url: absUrl('/downloads'),
 };
 ---
 <BaseLayout title={title} description={description} path="/downloads" jsonLd={jsonLd}>

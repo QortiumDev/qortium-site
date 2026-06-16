@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HomeMark from '../components/HomeMark.astro';
-import { withBase, RELEASES, LINKS, SITE } from '../data/site';
+import { withBase, RELEASES, LINKS, absUrl } from '../data/site';
 
 const title = 'Qortium Home';
 const description = 'Your wallet, the network, and decentralized content in one app.';
@@ -20,7 +20,7 @@ const jsonLd = {
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Linux, macOS, Windows, Android',
   license: RELEASES.home.license,
-  url: SITE.origin + withBase('/home'),
+  url: absUrl('/home'),
   description: 'Your wallet, the network, and decentralized content in one app.',
   sameAs: [LINKS.homeRepo],
 };

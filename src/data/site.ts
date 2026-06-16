@@ -4,26 +4,25 @@
    links in pages.
    ========================================================================== */
 
-/** Astro injects the configured `base` ("/Qortium/") here at build time. */
-const BASE = import.meta.env.BASE_URL; // e.g. "/Qortium/"
-
 /**
- * Build a base-aware internal link. The site is served from a QDN sub-path
- * (https://qortal.link/Qortium), so internal links MUST go through this — a
- * root-absolute "/why" would break on the gateway.
- *   withBase('/')      -> "/Qortium/"
- *   withBase('/why')   -> "/Qortium/why"
- *   withBase('img.svg')-> "/Qortium/img.svg"
+ * Build a RELATIVE in-page link/asset path. The site is published to QDN and
+ * shown through the Core render endpoint, which injects a <base href> at the
+ * resource root and resolves only relative paths — a root-absolute "/foo" would
+ * escape the resource. The build emits flat files (compare.html, core.html, …)
+ * so every page is at the resource root and these resolve the same from any page.
+ *   withBase('/')            -> "./"
+ *   withBase('/compare')     -> "./compare.html"
+ *   withBase('/favicon.svg') -> "./favicon.svg"
+ * For absolute canonical/OG/JSON-LD URLs use absUrl() instead.
  */
 export function withBase(path = '/'): string {
-  const b = BASE.endsWith('/') ? BASE.slice(0, -1) : BASE;
-  if (!path || path === '/') return b + '/';
-  let p = path.startsWith('/') ? path : '/' + path;
-  // Route links get a trailing slash (directory output: /compare/ ->
-  // compare/index.html). Asset paths with a file extension are left as-is.
+  if (!path || path === '/') return './';
+  let p = path.startsWith('/') ? path.slice(1) : path;
+  p = p.replace(/\/+$/, '');
+  // A route (no file extension) maps to a flat .html file; assets are left as-is.
   const lastSeg = p.split('/').pop() ?? '';
-  if (!lastSeg.includes('.') && !p.endsWith('/')) p += '/';
-  return b + p;
+  if (!lastSeg.includes('.')) p += '.html';
+  return './' + p;
 }
 
 export const SITE = {
@@ -31,10 +30,24 @@ export const SITE = {
   tagline: 'A cleaner chain baseline with a focused QDN home',
   description:
     'Qortium is a stripped-down fork of Qortal Core with a companion app for wallets, nodes, and QDN browsing. Built for preview testing, chain experimentation, and an explicit roadmap.',
-  /** Gateway origin; canonical/OG URLs are origin + base + path. */
+  /** Gateway origin; canonical/OG URLs are origin + public path + path. */
   origin: 'https://qortal.link',
-  ogImage: '/og-default.png', // relative to base
+  ogImage: '/og-default.png',
 } as const;
+
+/** Public gateway path used only for absolute meta URLs (canonical/OG/JSON-LD). */
+const PUBLIC_PATH = '/Qortium';
+
+/**
+ * Absolute URL for canonical / Open Graph / JSON-LD meta tags only. In-page
+ * links and assets use the relative withBase() instead.
+ *   absUrl('/')        -> "https://qortal.link/Qortium"
+ *   absUrl('/compare') -> "https://qortal.link/Qortium/compare"
+ */
+export function absUrl(path = '/'): string {
+  const p = !path || path === '/' ? '' : path.startsWith('/') ? path : '/' + path;
+  return SITE.origin + PUBLIC_PATH + p;
+}
 
 /** Primary navigation (label + internal path). */
 export const NAV: { label: string; href: string }[] = [

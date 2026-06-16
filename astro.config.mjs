@@ -3,22 +3,23 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
-// The site is published to QDN and served under a sub-path, e.g.
-//   https://qortal.link/Qortium
-// so `site` is the gateway origin and `base` is the QDN resource path.
-// Because the app lives under a sub-path, NEVER use root-absolute internal
-// links ("/why"). Always route links and assets through the `withBase()`
-// helper in src/data/site.ts so they resolve correctly on QDN.
+// The site is published to QDN and shown through the Core render endpoint
+// (/render/WEBSITE/<name>...). That renderer injects a <base href> at the
+// resource root and only resolves RELATIVE asset/link paths — any root-absolute
+// "/foo" path escapes the resource and 404s. So:
+//   - no `base` prefix,
+//   - `assetsPrefix: '.'` so bundled assets are referenced relatively (./_astro/…),
+//   - `format: 'file'` so every page is a flat file at the resource root
+//     (compare.html, core.html, …) and relative links resolve the same from any page.
+// All internal links/assets go through `withBase()` in src/data/site.ts, which
+// returns relative paths; canonical/OG/JSON-LD use `absUrl()` for absolute URLs.
 export default defineConfig({
   site: 'https://qortal.link',
-  base: '/Qortium',
-  // Directory output + trailing-slash links: /Qortium/compare/ maps directly to
-  // compare/index.html with no redirect, which is the most robust form for
-  // static hosts and the QDN renderer alike.
-  trailingSlash: 'always',
+  trailingSlash: 'ignore',
   integrations: [mdx(), sitemap()],
   build: {
     inlineStylesheets: 'auto',
-    format: 'directory',
+    format: 'file',
+    assetsPrefix: '.',
   },
 });

@@ -88,16 +88,20 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           var size = qpSize || inList(lsGet('qdnTextSize'), SIZES);
           if (size) root.setAttribute('data-text-size', size);
         } else {
-          // Standalone browser: the manual toggle is the only authority; otherwise
-          // the OS preference applies via CSS.
+          // Standalone browser or public gateway: the manual toggle is the only
+          // theme authority (else the OS preference applies via CSS), and the
+          // in-page color picker's saved accent (if any) applies on top.
           var manual = normTheme(lsGet('theme'));
           if (manual) root.setAttribute('data-theme', manual);
+          var manualAccent = inList(lsGet('accent'), ACCENTS);
+          if (manualAccent) root.setAttribute('data-accent', manualAccent);
         }
       })();
     </script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <meta name="theme-color" content="#4f5bd5" />
 
@@ -162,6 +166,115 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
                 });
             })
             .catch(function () {});
+        });
+      })();
+    </script>
+
+    <!-- External-link + qdn:// handling. Inside Home/Hub (_qdnContext === "render")
+         external http(s) links are blocked by the host, so we intercept clicks and
+         show a copy-the-URL popup; qdn:// references become clickable new-tab links.
+         In a plain browser or public gateway external links just open in a new tab. -->
+    <div class="ext-modal" id="ext-modal" hidden role="dialog" aria-modal="true" aria-labelledby="ext-modal-title">
+      <div class="ext-modal__backdrop" data-ext-close></div>
+      <div class="ext-modal__panel">
+        <button type="button" class="ext-modal__x" data-ext-close aria-label="Close">&times;</button>
+        <p class="ext-modal__title" id="ext-modal-title">Open this link in your browser</p>
+        <p class="ext-modal__hint muted">External links can&rsquo;t open from inside the app. Copy the address and paste it into your web browser.</p>
+        <code class="ext-modal__url" id="ext-modal-url"></code>
+        <div class="ext-modal__actions">
+          <button type="button" class="btn btn--primary" id="ext-modal-copy">Copy link</button>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var inApp = window._qdnContext === 'render';
+
+        // --- qdn:// references -> clickable new-tab links (inside Home only) ---
+        // Home auto-intercepts <a href="qdn://…"> clicks and opens them in a new
+        // in-app tab; a plain browser/gateway keeps the inert <code> rendering.
+        if (inApp) {
+          var refs = document.querySelectorAll('code.qdn-ref[data-qdn]');
+          Array.prototype.forEach.call(refs, function (code) {
+            var res = code.getAttribute('data-qdn');
+            if (!res) return;
+            var a = document.createElement('a');
+            a.className = 'qdn-link';
+            a.href = res;
+            a.rel = 'noopener noreferrer';
+            a.setAttribute('data-qdn', res);
+            a.textContent = code.textContent;
+            code.parentNode.replaceChild(a, code);
+          });
+        }
+
+        // --- external http(s) links ---
+        var modal = document.getElementById('ext-modal');
+        var urlEl = document.getElementById('ext-modal-url');
+        var copyBtn = document.getElementById('ext-modal-copy');
+        var lastFocus = null;
+
+        function openModal(url) {
+          if (!modal) return;
+          urlEl.textContent = url;
+          if (copyBtn) copyBtn.textContent = 'Copy link';
+          modal.hidden = false;
+          lastFocus = document.activeElement;
+          if (copyBtn) copyBtn.focus();
+        }
+        function closeModal() {
+          if (!modal) return;
+          modal.hidden = true;
+          if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+        function copyUrl() {
+          var url = urlEl ? urlEl.textContent : '';
+          if (!url) return;
+          function ok() { if (copyBtn) copyBtn.textContent = 'Copied!'; }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(ok, fallback);
+          } else {
+            fallback();
+          }
+          function fallback() {
+            try {
+              var ta = document.createElement('textarea');
+              ta.value = url;
+              ta.setAttribute('readonly', '');
+              ta.style.position = 'absolute';
+              ta.style.left = '-9999px';
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand('copy');
+              document.body.removeChild(ta);
+              ok();
+            } catch (e) {
+              if (copyBtn) copyBtn.textContent = 'Press Ctrl+C';
+            }
+          }
+        }
+        if (copyBtn) copyBtn.addEventListener('click', copyUrl);
+        if (modal) {
+          Array.prototype.forEach.call(modal.querySelectorAll('[data-ext-close]'), function (el) {
+            el.addEventListener('click', closeModal);
+          });
+          document.addEventListener('keydown', function (e) {
+            if (!modal.hidden && (e.key === 'Escape' || e.key === 'Esc')) closeModal();
+          });
+        }
+
+        var links = document.querySelectorAll('a[href^="http://"], a[href^="https://"]');
+        Array.prototype.forEach.call(links, function (a) {
+          if (inApp) {
+            a.addEventListener('click', function (e) {
+              e.preventDefault();
+              openModal(a.href);
+            });
+          } else {
+            a.target = '_blank';
+            a.rel = a.rel ? a.rel + ' noopener noreferrer' : 'noopener noreferrer';
+          }
         });
       })();
     </script>

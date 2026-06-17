@@ -49,6 +49,24 @@ export function absUrl(path = '/'): string {
   return SITE.origin + PUBLIC_PATH + p;
 }
 
+/**
+ * Accent colors offered by the in-page color picker. Ids match Qortium Home's
+ * accent option ids, and the swatch hexes mirror Home's light-theme accent
+ * values (same values used in global.css for :root[data-accent="…"]), so a
+ * standalone/gateway visitor's choice lines up with the embedded experience.
+ */
+export const ACCENTS: { id: string; label: string; hex: string }[] = [
+  { id: 'green', label: 'Green', hex: '#21824a' },
+  { id: 'blue', label: 'Blue', hex: '#2a79f3' },
+  { id: 'orange', label: 'Orange', hex: '#de8b23' },
+  { id: 'purple', label: 'Purple', hex: '#7b44da' },
+  { id: 'red', label: 'Red', hex: '#d53e3e' },
+  { id: 'teal', label: 'Teal', hex: '#17a398' },
+  { id: 'cyan', label: 'Cyan', hex: '#1298d8' },
+  { id: 'pink', label: 'Pink', hex: '#d43f86' },
+  { id: 'yellow', label: 'Yellow', hex: '#d6a828' },
+];
+
 /** Primary navigation (label + internal path). */
 export const NAV: { label: string; href: string }[] = [
   { label: 'Compare', href: '/compare' },

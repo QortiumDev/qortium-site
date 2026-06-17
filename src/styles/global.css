@@ -72,8 +72,8 @@
   --text-scale: 1;
 
   /* Rhythm */
-  --maxw: 1080px;
-  --maxw-prose: 720px;
+  --maxw: 1280px;
+  --maxw-prose: 760px;
   --radius: 12px;
   --radius-sm: 8px;
   --shadow-sm: 0 1px 2px rgba(20, 21, 26, 0.04), 0 1px 3px rgba(20, 21, 26, 0.06);
@@ -158,6 +158,22 @@
 :root[data-theme="dark"][data-accent="cyan"] { --accent: #88d2ff; --accent-strong: #79c5f5; --accent-soft: rgb(136 210 255 / 12%); --accent-ink: #88d2ff; }
 :root[data-theme="dark"][data-accent="pink"] { --accent: #f8a7cf; --accent-strong: #f58cbf; --accent-soft: rgb(248 167 207 / 12%); --accent-ink: #f8a7cf; }
 :root[data-theme="dark"][data-accent="yellow"] { --accent: #f4cb67; --accent-strong: #edbf53; --accent-soft: rgb(244 203 103 / 12%); --accent-ink: #f4cb67; }
+/* System-dark (OS prefers dark, no explicit toggle) + a picked accent: mirror the
+   dark accent values so --accent-ink stays light enough for AA contrast. Without
+   this the light [data-accent] rules above would win the specificity tie over the
+   system-dark base tokens and put a dark accent ink on a near-black background.
+   Uses the file's :root:not([data-theme="light"]) convention (specificity 0,3,0). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"])[data-accent="green"] { --accent: #87d99b; --accent-strong: #6fcd87; --accent-soft: rgb(135 217 155 / 12%); --accent-ink: #87d99b; }
+  :root:not([data-theme="light"])[data-accent="blue"] { --accent: #8abefe; --accent-strong: #7aaef7; --accent-soft: rgb(138 190 254 / 12%); --accent-ink: #8abefe; }
+  :root:not([data-theme="light"])[data-accent="orange"] { --accent: #f1b16d; --accent-strong: #eaa257; --accent-soft: rgb(241 177 109 / 12%); --accent-ink: #f1b16d; }
+  :root:not([data-theme="light"])[data-accent="purple"] { --accent: #caa2ff; --accent-strong: #b58dff; --accent-soft: rgb(202 162 255 / 12%); --accent-ink: #caa2ff; }
+  :root:not([data-theme="light"])[data-accent="red"] { --accent: #f19a9a; --accent-strong: #dd7a7a; --accent-soft: rgb(241 154 154 / 12%); --accent-ink: #f19a9a; }
+  :root:not([data-theme="light"])[data-accent="teal"] { --accent: #6ed9d1; --accent-strong: #5fc3bc; --accent-soft: rgb(110 217 209 / 12%); --accent-ink: #6ed9d1; }
+  :root:not([data-theme="light"])[data-accent="cyan"] { --accent: #88d2ff; --accent-strong: #79c5f5; --accent-soft: rgb(136 210 255 / 12%); --accent-ink: #88d2ff; }
+  :root:not([data-theme="light"])[data-accent="pink"] { --accent: #f8a7cf; --accent-strong: #f58cbf; --accent-soft: rgb(248 167 207 / 12%); --accent-ink: #f8a7cf; }
+  :root:not([data-theme="light"])[data-accent="yellow"] { --accent: #f4cb67; --accent-strong: #edbf53; --accent-soft: rgb(244 203 103 / 12%); --accent-ink: #f4cb67; }
+}
 
 /* ----- reset ----- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -232,7 +248,28 @@ code, kbd, pre { font-family: var(--font-mono); font-size: 0.92em; }
 .card--link:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .card h3 { margin-bottom: 0.35rem; }
 .card p:last-child { margin-bottom: 0; }
-.card__mark { display: inline-flex; color: var(--accent); margin-bottom: 0.7rem; }
+.card__mark {
+  display: inline-flex; color: var(--accent); margin-bottom: 0.7rem;
+  transition: color 0.18s ease, filter 0.22s ease, transform 0.22s ease;
+}
+.card__mark svg { display: block; }
+/* App marks feel alive: a soft accent glow that intensifies on hover/press. */
+.card--link:hover .card__mark,
+.card--link:focus-visible .card__mark {
+  color: var(--accent-strong);
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--accent) 55%, transparent));
+  transform: scale(1.06);
+}
+.card--link:active .card__mark { transform: scale(0.97); }
+
+/* Tile head — icon sits inline with the title (used on the home product tiles
+   and the downloads tiles). Bottom-aligned by default so the title baseline
+   lines up with the foot of the icon; --top variant aligns to the first line. */
+.tile__head { display: flex; align-items: flex-end; gap: 0.7rem; margin-bottom: 0.5rem; }
+.tile__head .card__mark { margin-bottom: 0; }
+.tile__head h3 { margin: 0; line-height: 1.05; }
+.tile__head--top { align-items: flex-start; }
+.tile__head--top h3 { line-height: 1.18; }
 
 /* ----- badges ----- */
 /* One small inline pill, used for the live release-version tag. */
@@ -294,8 +331,15 @@ td strong { color: var(--ink); }
 .hero__grid { display: grid; gap: 2.5rem; align-items: center; }
 @media (min-width: 880px) { .hero__grid { grid-template-columns: 1.05fr 0.95fr; gap: 3rem; } }
 .hero h1 { margin-bottom: 0.6rem; }
-.hero-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem; }
-.hero-head svg { color: var(--accent); flex: none; }
+/* Icon top-aligned to the heading so it tracks the FIRST line when the title
+   wraps to two (not vertically centered across both). A hair of margin-top
+   optically seats the icon against the cap height of that first line. */
+.hero-head { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 0.6rem; }
+.hero-head svg {
+  color: var(--accent); flex: none; margin-top: 0.12em;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--accent) 32%, transparent));
+  transition: filter 0.22s ease, transform 0.22s ease;
+}
 .hero-head h1 { margin: 0; }
 .hero .lede { margin-bottom: 1.6rem; }
 /* Same card geometry as everything else, so the hero mark reads as one object. */
@@ -303,6 +347,34 @@ td strong { color: var(--ink); }
   display: grid; place-items: center; width: min(340px, 78vw); aspect-ratio: 1;
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--bg-soft); box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.hero__frame:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); box-shadow: var(--shadow-md); }
+
+/* The big house mark: reversed two-tone fill that flips with the theme — a white
+   line over a black body in light mode, a black line over a white body in dark.
+   It rotates slowly and breathes an accent glow, both lifting on hover. */
+.hero-mark { transform-origin: 50% 50%; will-change: transform, filter;
+  animation: hero-spin 42s linear infinite, hero-glow 5.5s ease-in-out infinite; }
+.hero-mark .hero-mark__fill { fill: #14151a; }
+.hero-mark .hero-mark__line { fill: #ffffff; }
+:root[data-theme="dark"] .hero-mark .hero-mark__fill { fill: #ffffff; }
+:root[data-theme="dark"] .hero-mark .hero-mark__line { fill: #14151a; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero-mark .hero-mark__fill { fill: #ffffff; }
+  :root:not([data-theme="light"]) .hero-mark .hero-mark__line { fill: #14151a; }
+}
+.hero__frame:hover .hero-mark { animation-duration: 10s, 2.6s; }
+@keyframes hero-spin { to { transform: rotate(360deg); } }
+@keyframes hero-glow {
+  0%, 100% { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 30%, transparent)); }
+  50% { filter: drop-shadow(0 0 17px color-mix(in srgb, var(--accent) 60%, transparent)); }
+}
+/* The global reduced-motion reset only zeroes animation-duration (not the
+   infinite iteration count), which would leave the spin churning. Stop it
+   outright here — animation-name:none has no competing !important to fight. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-mark { animation: none; }
 }
 
 /* ----- footer ----- */
@@ -310,6 +382,80 @@ td strong { color: var(--ink); }
 .site-footer__brand { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.8rem; }
 .site-footer__brand .muted { font-size: 0.92rem; }
 .site-footer__bottom { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--ink-muted); font-size: 0.88rem; }
+
+/* ----- accent color picker ----- */
+/* Sits to the right of the theme toggle. Lets a standalone/gateway visitor pick
+   one of Home's accent colors; hidden when embedded, where the host owns accent. */
+.color-picker { position: relative; display: inline-flex; margin-left: 0.4rem; }
+:root[data-embedded] .color-picker { display: none; }
+.color-picker__toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; flex: none; padding: 0;
+  background: transparent; border: 1px solid var(--line-strong);
+  border-radius: 8px; color: var(--ink-soft); cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.color-picker__toggle:hover { border-color: var(--ink-soft); background: var(--bg-soft); }
+.color-picker__dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 1px var(--line-strong) inset;
+}
+.color-picker__menu {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+  padding: 10px; z-index: 60;
+  background: var(--bg); border: 1px solid var(--line);
+  border-radius: 10px; box-shadow: var(--shadow-md);
+}
+.color-picker__menu[hidden] { display: none; }
+.color-picker__swatch {
+  width: 26px; height: 26px; padding: 0; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  box-shadow: 0 0 0 1px var(--line-strong) inset;
+  transition: transform 0.12s ease;
+}
+.color-picker__swatch:hover { transform: scale(1.12); }
+.color-picker__swatch[aria-checked="true"] { border-color: var(--ink); }
+.color-picker__swatch--default {
+  background:
+    conic-gradient(#21824a, #2a79f3, #7b44da, #d53e3e, #de8b23, #21824a);
+}
+
+/* ----- external-link modal (shown only inside Home/Hub, where external http
+   links can't open) — surfaces the URL with a one-tap copy button ----- */
+.ext-modal { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 1rem; }
+.ext-modal[hidden] { display: none; }
+.ext-modal__backdrop { position: absolute; inset: 0; background: rgba(8, 9, 12, 0.55); backdrop-filter: blur(2px); }
+.ext-modal__panel {
+  position: relative; width: min(440px, 100%);
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-md); padding: 1.4rem 1.5rem;
+}
+.ext-modal__x {
+  position: absolute; top: 0.55rem; right: 0.6rem; width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; line-height: 1; color: var(--ink-muted);
+  background: transparent; border: 0; border-radius: 8px; cursor: pointer;
+}
+.ext-modal__x:hover { background: var(--bg-soft); color: var(--ink); }
+.ext-modal__title { font-weight: 680; font-size: 1.05rem; margin: 0 1.5rem 0.35rem 0; color: var(--ink); }
+.ext-modal__hint { font-size: 0.9rem; margin: 0 0 0.9rem; }
+.ext-modal__url {
+  display: block; word-break: break-all; font-family: var(--font-mono); font-size: 0.86rem;
+  background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 0.6em 0.7em; margin-bottom: 1rem; color: var(--ink-soft);
+}
+.ext-modal__actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+/* ----- qdn:// reference — inline code by default; the BaseLayout enhancer turns
+   it into a clickable new-tab link when rendered inside Qortium Home ----- */
+a.qdn-link {
+  font-family: var(--font-mono); font-size: 0.92em; text-decoration: none;
+  color: var(--accent-ink); background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  padding: 0.12em 0.45em; border-radius: 6px;
+}
+a.qdn-link:hover { border-color: var(--accent); color: var(--accent-strong); text-decoration: underline; }
 
 /* ----- misc utilities ----- */
 .skip-link { position: absolute; left: -9999px; top: 0; background: var(--accent); color: #fff; padding: 0.6em 1em; border-radius: 0 0 8px 0; z-index: 100; }

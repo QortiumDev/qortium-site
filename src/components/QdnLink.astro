@@ -1,0 +1,10 @@
+---
+// A qdn:// resource reference. Renders as inline <code> by default (correct for a
+// plain browser or public gateway, where qdn:// can't resolve). When the page is
+// shown inside Qortium Home (_qdnContext === "render"), the enhancer in
+// BaseLayout swaps it for a clickable <a href="qdn://…"> that Home intercepts and
+// opens in a new tab. The data-qdn attribute is what the enhancer keys off.
+interface Props { resource: string; class?: string; }
+const { resource, class: cls = "" } = Astro.props;
+---
+<code class={`qdn-ref ${cls}`.trim()} data-qdn={resource}>{resource}</code>

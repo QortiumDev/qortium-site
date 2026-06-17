@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TrustMark from '../components/TrustMark.astro';
+import QdnLink from '../components/QdnLink.astro';
 import { TRUST, LINKS, withBase } from '../data/site';
 
 const title = 'Qortium Trust';
@@ -98,7 +99,7 @@ const jsonLd = {
       <h2>Get started</h2>
       <div class="card">
         <p class="muted">
-          Open Trust inside Qortium Home (<code>{TRUST.qdnResource}</code>).
+          Open Trust inside Qortium Home (<QdnLink resource={TRUST.qdnResource} />).
         </p>
         <div class="btn-row">
           <a class="btn btn--ghost" href={LINKS.trustRepo}>Source repo</a>

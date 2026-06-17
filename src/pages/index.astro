@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Logo from '../components/Logo.astro';
+import HeroMark from '../components/HeroMark.astro';
 import CoreMark from '../components/CoreMark.astro';
 import HomeMark from '../components/HomeMark.astro';
 import ChatMark from '../components/ChatMark.astro';
@@ -60,8 +60,8 @@ const jsonLd = [
           <a class="btn btn--ghost" href={withBase('/compare')}>Compare</a>
         </div>
       </div>
-      <div class="hero__frame" aria-hidden="true">
-        <Logo size={150} class="hero-mark" />
+      <div class="hero__frame">
+        <HeroMark size={168} />
       </div>
     </div>
   </section>
@@ -106,23 +106,31 @@ const jsonLd = [
       <h2>Core, Home, Chat, Trust</h2>
       <div class="grid grid--4">
         <a class="card card--link" href={withBase('/core')}>
-          <span class="card__mark"><CoreMark size={40} title="Qortium Core" /></span>
-          <h3>Qortium Core</h3>
+          <div class="tile__head">
+            <span class="card__mark"><CoreMark size={40} title="Qortium Core" /></span>
+            <h3>Qortium Core</h3>
+          </div>
           <p class="muted">The network software, the chain itself, open source.</p>
         </a>
         <a class="card card--link" href={withBase('/home')}>
-          <span class="card__mark"><HomeMark size={40} title="Qortium Home" /></span>
-          <h3>Qortium Home</h3>
+          <div class="tile__head">
+            <span class="card__mark"><HomeMark size={40} title="Qortium Home" /></span>
+            <h3>Qortium Home</h3>
+          </div>
           <p class="muted">A desktop and Android app for your wallet, the network, and content.</p>
         </a>
         <a class="card card--link" href={withBase('/chat')}>
-          <span class="card__mark"><ChatMark size={40} title="Qortium Chat" /></span>
-          <h3>Qortium Chat</h3>
+          <div class="tile__head">
+            <span class="card__mark"><ChatMark size={40} title="Qortium Chat" /></span>
+            <h3>Qortium Chat</h3>
+          </div>
           <p class="muted">Private and public group chat that runs inside Home.</p>
         </a>
         <a class="card card--link" href={withBase('/trust')}>
-          <span class="card__mark"><TrustMark size={40} title="Qortium Trust" /></span>
-          <h3>Qortium Trust</h3>
+          <div class="tile__head">
+            <span class="card__mark"><TrustMark size={40} title="Qortium Trust" /></span>
+            <h3>Qortium Trust</h3>
+          </div>
           <p class="muted">See and build account reputation, inside Home.</p>
         </a>
       </div>

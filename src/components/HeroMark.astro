@@ -1,0 +1,15 @@
+---
+// Big home-page house mark — a two-tone variant of the Core emblem. A solid
+// hexagon body (CORE_OUTER) sits behind the line-art emblem (CORE_EMBLEM) so the
+// figure can reverse with the theme: white line over a dark body in light mode,
+// dark line over a white body in dark mode (colors are set in global.css via the
+// .hero-mark__fill / .hero-mark__line hooks). Decorative, so aria-hidden.
+import { CORE_EMBLEM, CORE_OUTER } from '../data/marks';
+interface Props { size?: number; class?: string; }
+const { size = 150, class: cls = "" } = Astro.props;
+const w = Math.round((size * 553) / 638);
+---
+<svg class={`hero-mark ${cls}`} width={w} height={size} viewBox="0 0 553 638" role="presentation" aria-hidden="true">
+  <path class="hero-mark__fill" d={CORE_OUTER} />
+  <path class="hero-mark__line" d={CORE_EMBLEM} fill-rule="evenodd" />
+</svg>

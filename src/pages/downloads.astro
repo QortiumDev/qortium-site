@@ -5,6 +5,7 @@ import HomeMark from '../components/HomeMark.astro';
 import ChatMark from '../components/ChatMark.astro';
 import TrustMark from '../components/TrustMark.astro';
 import ReleaseTag from '../components/ReleaseTag.astro';
+import QdnLink from '../components/QdnLink.astro';
 import { RELEASES, CHAT, TRUST, absUrl } from '../data/site';
 
 const title = 'Qortium downloads';
@@ -48,10 +49,12 @@ const jsonLd = {
       <div class="grid grid--2">
         {products.map((p) => (
           <div class="card">
-            <span class="card__mark">
-              {p.kind === 'core' ? <CoreMark size={30} title={p.name} /> : <HomeMark size={30} title={p.name} />}
-            </span>
-            <h3>{p.name}</h3>
+            <div class="tile__head tile__head--top">
+              <span class="card__mark">
+                {p.kind === 'core' ? <CoreMark size={30} title={p.name} /> : <HomeMark size={30} title={p.name} />}
+              </span>
+              <h3>{p.name}</h3>
+            </div>
             <ReleaseTag class="badge badge--preview" repo={p.repoSlug} />
             <p class="muted">{p.blurb} License <code>{p.license}</code>.</p>
             <p class="muted">{p.platforms.join(', ')}.</p>
@@ -61,18 +64,22 @@ const jsonLd = {
           </div>
         ))}
         <div class="card">
-          <span class="card__mark">
-            <ChatMark size={30} title={CHAT.name} />
-          </span>
-          <h3>{CHAT.name}</h3>
-          <p class="muted">A QDN app — no separate download. Open <code>{CHAT.qdnResource}</code> in Home.</p>
+          <div class="tile__head tile__head--top">
+            <span class="card__mark">
+              <ChatMark size={30} title={CHAT.name} />
+            </span>
+            <h3>{CHAT.name}</h3>
+          </div>
+          <p class="muted">A QDN app — no separate download. Open <QdnLink resource={CHAT.qdnResource} /> in Home.</p>
         </div>
         <div class="card">
-          <span class="card__mark">
-            <TrustMark size={30} title={TRUST.name} />
-          </span>
-          <h3>{TRUST.name}</h3>
-          <p class="muted">A QDN app — no separate download. Open <code>{TRUST.qdnResource}</code> in Home.</p>
+          <div class="tile__head tile__head--top">
+            <span class="card__mark">
+              <TrustMark size={30} title={TRUST.name} />
+            </span>
+            <h3>{TRUST.name}</h3>
+          </div>
+          <p class="muted">A QDN app — no separate download. Open <QdnLink resource={TRUST.qdnResource} /> in Home.</p>
         </div>
       </div>
     </div>

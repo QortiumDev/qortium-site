@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { withBase } from '../data/site';
+import { withBase, LINKS } from '../data/site';
 ---
 <footer class="site-footer">
   <div class="container">
@@ -13,6 +13,7 @@ import { withBase } from '../data/site';
     </div>
     <div class="site-footer__bottom">
       <span>Preview software — reviewed and tested, not yet formally audited. Qortium ≠ Qortal.</span>
+      <span> · <a href={LINKS.siteRepo}>Source for this site</a></span>
     </div>
   </div>
 </footer>

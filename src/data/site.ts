@@ -103,6 +103,7 @@ export const LINKS = {
     'https://github.com/QortiumDev/qortium-core/blob/main/docs/trust/aura-trust-tier-minting.md',
   chatRepo: 'https://github.com/QortiumDev/qortium-chat',
   trustRepo: 'https://github.com/QortiumDev/qortium-trust',
+  siteRepo: 'https://github.com/QortiumDev/qortium-site',
   qortalSite: 'https://qortal.org',
   qortalHub: 'https://github.com/Qortal/Qortal-Hub',
 } as const;

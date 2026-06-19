@@ -9,6 +9,17 @@ developer-product aesthetic (line-art house mark, monochrome ink + one signal
 accent), candid about preview maturity, framing Qortal as *different goals and
 tradeoffs* rather than a replacement.
 
+## View the site
+
+- **qortium.app** — primary home _(coming soon)_
+
+Mirrors (the same published site, served from Qortium/Qortal nodes):
+
+- <http://185.207.104.78:24891/render/WEBSITE/Qortium/Qortium>
+- <http://146.103.42.59:24891/render/WEBSITE/Qortium/Qortium>
+- <https://qortal.link/Qortium>
+- <https://qortal.name/Qortium>
+
 ## Run locally
 
 ```sh

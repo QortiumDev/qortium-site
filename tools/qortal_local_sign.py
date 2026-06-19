@@ -260,13 +260,15 @@ def sign_message(seed: bytes, message: bytes) -> bytes:
 # re-serialized toBytes vs. the input guards against any layout mistake.
 TX_TYPE_ARBITRARY = 10
 SIGNATURE_LEN = 64
-# Qortal's transformCommonBytes (shared header) =
-#   type(4) + timestamp(8) + groupId(4) + reference(64) + creatorPublicKey(32) = 112.
-# The nonce + version-5 body (name, identifier, method, secret, compression, …)
-# follow. We treat this whole 112-byte prefix as opaque; it is copied verbatim
-# into both toBytes and toBytesForSigning, so its internal layout doesn't matter
-# here as long as the length is right.
+# The shared transaction header is treated as an opaque prefix (copied verbatim
+# into both toBytes and toBytesForSigning), so only its LENGTH matters here:
+#   Qortal:  type(4)+timestamp(8)+groupId(4)+reference(64)+creatorPublicKey(32) = 112
+#   Qortium: same but the fork dropped the 64-byte reference                     =  48
+# We auto-detect which by picking the length whose re-serialized toBytes
+# reproduces the input byte-for-byte (the round-trip guard), so the same signer
+# works for both chains without a flag.
 _ARB_HEADER_LEN = 4 + 8 + 4 + 64 + 32
+_ARB_HEADER_CANDIDATES = (4 + 8 + 4 + 64 + 32, 4 + 8 + 4 + 32)  # Qortal, Qortium
 
 
 def _take(buf: bytes, off: int, n: int):
@@ -287,11 +289,11 @@ def _take_lenpref(buf: bytes, off: int):
     return buf[off:after_body], body, after_body
 
 
-def _parse_arbitrary(buf: bytes) -> dict:
+def _parse_arbitrary(buf: bytes, header_len: int = _ARB_HEADER_LEN) -> dict:
     if int.from_bytes(buf[:4], "big") != TX_TYPE_ARBITRARY:
         raise ValueError("Not an ARBITRARY transaction (type != 10).")
     off = 0
-    header, off = _take(buf, off, _ARB_HEADER_LEN)
+    header, off = _take(buf, off, header_len)
     nonce, off = _take(buf, off, 4)
     name, _, off = _take_lenpref(buf, off)
     identifier, _, off = _take_lenpref(buf, off)
@@ -342,10 +344,19 @@ def _arbitrary_to_bytes_for_signing(f: dict) -> bytes:
 
 def sign_arbitrary_transaction(seed: bytes, unsigned_tx_b58: str) -> str:
     buf = b58decode(unsigned_tx_b58.strip())
-    f = _parse_arbitrary(buf)
-    # Guard: our own re-serialization must reproduce the input byte-for-byte.
-    if _arbitrary_to_bytes(f, f["signature"]) != buf:
-        raise RuntimeError("ARBITRARY round-trip mismatch; refusing to sign.")
+    # Auto-detect the header length (Qortal 112 / Qortium 48): accept the one
+    # whose re-serialized toBytes reproduces the input byte-for-byte.
+    f = None
+    for hl in _ARB_HEADER_CANDIDATES:
+        try:
+            cand = _parse_arbitrary(buf, hl)
+        except (ValueError, NotImplementedError):
+            continue
+        if _arbitrary_to_bytes(cand, cand["signature"]) == buf:
+            f = cand
+            break
+    if f is None:
+        raise RuntimeError("ARBITRARY round-trip failed for all header lengths; refusing to sign.")
     unsigned_portion = buf[:len(buf) - len(f["signature"])]
     signing_bytes = _arbitrary_to_bytes_for_signing(f)
     signature = sign_message(seed, signing_bytes)
@@ -396,6 +407,20 @@ def resolve_seed(args) -> bytes:
         return decode_private_key_input(args.private_key)
     if getattr(args, "private_key_file", None):
         return decode_private_key_input(_read_secret_file(args.private_key_file))
+    if getattr(args, "accounts_file", None):
+        addr = getattr(args, "account_address", None)
+        if not addr:
+            raise ValueError("--account-address is required with --accounts-file.")
+        data = json.loads(Path(args.accounts_file).expanduser().read_text(encoding="utf-8"))
+        accts = data if isinstance(data, list) else data.get("accounts", [])
+        acct = next((a for a in accts
+                     if a.get("accountAddress") == addr or a.get("address") == addr), None)
+        if acct is None:
+            raise ValueError(f"Account {addr} not found in {args.accounts_file}.")
+        field = getattr(args, "account_key_field", "accountPrivateKey")
+        if not acct.get(field):
+            raise ValueError(f"Account {addr} has no '{field}'.")
+        return decode_private_key_input(acct[field])
     if getattr(args, "wallet", None):
         wallet = json.loads(Path(args.wallet).expanduser().read_text(encoding="utf-8"))
         if not isinstance(wallet, dict):
@@ -421,6 +446,10 @@ def _add_key_args(p: argparse.ArgumentParser) -> None:
     g.add_argument("--password-env", help="env var holding the wallet password")
     g.add_argument("--private-key", help="base58 private key (32- or 64-byte)")
     g.add_argument("--private-key-file", help="file containing a base58 private key")
+    g.add_argument("--accounts-file", help="JSON accounts file (e.g. initial-minting-accounts.json)")
+    g.add_argument("--account-address", help="account address to select from --accounts-file")
+    g.add_argument("--account-key-field", default="accountPrivateKey",
+                   help="field in the account record holding the base58 private key")
 
 
 # --- Subcommands ------------------------------------------------------------
@@ -505,6 +534,16 @@ def cmd_selftest(_args) -> int:
     arb_signed = b58decode(sign_transaction(seed, b58encode(unsigned)))
     assert arb_signed[:-64] == unsigned, "ARBITRARY signed should be unsigned+sig"
     assert verify_signature(pub2, expected_signing, arb_signed[-64:]), "ARBITRARY sig invalid"
+
+    # Qortium variant: reference-less 48-byte header, must auto-detect
+    q_header = i32(TX_TYPE_ARBITRARY) + (1234567890).to_bytes(8, "big") + i32(0) + pub2
+    q_unsigned = (q_header + nonce + name + ident + method + secret + comp + payments
+                  + service + is_raw + data_seg + size + meta + fee)
+    q_signing = (q_header + nonce + name + ident + method + secret + comp + payments
+                 + service + data_seg + size + meta + fee)
+    q_signed = b58decode(sign_transaction(seed, b58encode(q_unsigned)))
+    assert q_signed[:-64] == q_unsigned, "Qortium ARBITRARY signed should be unsigned+sig"
+    assert verify_signature(pub2, q_signing, q_signed[-64:]), "Qortium ARBITRARY sig invalid"
     print(f"selftest OK  (sample address {addr})")
     return 0
 

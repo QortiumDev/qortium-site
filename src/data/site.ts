@@ -30,23 +30,33 @@ export const SITE = {
   tagline: 'A complete internet platform, built by the community',
   description:
     'Qortium is a complete internet platform for the everyday things you go online to do — sharing posts and media, messaging, publishing pages and apps, and storing files. It is built by the community and not controlled by any company, so no one can shut people out and you decide what you see.',
-  /** Gateway origin; canonical/OG URLs are origin + public path + path. */
-  origin: 'https://qortal.link',
+  /**
+   * Canonical origin for absolute meta URLs (canonical/OG/JSON-LD/sitemap). The
+   * site is multi-homed — Qortal QDN (Qortium/default, gateway path /Qortium),
+   * Qortium QDN (Qortium/Qortium), and this brand domain — so we declare ONE
+   * stable canonical home here regardless of which copy is being served.
+   */
+  origin: 'https://qortium.app',
   ogImage: '/og-default.png',
 } as const;
 
-/** Public gateway path used only for absolute meta URLs (canonical/OG/JSON-LD). */
-const PUBLIC_PATH = '/Qortium/Qortium';
-
 /**
  * Absolute URL for canonical / Open Graph / JSON-LD meta tags only. In-page
- * links and assets use the relative withBase() instead.
- *   absUrl('/')        -> "https://qortal.link/Qortium"
- *   absUrl('/compare') -> "https://qortal.link/Qortium/compare"
+ * links/assets use the relative withBase() instead. Routes map to the flat
+ * .html file actually emitted (build format 'file'), so the canonical resolves
+ * on a plain static host and on QDN alike; assets (with an extension) are left
+ * as-is.
+ *   absUrl('/')               -> "https://qortium.app/"
+ *   absUrl('/compare')        -> "https://qortium.app/compare.html"
+ *   absUrl('/og-default.png') -> "https://qortium.app/og-default.png"
  */
 export function absUrl(path = '/'): string {
-  const p = !path || path === '/' ? '' : path.startsWith('/') ? path : '/' + path;
-  return SITE.origin + PUBLIC_PATH + p;
+  if (!path || path === '/') return SITE.origin + '/';
+  let p = path.startsWith('/') ? path.slice(1) : path;
+  p = p.replace(/\/+$/, '');
+  const lastSeg = p.split('/').pop() ?? '';
+  if (!lastSeg.includes('.')) p += '.html';
+  return SITE.origin + '/' + p;
 }
 
 /**

@@ -14,9 +14,25 @@ import sitemap from '@astrojs/sitemap';
 // All internal links/assets go through `withBase()` in src/data/site.ts, which
 // returns relative paths; canonical/OG/JSON-LD use `absUrl()` for absolute URLs.
 export default defineConfig({
-  site: 'https://qortal.link',
+  // Canonical brand domain (the site is multi-homed across QDN + this domain).
+  site: 'https://qortium.app',
   trailingSlash: 'ignore',
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    // Emit sitemap URLs that match the flat .html files actually built, so the
+    // listed URLs resolve on a plain static host and on QDN (format: 'file').
+    sitemap({
+      serialize(item) {
+        const root = 'https://qortium.app';
+        if (item.url === root || item.url === root + '/') {
+          item.url = root + '/';
+        } else if (!/\.[a-z0-9]+$/i.test(new URL(item.url).pathname)) {
+          item.url = item.url.replace(/\/$/, '') + '.html';
+        }
+        return item;
+      },
+    }),
+  ],
   build: {
     inlineStylesheets: 'auto',
     format: 'file',

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://qortal.link/Qortium/sitemap-index.xml
+Sitemap: https://qortium.app/sitemap-index.xml

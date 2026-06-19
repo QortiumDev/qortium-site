@@ -6,7 +6,7 @@ import ChatMark from '../components/ChatMark.astro';
 import TrustMark from '../components/TrustMark.astro';
 import ReleaseTag from '../components/ReleaseTag.astro';
 import QdnLink from '../components/QdnLink.astro';
-import { RELEASES, CHAT, TRUST, absUrl } from '../data/site';
+import { RELEASES, CHAT, TRUST, absUrl, withBase } from '../data/site';
 
 const title = 'Get Qortium';
 const description =
@@ -110,6 +110,16 @@ const jsonLd = {
             <a class="btn btn--ghost" href={RELEASES.core.releases}>Get Qortium Core releases</a>
           </div>
         </div>
+      </div>
+      <div class="card">
+        <h3>No port-forwarding needed</h3>
+        <p class="muted">
+          Running a reachable node used to mean opening a port on your router.
+          Qortium can connect through I2P instead, so your node can take part
+          even on home internet that blocks incoming connections — and you can
+          route everything through I2P to keep your IP address private.
+          <a href={withBase('/core')}>How connecting works</a>.
+        </p>
       </div>
     </div>
   </section>

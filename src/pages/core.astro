@@ -25,6 +25,21 @@ const cleanup = [
   },
 ];
 
+const connectivity = [
+  {
+    h: 'Classic connections',
+    p: 'Nodes talk to each other directly. Lightest on your computer and your connection — a fine default when your node is already reachable.',
+  },
+  {
+    h: 'Most connected (with I2P)',
+    p: 'Qortium can also connect through I2P, a free, volunteer-run privacy network that carries traffic through layers of relays. It tunnels past a blocking router, so you can find and help peers even when incoming connections are closed — and the whole network gets better connected.',
+  },
+  {
+    h: 'Most private (I2P only)',
+    p: 'Send every connection through I2P and your real internet address is never exposed to peers. The strongest privacy, in exchange for a bit more overhead.',
+  },
+];
+
 const directions = [
   {
     h: 'Updates the community approves',
@@ -93,6 +108,26 @@ const jsonLd = {
       </p>
       <div class="grid grid--2">
         {cleanup.map((c) => (
+          <div class="card">
+            <h3>{c.h}</h3>
+            <p class="muted">{c.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Connecting, even behind a router</h2>
+      <p class="muted measure">
+        To help run the network, your computer needs to reach other people’s —
+        and let theirs reach yours. On a lot of home internet, your router
+        quietly blocks those incoming connections, so you can join but others
+        can’t find you. Qortium can now route around that, and you choose how.
+      </p>
+      <div class="grid grid--2">
+        {connectivity.map((c) => (
           <div class="card">
             <h3>{c.h}</h3>
             <p class="muted">{c.p}</p>

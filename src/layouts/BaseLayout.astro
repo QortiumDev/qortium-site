@@ -179,7 +179,7 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
       <div class="ext-modal__panel">
         <button type="button" class="ext-modal__x" data-ext-close aria-label="Close">&times;</button>
         <p class="ext-modal__title" id="ext-modal-title">Open this link in your browser</p>
-        <p class="ext-modal__hint muted">External links can&rsquo;t open from inside the app. Copy the address and paste it into your web browser.</p>
+        <p class="ext-modal__hint muted">This link can&rsquo;t open here directly. Copy the address and paste it into your web browser.</p>
         <code class="ext-modal__url" id="ext-modal-url"></code>
         <div class="ext-modal__actions">
           <button type="button" class="btn btn--primary" id="ext-modal-copy">Copy link</button>
@@ -264,16 +264,41 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           });
         }
 
+        // Open an external URL in a new tab WITHOUT relying on the click's native
+        // default action. On the public gateway (_qdnContext === "gateway") Core's
+        // injected q-apps script intercepts link clicks and cancels the navigation
+        // so it can route internal QDN links itself — which also swallows external
+        // links, so a plain target="_blank" left-click does nothing. Driving
+        // window.open ourselves sidesteps that (and works the same standalone).
+        // Returns false if the open was blocked (e.g. a sandboxed embed) so the
+        // caller can fall back to the copy-URL modal.
+        function openExternal(url) {
+          var w = null;
+          try { w = window.open(url, '_blank'); } catch (e) {}
+          if (w) { try { w.opener = null; } catch (e) {} return true; }
+          return false;
+        }
+
         var links = document.querySelectorAll('a[href^="http://"], a[href^="https://"]');
         Array.prototype.forEach.call(links, function (a) {
           if (inApp) {
+            // Home/Hub blocks external navigation outright -> copy-the-URL modal.
             a.addEventListener('click', function (e) {
               e.preventDefault();
               openModal(a.href);
             });
           } else {
+            // Standalone browser OR public gateway. Keep target/rel for graceful
+            // degradation and for modified/middle clicks, but actively open a plain
+            // left-click so the gateway's click interceptor can't swallow it.
             a.target = '_blank';
             a.rel = a.rel ? a.rel + ' noopener noreferrer' : 'noopener noreferrer';
+            a.addEventListener('click', function (e) {
+              // Let the browser handle middle/modified clicks (new tab/window) natively.
+              if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              if (!openExternal(a.href)) openModal(a.href);
+            });
           }
         });
       })();

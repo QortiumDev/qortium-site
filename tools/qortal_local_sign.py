@@ -251,14 +251,121 @@ def sign_message(seed: bytes, message: bytes) -> bytes:
     return Ed25519PrivateKey.from_private_bytes(seed).sign(message)
 
 
+# --- ARBITRARY transactions need a special "bytes for signing" ---------------
+# For most Qortal transactions the signing bytes equal the unsigned serialized
+# bytes (the base transformer just strips the trailing signature). ARBITRARY
+# overrides this: its toBytesForSigning OMITS the 1-byte dataType flag and, for
+# RAW_DATA, signs sha256(data) instead of the data. So we must parse the
+# unsigned bytes and rebuild the signing form. A byte-exact round-trip of the
+# re-serialized toBytes vs. the input guards against any layout mistake.
+TX_TYPE_ARBITRARY = 10
+SIGNATURE_LEN = 64
+# Qortal's transformCommonBytes (shared header) =
+#   type(4) + timestamp(8) + groupId(4) + reference(64) + creatorPublicKey(32) = 112.
+# The nonce + version-5 body (name, identifier, method, secret, compression, …)
+# follow. We treat this whole 112-byte prefix as opaque; it is copied verbatim
+# into both toBytes and toBytesForSigning, so its internal layout doesn't matter
+# here as long as the length is right.
+_ARB_HEADER_LEN = 4 + 8 + 4 + 64 + 32
+
+
+def _take(buf: bytes, off: int, n: int):
+    if n < 0 or off + n > len(buf):
+        raise ValueError("transaction bytes truncated")
+    return buf[off:off + n], off + n
+
+
+def _take_u32(buf: bytes, off: int):
+    chunk, off = _take(buf, off, 4)
+    return int.from_bytes(chunk, "big"), off
+
+
+def _take_lenpref(buf: bytes, off: int):
+    """Read an INT-length-prefixed field; return (full_segment, body, new_off)."""
+    n, after_len = _take_u32(buf, off)
+    body, after_body = _take(buf, after_len, n)
+    return buf[off:after_body], body, after_body
+
+
+def _parse_arbitrary(buf: bytes) -> dict:
+    if int.from_bytes(buf[:4], "big") != TX_TYPE_ARBITRARY:
+        raise ValueError("Not an ARBITRARY transaction (type != 10).")
+    off = 0
+    header, off = _take(buf, off, _ARB_HEADER_LEN)
+    nonce, off = _take(buf, off, 4)
+    name, _, off = _take_lenpref(buf, off)
+    identifier, _, off = _take_lenpref(buf, off)
+    method, off = _take(buf, off, 4)
+    secret, _, off = _take_lenpref(buf, off)
+    compression, off = _take(buf, off, 4)
+    pay_count, after_count = _take_u32(buf, off)
+    if pay_count != 0:
+        raise NotImplementedError("ARBITRARY payments are not supported by this signer.")
+    payments = buf[off:after_count]
+    off = after_count
+    service, off = _take(buf, off, 4)
+    is_raw, off = _take(buf, off, 1)
+    data_seg, data_body, off = _take_lenpref(buf, off)
+    size, off = _take(buf, off, 4)
+    metadata, _, off = _take_lenpref(buf, off)
+    fee, off = _take(buf, off, 8)
+    signature = buf[off:]
+    if len(signature) not in (0, SIGNATURE_LEN):
+        raise ValueError(f"Unexpected trailing bytes ({len(signature)}); not 0 or 64.")
+    return {
+        "header": header, "nonce": nonce, "name": name, "identifier": identifier,
+        "method": method, "secret": secret, "compression": compression,
+        "payments": payments, "service": service, "is_raw": is_raw,
+        "data_seg": data_seg, "data_body": data_body, "data_len_prefix": data_seg[:4],
+        "size": size, "metadata": metadata, "fee": fee, "signature": signature,
+    }
+
+
+def _arbitrary_to_bytes(f: dict, signature: bytes = b"") -> bytes:
+    """Re-serialize ArbitraryTransactionTransformer.toBytes (full wire form)."""
+    return (f["header"] + f["nonce"] + f["name"] + f["identifier"] + f["method"]
+            + f["secret"] + f["compression"] + f["payments"] + f["service"]
+            + f["is_raw"] + f["data_seg"] + f["size"] + f["metadata"] + f["fee"]
+            + signature)
+
+
+def _arbitrary_to_bytes_for_signing(f: dict) -> bytes:
+    """ArbitraryTransactionTransformer.toBytesForSigning: drop the dataType byte;
+    sign the data hash (data as-is for DATA_HASH, sha256(data) for RAW_DATA)."""
+    is_raw = f["is_raw"][0] != 0
+    data_for_signing = hashlib.sha256(f["data_body"]).digest() if is_raw else f["data_body"]
+    return (f["header"] + f["nonce"] + f["name"] + f["identifier"] + f["method"]
+            + f["secret"] + f["compression"] + f["payments"] + f["service"]
+            + f["data_len_prefix"] + data_for_signing + f["size"] + f["metadata"]
+            + f["fee"])
+
+
+def sign_arbitrary_transaction(seed: bytes, unsigned_tx_b58: str) -> str:
+    buf = b58decode(unsigned_tx_b58.strip())
+    f = _parse_arbitrary(buf)
+    # Guard: our own re-serialization must reproduce the input byte-for-byte.
+    if _arbitrary_to_bytes(f, f["signature"]) != buf:
+        raise RuntimeError("ARBITRARY round-trip mismatch; refusing to sign.")
+    unsigned_portion = buf[:len(buf) - len(f["signature"])]
+    signing_bytes = _arbitrary_to_bytes_for_signing(f)
+    signature = sign_message(seed, signing_bytes)
+    if not verify_signature(seed_to_public_key(seed), signing_bytes, signature):
+        raise RuntimeError("Local self-verification of the signature failed.")
+    return b58encode(unsigned_portion + signature)
+
+
 def sign_transaction(seed: bytes, unsigned_tx_b58: str) -> str:
     """Sign unsigned transaction bytes; return base58 signed bytes.
 
-    signed = message + 64-byte signature, exactly as the node returns.
+    For ARBITRARY (type 10) the signing bytes differ from the wire bytes, so
+    dispatch to the dedicated path. For other transaction types the base
+    transformer signs the unsigned bytes as-is, so signed = message + signature.
     """
     message = b58decode(unsigned_tx_b58.strip())
     if not message:
         raise ValueError("Unsigned transaction bytes are empty.")
+    if int.from_bytes(message[:4], "big") == TX_TYPE_ARBITRARY:
+        return sign_arbitrary_transaction(seed, unsigned_tx_b58)
     signature = sign_message(seed, message)
     signed = message + signature
     # Self-check: the produced signature must verify against our own pubkey.
@@ -368,10 +475,36 @@ def cmd_selftest(_args) -> int:
     pub = seed_to_public_key(seed)
     assert verify_signature(pub, msg, sig), "valid signature rejected"
     assert not verify_signature(pub, msg + b"!", sig), "tampered message accepted"
-    # signed tx = message + 64-byte signature, signature trails
-    fake_unsigned = b58encode(msg)
-    signed = b58decode(sign_transaction(seed, fake_unsigned))
-    assert signed[:-64] == msg and len(signed[-64:]) == 64, "signed layout wrong"
+    # non-ARBITRARY tx (type != 10): signed = message + 64-byte signature
+    fake_unsigned = (99).to_bytes(4, "big") + msg
+    signed = b58decode(sign_transaction(seed, b58encode(fake_unsigned)))
+    assert signed[:-64] == fake_unsigned and len(signed[-64:]) == 64, "signed layout wrong"
+
+    # synthetic ARBITRARY tx: round-trip + signing form drops the dataType byte
+    def i32(n: int) -> bytes:
+        return n.to_bytes(4, "big")
+
+    def lp(b: bytes) -> bytes:
+        return i32(len(b)) + b
+
+    pub2 = seed_to_public_key(seed)
+    reference = hashlib.sha512(b"ref").digest()[:64]  # 64-byte reference
+    header = i32(TX_TYPE_ARBITRARY) + (1234567890).to_bytes(8, "big") + i32(0) + reference + pub2
+    nonce, name, ident = i32(42), lp(b"Qortium"), lp(b"")
+    method, secret, comp, payments = i32(0), lp(b""), i32(0), i32(0)
+    service, is_raw = i32(200), b"\x00"  # DATA_HASH
+    data_seg = lp(hashlib.sha256(b"content").digest())
+    size, meta, fee = i32(123), lp(hashlib.sha256(b"m").digest()), (1_000_000).to_bytes(8, "big")
+    unsigned = (header + nonce + name + ident + method + secret + comp + payments
+                + service + is_raw + data_seg + size + meta + fee)
+    f = _parse_arbitrary(unsigned)
+    assert _arbitrary_to_bytes(f) == unsigned, "ARBITRARY round-trip failed"
+    expected_signing = (header + nonce + name + ident + method + secret + comp
+                        + payments + service + data_seg + size + meta + fee)
+    assert _arbitrary_to_bytes_for_signing(f) == expected_signing, "ARBITRARY signing form wrong"
+    arb_signed = b58decode(sign_transaction(seed, b58encode(unsigned)))
+    assert arb_signed[:-64] == unsigned, "ARBITRARY signed should be unsigned+sig"
+    assert verify_signature(pub2, expected_signing, arb_signed[-64:]), "ARBITRARY sig invalid"
     print(f"selftest OK  (sample address {addr})")
     return 0
 

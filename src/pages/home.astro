@@ -10,7 +10,8 @@ const wallets = [
   'Encrypted wallet backups on desktop and Android.',
   'Hold several addresses in one wallet.',
   'Import a private key to make a password-protected wallet.',
-  'Unlocked per session, locked when you step away.',
+  'Your password is only asked for when your key is actually needed to sign something — reading, browsing, and watching never prompt for it.',
+  'Locked by default — your key stays encrypted until the moment it is used, and locks again when you step away.',
 ];
 
 const jsonLd = {
@@ -78,8 +79,9 @@ const jsonLd = {
         <div class="card">
           <h3>Browse in tabs</h3>
           <p class="muted">
-            Move between everything in tabs. Each tab keeps its own history and
-            active account.
+            Move between everything in tabs, and give each tab its own signed-in
+            account — so you can use several accounts at once, with no need to run
+            multiple copies of the app.
           </p>
         </div>
       </div>

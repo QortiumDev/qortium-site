@@ -4,7 +4,7 @@ import ChatMark from '../components/ChatMark.astro';
 import { CHAT, LINKS, withBase } from '../data/site';
 
 const title = 'Qortium Chat';
-const description = 'Private and public group chat that runs inside Qortium Home.';
+const description = 'Talk privately or in public on a network that has no operator reading over your shoulder.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -14,7 +14,7 @@ const jsonLd = {
   operatingSystem: 'Runs in Qortium Home (desktop & Android)',
   license: CHAT.license,
   url: CHAT.repo,
-  description: 'Private and public group chat that runs inside Qortium Home.',
+  description: 'Talk privately or in public on a network that has no operator reading over your shoulder.',
   sameAs: [CHAT.repo],
 };
 ---
@@ -23,11 +23,17 @@ const jsonLd = {
     <div class="container">
       <div class="hero-head">
         <ChatMark size={44} title="Qortium Chat" />
-        <h1>Private and public group chat</h1>
+        <h1>Talk freely, in private or in public</h1>
       </div>
       <p class="lede measure">
-        Qortium Chat is an app that runs inside Home for private and public group
-        chat — your messages stay encrypted and you never juggle keys.
+        Qortium Chat lets you message people and join group conversations with
+        no operator hosting the rooms or reading along. Private groups are
+        encrypted just for the people in them, and you never have to handle any
+        keys yourself.
+      </p>
+      <p class="muted measure">
+        There is no moderator who can read all your messages or shut you out. In
+        group chats, you decide what to take part in and what to ignore.
       </p>
       <div class="btn-row">
         <a class="btn btn--primary" href={withBase('/downloads')}>Get Qortium Home</a>
@@ -43,27 +49,29 @@ const jsonLd = {
         <div class="card">
           <h3>Private groups, encrypted for you</h3>
           <p class="muted">
-            Closed group chats are encrypted automatically — you never have to
-            handle keys.
+            Closed group chats are encrypted automatically, just for the people
+            in them. You never have to set up or remember keys.
           </p>
         </div>
         <div class="card">
-          <h3>No messages sent in the clear</h3>
+          <h3>Nothing slips out in the clear</h3>
           <p class="muted">
-            Messages in a private group can't be sent unencrypted.
+            Messages in a private group can't be sent unencrypted, so a private
+            conversation stays private.
           </p>
         </div>
         <div class="card">
-          <h3>Public chat is back</h3>
+          <h3>Open public rooms</h3>
           <p class="muted">
-            Qortium brings back the open, public chat room.
+            Want to talk out in the open? Qortium brings back the public chat
+            room, where anyone can join the conversation.
           </p>
         </div>
         <div class="card">
-          <h3>Keep your history</h3>
+          <h3>You choose how long to keep it</h3>
           <p class="muted">
-            Choose how long your chats are kept — the default is about a day, and
-            you can save them longer.
+            Pick how long your chats are kept. The default is about a day, and
+            you can save them for longer if you want.
           </p>
         </div>
       </div>
@@ -72,20 +80,22 @@ const jsonLd = {
 
   <section class="section">
     <div class="container">
-      <h2>Inside the app</h2>
+      <h2>How it fits together</h2>
       <div class="grid grid--2">
         <div class="card">
           <h3>Its own app, not locked in</h3>
           <p class="muted">
-            Chat isn't built into Home, so anyone can make their own version —
-            and your keys stay in Home.
+            Chat is a separate app that runs inside Home, not baked into it. So
+            anyone can build their own version, while your keys stay safe in
+            Home.
           </p>
         </div>
         <div class="card">
-          <h3>Start minting from chat</h3>
+          <h3>Start helping run the network</h3>
           <p class="muted">
-            Right from a group you can start minting (earning by helping run the
-            chain); Home handles your keys for you.
+            Right from inside the chat app you can start minting — helping produce
+            blocks with your own node to secure the network, which builds your
+            voting weight. Home handles the keys for you.
           </p>
         </div>
       </div>
@@ -97,9 +107,11 @@ const jsonLd = {
       <h2>Get started</h2>
       <div class="card">
         <p class="muted">
-          Open Chat inside Qortium Home.
+          Chat runs inside Qortium Home, so there's nothing extra to download.
+          Open Home and you're ready to talk.
         </p>
         <div class="btn-row">
+          <a class="btn btn--primary" href={withBase('/downloads')}>Get Qortium Home</a>
           <a class="btn btn--ghost" href={LINKS.chatRepo}>Source repo</a>
         </div>
       </div>

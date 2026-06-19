@@ -1,123 +1,145 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { withBase } from '../data/site';
+import { withBase, absUrl } from '../data/site';
 
-const title = 'Qortium vs Qortal';
-const description = 'How Qortium and Qortal compare in plain terms.';
+const title = 'How Qortium compares';
+const description =
+  'How Qortium lines up against Qortal and the broad kinds of platforms people compare it to — other decentralized networks, a currency chain, and a company-run suite of apps.';
 
+// Columns left-to-right run most-similar to least, and decentralized to
+// centralized: Qortium, Qortal, then three general categories (no brand names).
+const cols = ['Qortium', 'Qortal', 'Decentralized platform', 'Crypto coin', 'Company platform'];
+
+// The big picture first, then finer Qortium-vs-Qortal detail. Category cells are
+// kept honest: "—" where the thing genuinely has no equivalent, hedged where it
+// varies. Cells are deliberately terse so the wide table stays readable.
 const rows = [
   {
-    dim: 'Overall',
-    qortium: 'A streamlined protocol that grew out of Qortal — a foundation for chains, still in preview.',
-    qortal: 'A full, live platform and coin economy.',
+    dim: 'What it is',
+    cells: ['A complete internet platform', 'A complete internet platform', 'A decentralized or federated network', 'Mainly a digital currency', 'A whole suite of apps from one company'],
   },
   {
-    dim: 'App',
-    qortium: 'Home: a simple app for your wallet, the network, and content.',
-    qortal: 'Hub: chat, wallet, publishing, hosted access, and voice.',
+    dim: 'What you do with it',
+    cells: ['Post, message, publish sites & apps, store files', 'Much the same', 'Often one area, like social or messaging', 'Send and hold value', "A lot — but all within one company's walls"],
   },
   {
-    dim: 'Coin',
-    qortium: "Starts with no coin of its own; you don't need to buy anything to use it, and a coin is added only by community vote.",
-    qortal: 'Built around the QORT coin and its economy.',
+    dim: 'Who runs it',
+    cells: ['Anyone running a node — no company', 'Anyone running a node', 'Separate servers run by volunteers', 'Anyone running a node', "The company's servers"],
+  },
+  {
+    dim: 'Can you be banned or censored?',
+    cells: ['No — you choose what you see', 'No', "Your server's admin can; you can switch servers", 'Payments are hard to block', 'Yes — one ban can lock you out of all of it'],
+  },
+  {
+    dim: 'Who decides its direction',
+    cells: ['The community; open voting is being built', 'Its community and developers', 'The project, or each server on its own', 'Core developers and big holders', 'The company and its investors'],
+  },
+  {
+    dim: 'Do you need to buy a coin?',
+    cells: ['No coin by default', 'Uses its QORT coin', 'Usually no; some use a token', 'Yes — the coin is the point', 'You pay with money or your data'],
+  },
+  {
+    dim: 'Your content and name',
+    cells: ['Yours — portable, and you can delete it', 'Yours', 'Often tied to the server you joined', '—', 'They hold it and set the rules'],
+  },
+  {
+    dim: 'How far along it is',
+    cells: ['Preview (Previewnet), still being shaped', 'Live for years', 'Some are well-established', 'Many are long-established', 'Established'],
   },
   {
     dim: 'Names',
-    qortium: 'Choose and change your primary name anytime, even if you own several.',
-    qortal: 'Your first name is fixed, and owning more names locks it.',
-  },
-  {
-    dim: 'Apps per name',
-    qortium: 'Publish many apps or sites under one name, each with its own icon.',
-    qortal: "Effectively one or two per name, all using the name's avatar.",
+    cells: ['Choose and change your name anytime', 'First name is fixed; more names lock it', 'A handle tied to your server', '—', 'A username they can reclaim'],
   },
   {
     dim: 'Selling names',
-    qortium: 'Sell a name privately to one person, or give one for free that they choose to accept — no sniping.',
-    qortal: 'Sales are public, so anyone can buy first.',
+    cells: ['Private sale to one person, or gift it — no sniping', 'Public sales — anyone can buy first', '—', '—', '—'],
+  },
+  {
+    dim: 'Apps per name',
+    cells: ['Many, each with its own icon', 'About one or two', '—', '—', '—'],
   },
   {
     dim: 'Groups',
-    qortium: 'Groups can be renamed and sold, including private sales.',
-    qortal: "Group names are fixed and groups can't be sold.",
-  },
-  {
-    dim: 'Deleting content',
-    qortium: 'You can remove your content from the network.',
-    qortal: 'No built-in way to delete published content.',
+    cells: ['Rename and sell, even privately', "Fixed names, can't be sold", '—', '—', '—'],
   },
   {
     dim: 'Content ratings',
-    qortium: 'Rate any published content, built into the core, so the best rises to the top.',
-    qortal: 'Only limited ratings, built on top of polls.',
+    cells: ['Built into the core, so the best rises', 'Limited, built on top of polls', 'Rarely built in', '—', "The company's algorithm decides"],
   },
   {
     dim: 'Account reputation',
-    qortium: "Built-in reputation from on-chain ratings adjusts how much each account's minting and votes count, and resists fake accounts.",
-    qortal: 'Uses sponsorship and minting levels.',
+    cells: ['On-chain ratings adjust vote and mint weight; resists fakes', 'Sponsorship and minting levels', 'Per server, if any', '—', 'Internal, if any'],
   },
   {
     dim: 'Updates',
-    qortium: 'Off by default; an update only applies after the community approves it — nothing is pushed to you silently.',
-    qortal: 'Updates are approved by its developer group.',
+    cells: ['Off by default; community-approved', 'Approved by its developer group', 'Each server updates itself', 'Depends on the chain', 'Pushed by the company'],
   },
   {
     dim: 'Private group chat',
-    qortium: 'Private group chats are encrypted automatically — no keys to manage.',
-    qortal: 'Encrypts in the app and shares group keys over its network.',
+    cells: ['Auto-encrypted, no keys to manage', 'Encrypts in-app; shares keys over its network', 'Sometimes end-to-end encrypted', '—', 'The company can often read it'],
   },
   {
     dim: 'Chat history',
-    qortium: 'Keep your chat history as long as you want; the default is about a day.',
-    qortal: 'Messages are dropped after about a day.',
+    cells: ['Keep it as long as you want (default ~a day)', 'Dropped after about a day', 'Held by your server', '—', 'Stored on their servers'],
   },
 ];
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: 'Qortium vs Qortal',
-  description: 'How Qortium and Qortal compare in plain terms.',
-  about: ['Qortium', 'Qortal'],
-  url: 'https://qortal.link/Qortium/compare',
+  headline: 'How Qortium compares',
+  description,
+  about: ['Qortium', 'Qortal', 'decentralized platforms', 'cryptocurrency'],
+  url: absUrl('/compare'),
 };
 ---
 <BaseLayout title={title} description={description} path="/compare" jsonLd={jsonLd}>
   <section class="section">
     <div class="container">
-      <h1>Different goals, not a replacement</h1>
+      <h1>How Qortium compares</h1>
       <p class="lede measure">
-        Qortium and Qortal share a starting point but aim at different things. Here's how they compare.
+        Qortium is a complete internet platform. Here's how it lines up against
+        Qortal — its closest relative — and the broad kinds of platforms people
+        compare it to.
+      </p>
+      <p class="muted measure">
+        By <strong>decentralized platform</strong> we mean another decentralized
+        or federated network — broader than a coin, but usually narrower than
+        Qortium or split across separate servers; <strong>crypto coin</strong>, a
+        chain built mainly around a currency (private or not);
+        <strong>company platform</strong>, a whole suite of apps run by a single
+        company.
       </p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <h2>Where they differ</h2>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th scope="col">Dimension</th>
-              <th scope="col">Qortium</th>
-              <th scope="col">Qortal</th>
+              <th scope="col">&nbsp;</th>
+              {cols.map((c) => <th scope="col">{c}</th>)}
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr>
                 <td><strong>{r.dim}</strong></td>
-                <td>{r.qortium}</td>
-                <td>{r.qortal}</td>
+                {r.cells.map((cell) => <td>{cell}</td>)}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <p class="muted measure">
-        Qortium can adopt Qortal's more advanced features — like voice chat or
-        Reticulum — later; the focus now is the foundation and community governance.
+        Each of these has its strengths — a currency chain at moving value, other
+        decentralized networks within their own corner. Qortium's aim is to bring
+        the everyday things you go online for into one community-run platform:
+        broad like a company's suite, but with no company in charge and no
+        patchwork of separate servers. It can take on more advanced features over
+        time; the focus now is the foundation and the community that steers it.
       </p>
       <div class="btn-row">
         <a class="btn btn--primary" href={withBase('/downloads')}>Join Previewnet</a>

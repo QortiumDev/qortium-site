@@ -5,24 +5,24 @@ import CoreMark from '../components/CoreMark.astro';
 import HomeMark from '../components/HomeMark.astro';
 import ChatMark from '../components/ChatMark.astro';
 import TrustMark from '../components/TrustMark.astro';
-import { withBase, LINKS } from '../data/site';
+import { withBase, LINKS, absUrl } from '../data/site';
 
-const title = 'Qortium | A simpler foundation for blockchains';
+const title = 'Qortium | A community-run internet platform';
 const description =
-  'Qortium is a streamlined foundation for blockchains, grown out of Qortal, with one app, Qortium Home, for your wallet, the network, and content.';
+  'Qortium is a complete internet platform, built by the community and not controlled by any company. Post, message, publish, and store files on one network you help steer.';
 
 const reasons = [
   {
-    h: 'A cleaner foundation',
-    p: 'Qortium trims Qortal down to a simpler base that is easier to understand and to build a new chain on.',
+    h: 'A complete platform',
+    p: 'The everyday things you go online to do — sharing posts and media, messaging people, publishing pages and apps, storing files — all on one network instead of a separate tool for each.',
   },
   {
-    h: 'Everything in one app',
-    p: 'Qortium Home gives you wallets, the network, and content in one place.',
+    h: 'Built by the community',
+    p: 'The direction is shaped by the people who use it, not a company or a closed group. Anyone can join, take part, and help decide where it goes next.',
   },
   {
-    h: 'No coin forced on you',
-    p: 'A new chain starts with no built-in coin; the community decides if one is ever added.',
+    h: 'Not controlled by a company',
+    p: 'No one sits above the network to censor, ban, or shut people out. Instead you decide what you see — you locally hide whatever you do not want.',
   },
 ];
 
@@ -31,16 +31,18 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Qortium',
-    url: 'https://qortal.link/Qortium',
+    url: absUrl('/'),
     description:
-      'Qortium is a streamlined foundation for blockchains, grown out of Qortal, with one app for your wallet, the network, and content.',
+      'Qortium is a complete internet platform, built by the community and not controlled by any company.',
     sameAs: [LINKS.coreRepo, LINKS.homeRepo],
   },
   {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Qortium',
-    url: 'https://qortal.link/Qortium',
+    url: absUrl('/'),
+    description:
+      'A complete internet platform for posting, messaging, publishing, and storing files — built by the community and not controlled by any company.',
   },
 ];
 ---
@@ -49,11 +51,15 @@ const jsonLd = [
   <section class="hero">
     <div class="container hero__grid">
       <div>
-        <h1>A simpler foundation for blockchains</h1>
+        <h1>An internet platform the community owns</h1>
         <p class="lede measure">
-          Qortium is a streamlined foundation for blockchains, grown out of
-          Qortal, with one simple app, Qortium Home, for your wallet, the
-          network, and decentralized content.
+          Qortium is a complete internet platform, which is built by the
+          community, and not controlled by any company.
+        </p>
+        <p class="measure">
+          Share posts and media, message people, publish your own pages and
+          apps, and store files — all on one network, with no company in the
+          middle.
         </p>
         <div class="btn-row">
           <a class="btn btn--primary" href={withBase('/downloads')}>Join Previewnet</a>
@@ -66,10 +72,10 @@ const jsonLd = [
     </div>
   </section>
 
-  <!-- 2. WHY -->
+  <!-- 2. WHAT THAT MEANS -->
   <section class="section">
     <div class="container">
-      <h2>Why Qortium exists</h2>
+      <h2>What that means</h2>
       <div class="grid grid--2">
         {reasons.map((r) => (
           <div class="card">
@@ -86,13 +92,15 @@ const jsonLd = [
     <div class="container">
       <h2>Live now on Previewnet</h2>
       <p class="lede measure">
-        Qortium is already running on Previewnet — a live network for testing and
-        shaping the protocol, though not yet a permanent mainnet. There's no coin
-        by choice; whether to add one is an open decision for the community.
+        Qortium is already running on Previewnet — a live network for testing
+        and shaping the protocol, not yet a permanent mainnet. It will be reset
+        along the way, so this is a place to take part and help shape what comes
+        next.
       </p>
       <p class="measure">
-        This is the moment to get involved — join Previewnet, try it out, and help
-        decide where Qortium goes next.
+        There is no coin, by choice. A new network starts with none of its own,
+        and whether one is ever added is an open decision for the community. You
+        do not have to buy anything to join in.
       </p>
       <div class="btn-row">
         <a class="btn btn--primary" href={withBase('/downloads')}>Join Previewnet</a>
@@ -110,28 +118,28 @@ const jsonLd = [
             <span class="card__mark"><CoreMark size={40} title="Qortium Core" /></span>
             <h3>Qortium Core</h3>
           </div>
-          <p class="muted">The network software, the chain itself, open source.</p>
+          <p class="muted">Run a piece of the network yourself and keep it open to everyone.</p>
         </a>
         <a class="card card--link" href={withBase('/home')}>
           <div class="tile__head">
             <span class="card__mark"><HomeMark size={40} title="Qortium Home" /></span>
             <h3>Qortium Home</h3>
           </div>
-          <p class="muted">A desktop and Android app for your wallet, the network, and content.</p>
+          <p class="muted">Browse, post, and manage your account from one app on desktop and Android.</p>
         </a>
         <a class="card card--link" href={withBase('/chat')}>
           <div class="tile__head">
             <span class="card__mark"><ChatMark size={40} title="Qortium Chat" /></span>
             <h3>Qortium Chat</h3>
           </div>
-          <p class="muted">Private and public group chat that runs inside Home.</p>
+          <p class="muted">Message friends one to one or talk in group rooms, right inside Home.</p>
         </a>
         <a class="card card--link" href={withBase('/trust')}>
           <div class="tile__head">
             <span class="card__mark"><TrustMark size={40} title="Qortium Trust" /></span>
             <h3>Qortium Trust</h3>
           </div>
-          <p class="muted">See and build account reputation, inside Home.</p>
+          <p class="muted">Check who you can rely on and build your own reputation over time.</p>
         </a>
       </div>
     </div>

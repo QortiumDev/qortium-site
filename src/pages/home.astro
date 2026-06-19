@@ -4,7 +4,7 @@ import HomeMark from '../components/HomeMark.astro';
 import { withBase, RELEASES, LINKS, absUrl } from '../data/site';
 
 const title = 'Qortium Home';
-const description = 'Your wallet, the network, and decentralized content in one app.';
+const description = 'One simple app that opens the whole platform: your account, the network, and everything published on it.';
 
 const wallets = [
   'Encrypted wallet backups on desktop and Android.',
@@ -21,7 +21,7 @@ const jsonLd = {
   operatingSystem: 'Linux, macOS, Windows, Android',
   license: RELEASES.home.license,
   url: absUrl('/home'),
-  description: 'Your wallet, the network, and decentralized content in one app.',
+  description: 'One simple app that opens the whole platform: your account, the network, and everything published on it.',
   sameAs: [LINKS.homeRepo],
 };
 ---
@@ -30,11 +30,12 @@ const jsonLd = {
     <div class="container">
       <div class="hero-head">
         <HomeMark size={44} title="Qortium Home" />
-        <h1>Your wallet and the network, in one app</h1>
+        <h1>One app, your doorway to the whole platform</h1>
       </div>
       <p class="lede measure">
-        Home keeps your wallet, the network, and decentralized content together in
-        one simple app.
+        Home is the one app you open to use Qortium. Your account, the network,
+        and everything people publish on it all live in one place — nothing
+        extra to install or piece together.
       </p>
       <div class="btn-row">
         <a class="btn btn--primary" href={withBase('/downloads')}>Download</a>
@@ -56,22 +57,24 @@ const jsonLd = {
         <div class="card">
           <h3>Connect to the network</h3>
           <p class="muted">
-            Home is becoming a lite client, so you can use the network without
-            running your own node. It can still set up and run one for you if you
-            prefer.
+            Open Home and it can put you on the network straight away, through a
+            public network of nodes. When you're ready, Home can set up and run
+            your own node for you — which strengthens the network and lets you
+            mint to earn a say in it. <a href={withBase('/downloads')}>Run your own node</a>.
           </p>
         </div>
         <div class="card">
-          <h3>Browse decentralized content</h3>
+          <h3>Open what people publish</h3>
           <p class="muted">
-            Open apps, websites, media, and files on the decentralized network,
-            just by name.
+            Read posts, watch and listen to media, visit pages and apps, and open
+            shared files — all published on the network and reached just by name.
           </p>
         </div>
         <div class="card">
           <h3>Browse in tabs</h3>
           <p class="muted">
-            Each tab keeps its own history and active wallet.
+            Move between everything in tabs. Each tab keeps its own history and
+            active account.
           </p>
         </div>
       </div>
@@ -85,21 +88,22 @@ const jsonLd = {
         <div class="card">
           <h3>You approve everything</h3>
           <p class="muted">
-            Home never acts for an app without asking; you approve every action
-            yourself.
+            Home never acts for an app without asking. You stay in control and
+            approve every action yourself.
           </p>
         </div>
         <div class="card">
           <h3>Works with Qortal too</h3>
           <p class="muted">
-            Home can also browse Qortal's apps, content, and data — today through a
-            public Qortal node, and soon directly across the Qortal network.
+            Qortium shares its roots with Qortal, so Home can also open Qortal's
+            apps, content, and data — today through a public Qortal node, and
+            soon directly across the Qortal network.
           </p>
         </div>
         <div class="card">
           <h3>Chat is a separate app</h3>
           <p class="muted">
-            Chat lives in its own app that runs inside Home.
+            Messaging lives in its own app that runs inside Home.
             <a href={withBase('/chat')}>See Qortium Chat</a>.
           </p>
         </div>

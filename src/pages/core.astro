@@ -4,7 +4,7 @@ import CoreMark from '../components/CoreMark.astro';
 import { withBase, LINKS } from '../data/site';
 
 const title = 'Qortium Core';
-const description = 'The network software — the chain itself, built to be understood and easy to launch your own from.';
+const description = 'The free, open software that runs the network. Anyone can run it, so the network lives on people’s own computers instead of a company’s servers.';
 
 const cleanup = [
   {
@@ -12,31 +12,35 @@ const cleanup = [
     p: 'A new Qortium chain begins with no coin of its own — none made or handed out in advance.',
   },
   {
-    h: 'Use it without owning a coin',
-    p: 'With no coin, transactions are secured by a small bit of work from your own device, so anyone can transact.',
+    h: 'Take part without owning a coin',
+    p: 'With no coin, a transaction is secured by a small bit of work from your own device, so anyone can join in. You never have to buy anything.',
   },
   {
-    h: 'A coin only by community vote',
-    p: 'Anyone can create their own assets freely, but the chain has no coin for fees unless the development group votes to add one.',
+    h: 'A coin only if the community adds one',
+    p: 'Anyone can create their own assets freely. Whether the chain ever gets a coin of its own is an open decision for the community — not something baked in.',
   },
   {
-    h: 'A cleaner, documented base',
-    p: 'Qortium clears out Qortal-specific assumptions and explains the rest in plain language.',
+    h: 'Built to be understood',
+    p: 'The software is open for anyone to read, run, and check. It grows from the Qortal lineage, with the workings explained in plain language.',
   },
 ];
 
 const directions = [
   {
-    h: 'Community-approved updates',
-    p: 'Updates are off by default and only apply after the community approves them, so no one can push software to you silently.',
+    h: 'Updates the community approves',
+    p: 'Updates are off by default and only apply after the community approves them, so no one can push software to your computer silently.',
   },
   {
-    h: 'Open, community-driven governance',
-    p: 'The development group is open to anyone. The direction: admins approve updates and the fee coin, while members vote admins in or out — kept fair by trust scores.',
+    h: 'Decided together, today',
+    p: 'Right now a small group of developers and the people who use Qortium discuss and decide things together. Users actively guide the developers, and the group is open for anyone to join.',
+  },
+  {
+    h: 'Voting on the people who sign updates',
+    p: 'Being designed: an on-chain system where trusted admins sign network updates and the community can vote those admins in or out, kept fair by trust scores. The exact rules are still being worked out.',
   },
   {
     h: 'Changes by vote, not by force',
-    p: 'Important network settings can change through on-chain votes instead of forced restarts.',
+    p: 'The aim is for important network settings to change through on-chain votes instead of forced restarts — another piece still being shaped.',
   },
 ];
 
@@ -47,6 +51,8 @@ const jsonLd = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Linux, macOS, Windows',
   license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+  description:
+    'The free, open software that runs the Qortium network. Anyone can run it, so the network lives on people’s own computers instead of a company’s servers.',
   url: LINKS.coreRepo,
   sameAs: [LINKS.coreRepo, LINKS.coreReleases],
 };
@@ -56,11 +62,21 @@ const jsonLd = {
     <div class="container">
       <div class="hero-head">
         <CoreMark size={44} title="Qortium Core" />
-        <h1>The network software — the chain itself</h1>
+        <h1>The software that runs the network</h1>
       </div>
       <p class="lede measure">
-        Qortium Core is a cleaned-up evolution of Qortal, made to be easy to
-        understand and to launch your own chain from.
+        Qortium Core is free, open software that anyone can run. Each person who
+        runs it helps carry the network, so it lives on people’s own computers
+        instead of a company’s servers — with no one in the middle.
+      </p>
+      <p class="muted measure">
+        Run it and you become part of the network yourself. The more people run
+        it, the stronger and more independent the network gets.
+      </p>
+      <p class="muted measure">
+        Most people won’t have to install Core directly — <a href={withBase('/downloads')}>Qortium
+        Home</a> can run a node for you. Core is for running a node on a server or
+        headless.
       </p>
       <div class="btn-row">
         <a class="btn btn--primary" href={LINKS.coreRepo}>Open qortium-core</a>
@@ -71,7 +87,10 @@ const jsonLd = {
 
   <section class="section">
     <div class="container">
-      <h2>A clean starting point</h2>
+      <h2>How it starts</h2>
+      <p class="muted measure">
+        Anyone can join from day one — you don’t need to buy anything to take part.
+      </p>
       <div class="grid grid--2">
         {cleanup.map((c) => (
           <div class="card">
@@ -85,12 +104,17 @@ const jsonLd = {
 
   <section class="section">
     <div class="container">
-      <h2>Where the chain is heading</h2>
+      <h2>Who decides where it goes</h2>
+      <p class="muted measure">
+        There is no head office calling the shots for everyone. Some of
+        what follows works today; some is still being designed by the community.
+      </p>
       <div class="grid grid--2">
         <a class="card card--link" href={withBase('/trust')}>
-          <h3>Built-in account reputation</h3>
+          <h3>Reputation built into accounts</h3>
           <p class="muted">
-            Accounts earn reputation that shapes their minting and voting — see Trust.
+            Accounts earn reputation that shapes their part in minting and voting,
+            helping keep things fair — see Trust.
           </p>
         </a>
         {directions.map((d) => (

@@ -8,26 +8,14 @@ import ReleaseTag from '../components/ReleaseTag.astro';
 import QdnLink from '../components/QdnLink.astro';
 import { RELEASES, CHAT, TRUST, absUrl } from '../data/site';
 
-const title = 'Qortium downloads';
-const description = 'Qortium Core and Home preview releases.';
-
-const products = [
-  {
-    kind: 'core' as const,
-    ...RELEASES.core,
-    blurb: 'The network software — the chain itself.',
-  },
-  {
-    kind: 'home' as const,
-    ...RELEASES.home,
-    blurb: 'Your wallet, the network, and content in one app — desktop and Android.',
-  },
-];
+const title = 'Get Qortium';
+const description =
+  'Install Qortium Home to step into the platform, then run your own node — let Home set it up for you, or run the node software by hand — to help secure the network and earn a say in it.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Qortium downloads',
+  name: 'Get Qortium',
   description,
   url: absUrl('/downloads'),
 };
@@ -35,51 +23,92 @@ const jsonLd = {
 <BaseLayout title={title} description={description} path="/downloads" jsonLd={jsonLd}>
   <section class="hero">
     <div class="container">
-      <h1>Preview releases</h1>
+      <div class="hero-head">
+        <HomeMark size={44} title="Qortium Home" />
+        <h1>Your front door to Qortium</h1>
+      </div>
       <p class="lede measure">
-        Install Qortium Home, join Previewnet, and help shape what comes next.
+        Qortium Home is the doorway to the whole platform — one app for your
+        account, the network, and everything published on it, for desktop and
+        Android. Install it and you're connected to the network straight away.
       </p>
-      <p class="muted">Early preview builds, for testing only.</p>
+      <p class="muted">
+        <ReleaseTag class="badge badge--preview" repo={RELEASES.home.repoSlug} />
+        {RELEASES.home.platforms.join(', ')}. License <code>{RELEASES.home.license}</code>.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={RELEASES.home.releases}>Get Qortium Home</a>
+      </div>
+      <p class="muted">These are early builds for testing while the network takes shape.</p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <h2>Core and Home</h2>
+      <h2>Comes with Home</h2>
+      <p class="muted measure">No separate downloads — these open right inside Home.</p>
       <div class="grid grid--2">
-        {products.map((p) => (
-          <div class="card">
-            <div class="tile__head tile__head--top">
-              <span class="card__mark">
-                {p.kind === 'core' ? <CoreMark size={30} title={p.name} /> : <HomeMark size={30} title={p.name} />}
-              </span>
-              <h3>{p.name}</h3>
-            </div>
-            <ReleaseTag class="badge badge--preview" repo={p.repoSlug} />
-            <p class="muted">{p.blurb} License <code>{p.license}</code>.</p>
-            <p class="muted">{p.platforms.join(', ')}.</p>
-            <div class="btn-row">
-              <a class="btn btn--primary" href={p.releases}>Get {p.name} releases</a>
-            </div>
-          </div>
-        ))}
         <div class="card">
           <div class="tile__head tile__head--top">
-            <span class="card__mark">
-              <ChatMark size={30} title={CHAT.name} />
-            </span>
+            <span class="card__mark"><ChatMark size={30} title={CHAT.name} /></span>
             <h3>{CHAT.name}</h3>
           </div>
-          <p class="muted">A QDN app — no separate download. Open <QdnLink resource={CHAT.qdnResource} /> in Home.</p>
+          <p class="muted">
+            Private and public group chat. Open <QdnLink resource={CHAT.qdnResource} /> in Home.
+          </p>
         </div>
         <div class="card">
           <div class="tile__head tile__head--top">
-            <span class="card__mark">
-              <TrustMark size={30} title={TRUST.name} />
-            </span>
+            <span class="card__mark"><TrustMark size={30} title={TRUST.name} /></span>
             <h3>{TRUST.name}</h3>
           </div>
-          <p class="muted">A QDN app — no separate download. Open <QdnLink resource={TRUST.qdnResource} /> in Home.</p>
+          <p class="muted">
+            See and build account reputation. Open <QdnLink resource={TRUST.qdnResource} /> in Home.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Run your own node</h2>
+      <p class="lede measure">
+        Home can connect you through a public network of nodes, so you're online
+        right away. But running your own node is what keeps the platform in the
+        hands of the people on it — it strengthens the network, and it lets you
+        mint: by helping produce blocks you build voting weight, so you help
+        decide where Qortium goes next.
+      </p>
+      <div class="grid grid--2">
+        <div class="card">
+          <div class="tile__head tile__head--top">
+            <span class="card__mark"><HomeMark size={30} title="Qortium Home" /></span>
+            <h3>Let Home run it for you</h3>
+          </div>
+          <p class="muted">
+            Home can set up and run the node software for you — the easiest path,
+            and a great fit on a desktop that stays on. Install Home, then turn
+            on your node.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--ghost" href={RELEASES.home.releases}>Get Qortium Home</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tile__head tile__head--top">
+            <span class="card__mark"><CoreMark size={30} title="Qortium Core" /></span>
+            <h3>Run the node software yourself</h3>
+          </div>
+          <ReleaseTag class="badge badge--preview" repo={RELEASES.core.repoSlug} />
+          <p class="muted">
+            Qortium Core is that same node software on its own — run it by hand on
+            a server or an always-on machine without the app, or use it as a base
+            to build your own chain. {RELEASES.core.platforms.join(', ')}. License <code>{RELEASES.core.license}</code>.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--ghost" href={RELEASES.core.releases}>Get Qortium Core releases</a>
+          </div>
         </div>
       </div>
     </div>

@@ -27,9 +27,9 @@ export function withBase(path = '/'): string {
 
 export const SITE = {
   name: 'Qortium',
-  tagline: 'A cleaner chain baseline with a focused QDN home',
+  tagline: 'A complete internet platform, built by the community',
   description:
-    'Qortium is a stripped-down fork of Qortal Core with a companion app for wallets, nodes, and QDN browsing. Built for preview testing, chain experimentation, and an explicit roadmap.',
+    'Qortium is a complete internet platform for the everyday things you go online to do — sharing posts and media, messaging, publishing pages and apps, and storing files. It is built by the community and not controlled by any company, so no one can shut people out and you decide what you see.',
   /** Gateway origin; canonical/OG URLs are origin + public path + path. */
   origin: 'https://qortal.link',
   ogImage: '/og-default.png',

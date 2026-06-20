@@ -11,7 +11,7 @@ tradeoffs* rather than a replacement.
 
 ## View the site
 
-- **qortium.app** — primary home _(coming soon)_
+- <https://qortium.app> — primary home
 
 Mirrors (the same published site, served from Qortium/Qortal nodes):
 

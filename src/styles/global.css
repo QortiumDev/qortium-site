@@ -54,9 +54,18 @@
   --accent-strong: #3b46b8;
   --accent-soft:   #eef0fc;
   --accent-ink:    #2b338f;
+  /* Background and text colour for .btn--primary. Defaults to --accent / white.
+     --btn-primary-bg is overridden to --accent-strong for light-mode blue/pink
+     (where white text fails on the resting accent, but passes on --accent-strong).
+     --btn-primary-color is overridden to #14151a for light-hue accents where white
+     falls below AA 4.5:1 (orange/teal/cyan/yellow), and globally in dark mode
+     (all dark-mode accent tokens are pastel/high-luminance). */
+  --btn-primary-bg:    var(--accent);
+  --btn-primary-color: #fff;
 
   /* Status semantics */
-  --warn:      #b4540a;
+  /* --warn darkened #b4540a→#a84b09: was 4.37:1 on warn-soft, now 5.01:1 (AA pass) */
+  --warn:      #a84b09;
   --warn-soft: #fbeee2;
   --ok:        #1f7a4d;
   --ok-soft:   #e7f4ec;
@@ -105,6 +114,9 @@
     --ok-soft:   #14241b;
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
     --shadow-md: 0 8px 28px rgba(0,0,0,0.45);
+    /* Dark-mode accents are high-luminance pastels; dark ink is the only AA-safe
+       text colour on them (#14151a on default #8c95f0 = 6.66:1). */
+    --btn-primary-color: #14151a;
   }
 }
 
@@ -127,6 +139,9 @@
   --ok-soft:   #14241b;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
   --shadow-md: 0 8px 28px rgba(0,0,0,0.45);
+  /* Dark-mode accents are high-luminance pastels; dark ink is the only AA-safe
+     text colour on them (#14151a on default #8c95f0 = 6.66:1). */
+  --btn-primary-color: #14151a;
 }
 
 /* ----- text-size scale (mirrors Qortium Home) ----- */
@@ -138,25 +153,37 @@
 :root[data-text-size="huge"] { --text-scale: 2.1; }
 
 /* ----- host accents (from Qortium Home; applied when embedded) ----- */
-/* Light theme accents. --accent-ink uses the stronger shade for text contrast. */
+/* Light theme accents. --accent-ink uses the stronger shade for text contrast.
+   --btn-primary-color is overridden where white text fails AA 4.5:1 on --accent:
+     orange/teal/cyan/yellow: #14151a (dark ink) passes on the accent hue.
+     blue/pink: neither white nor #14151a reaches 4.5:1 on the resting accent,
+       so the btn-primary-bg var shifts to --accent-strong (which does pass white). */
 :root[data-accent="green"] { --accent: #21824a; --accent-strong: #196a3a; --accent-soft: rgb(33 130 74 / 10%); --accent-ink: #196a3a; }
-:root[data-accent="blue"] { --accent: #2a79f3; --accent-strong: #1e5ec3; --accent-soft: rgb(42 121 243 / 10%); --accent-ink: #1e5ec3; }
-:root[data-accent="orange"] { --accent: #de8b23; --accent-strong: #bf6e0f; --accent-soft: rgb(222 139 35 / 10%); --accent-ink: #bf6e0f; }
+/* blue: white on #2a79f3 = 4.10 FAIL; dark on #2a79f3 = 4.45 FAIL; white on #1e5ec3 (strong) = 6.10 PASS */
+:root[data-accent="blue"] { --accent: #2a79f3; --accent-strong: #1e5ec3; --accent-soft: rgb(42 121 243 / 10%); --accent-ink: #1e5ec3; --btn-primary-bg: var(--accent-strong); }
+/* orange: white on #de8b23 = 2.68 FAIL; dark #14151a = 6.79 PASS */
+:root[data-accent="orange"] { --accent: #de8b23; --accent-strong: #bf6e0f; --accent-soft: rgb(222 139 35 / 10%); --accent-ink: #bf6e0f; --btn-primary-color: #14151a; }
 :root[data-accent="purple"] { --accent: #7b44da; --accent-strong: #622fbd; --accent-soft: rgb(123 68 218 / 10%); --accent-ink: #622fbd; }
 :root[data-accent="red"] { --accent: #d53e3e; --accent-strong: #b63232; --accent-soft: rgb(213 62 62 / 10%); --accent-ink: #b63232; }
-:root[data-accent="teal"] { --accent: #17a398; --accent-strong: #12857a; --accent-soft: rgb(23 163 152 / 10%); --accent-ink: #12857a; }
-:root[data-accent="cyan"] { --accent: #1298d8; --accent-strong: #0f79aa; --accent-soft: rgb(18 152 216 / 10%); --accent-ink: #0f79aa; }
-:root[data-accent="pink"] { --accent: #d43f86; --accent-strong: #bd3673; --accent-soft: rgb(212 63 134 / 10%); --accent-ink: #bd3673; }
-:root[data-accent="yellow"] { --accent: #d6a828; --accent-strong: #bd8f20; --accent-soft: rgb(214 168 40 / 10%); --accent-ink: #bd8f20; }
-/* Dark theme accents. --accent-ink uses the lighter shade for contrast on dark. */
+/* teal: white on #17a398 = 3.12 FAIL; dark #14151a = 5.84 PASS */
+:root[data-accent="teal"] { --accent: #17a398; --accent-strong: #12857a; --accent-soft: rgb(23 163 152 / 10%); --accent-ink: #12857a; --btn-primary-color: #14151a; }
+/* cyan: white on #1298d8 = 3.23 FAIL; dark #14151a = 5.65 PASS */
+:root[data-accent="cyan"] { --accent: #1298d8; --accent-strong: #0f79aa; --accent-soft: rgb(18 152 216 / 10%); --accent-ink: #0f79aa; --btn-primary-color: #14151a; }
+/* pink: white on #d43f86 = 4.33 FAIL; dark on #d43f86 = 4.21 FAIL; white on #bd3673 (strong) = 5.33 PASS */
+:root[data-accent="pink"] { --accent: #d43f86; --accent-strong: #bd3673; --accent-soft: rgb(212 63 134 / 10%); --accent-ink: #bd3673; --btn-primary-bg: var(--accent-strong); }
+/* yellow: white on #d6a828 = 2.21 FAIL; dark #14151a = 8.24 PASS */
+:root[data-accent="yellow"] { --accent: #d6a828; --accent-strong: #bd8f20; --accent-soft: rgb(214 168 40 / 10%); --accent-ink: #bd8f20; --btn-primary-color: #14151a; }
+/* Dark theme accents. --accent-ink uses the lighter shade for contrast on dark.
+   All dark-mode accent tokens are high-luminance pastels, so btn-primary text
+   must be dark — covered by the base dark-mode --btn-primary-color: #14151a rule. */
 :root[data-theme="dark"][data-accent="green"] { --accent: #87d99b; --accent-strong: #6fcd87; --accent-soft: rgb(135 217 155 / 12%); --accent-ink: #87d99b; }
-:root[data-theme="dark"][data-accent="blue"] { --accent: #8abefe; --accent-strong: #7aaef7; --accent-soft: rgb(138 190 254 / 12%); --accent-ink: #8abefe; }
+:root[data-theme="dark"][data-accent="blue"] { --accent: #8abefe; --accent-strong: #7aaef7; --accent-soft: rgb(138 190 254 / 12%); --accent-ink: #8abefe; --btn-primary-bg: var(--accent); }
 :root[data-theme="dark"][data-accent="orange"] { --accent: #f1b16d; --accent-strong: #eaa257; --accent-soft: rgb(241 177 109 / 12%); --accent-ink: #f1b16d; }
 :root[data-theme="dark"][data-accent="purple"] { --accent: #caa2ff; --accent-strong: #b58dff; --accent-soft: rgb(202 162 255 / 12%); --accent-ink: #caa2ff; }
 :root[data-theme="dark"][data-accent="red"] { --accent: #f19a9a; --accent-strong: #dd7a7a; --accent-soft: rgb(241 154 154 / 12%); --accent-ink: #f19a9a; }
 :root[data-theme="dark"][data-accent="teal"] { --accent: #6ed9d1; --accent-strong: #5fc3bc; --accent-soft: rgb(110 217 209 / 12%); --accent-ink: #6ed9d1; }
 :root[data-theme="dark"][data-accent="cyan"] { --accent: #88d2ff; --accent-strong: #79c5f5; --accent-soft: rgb(136 210 255 / 12%); --accent-ink: #88d2ff; }
-:root[data-theme="dark"][data-accent="pink"] { --accent: #f8a7cf; --accent-strong: #f58cbf; --accent-soft: rgb(248 167 207 / 12%); --accent-ink: #f8a7cf; }
+:root[data-theme="dark"][data-accent="pink"] { --accent: #f8a7cf; --accent-strong: #f58cbf; --accent-soft: rgb(248 167 207 / 12%); --accent-ink: #f8a7cf; --btn-primary-bg: var(--accent); }
 :root[data-theme="dark"][data-accent="yellow"] { --accent: #f4cb67; --accent-strong: #edbf53; --accent-soft: rgb(244 203 103 / 12%); --accent-ink: #f4cb67; }
 /* System-dark (OS prefers dark, no explicit toggle) + a picked accent: mirror the
    dark accent values so --accent-ink stays light enough for AA contrast. Without
@@ -165,13 +192,13 @@
    Uses the file's :root:not([data-theme="light"]) convention (specificity 0,3,0). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"])[data-accent="green"] { --accent: #87d99b; --accent-strong: #6fcd87; --accent-soft: rgb(135 217 155 / 12%); --accent-ink: #87d99b; }
-  :root:not([data-theme="light"])[data-accent="blue"] { --accent: #8abefe; --accent-strong: #7aaef7; --accent-soft: rgb(138 190 254 / 12%); --accent-ink: #8abefe; }
+  :root:not([data-theme="light"])[data-accent="blue"] { --accent: #8abefe; --accent-strong: #7aaef7; --accent-soft: rgb(138 190 254 / 12%); --accent-ink: #8abefe; --btn-primary-bg: var(--accent); }
   :root:not([data-theme="light"])[data-accent="orange"] { --accent: #f1b16d; --accent-strong: #eaa257; --accent-soft: rgb(241 177 109 / 12%); --accent-ink: #f1b16d; }
   :root:not([data-theme="light"])[data-accent="purple"] { --accent: #caa2ff; --accent-strong: #b58dff; --accent-soft: rgb(202 162 255 / 12%); --accent-ink: #caa2ff; }
   :root:not([data-theme="light"])[data-accent="red"] { --accent: #f19a9a; --accent-strong: #dd7a7a; --accent-soft: rgb(241 154 154 / 12%); --accent-ink: #f19a9a; }
   :root:not([data-theme="light"])[data-accent="teal"] { --accent: #6ed9d1; --accent-strong: #5fc3bc; --accent-soft: rgb(110 217 209 / 12%); --accent-ink: #6ed9d1; }
   :root:not([data-theme="light"])[data-accent="cyan"] { --accent: #88d2ff; --accent-strong: #79c5f5; --accent-soft: rgb(136 210 255 / 12%); --accent-ink: #88d2ff; }
-  :root:not([data-theme="light"])[data-accent="pink"] { --accent: #f8a7cf; --accent-strong: #f58cbf; --accent-soft: rgb(248 167 207 / 12%); --accent-ink: #f8a7cf; }
+  :root:not([data-theme="light"])[data-accent="pink"] { --accent: #f8a7cf; --accent-strong: #f58cbf; --accent-soft: rgb(248 167 207 / 12%); --accent-ink: #f8a7cf; --btn-primary-bg: var(--accent); }
   :root:not([data-theme="light"])[data-accent="yellow"] { --accent: #f4cb67; --accent-strong: #edbf53; --accent-soft: rgb(244 203 103 / 12%); --accent-ink: #f4cb67; }
 }
 
@@ -230,8 +257,8 @@ code, kbd, pre { font-family: var(--font-mono); font-size: 0.92em; }
   transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
 }
 .btn:active { transform: translateY(1px); }
-.btn--primary { background: var(--accent); color: #fff; }
-.btn--primary:hover { background: var(--accent-strong); color: #fff; }
+.btn--primary { background: var(--btn-primary-bg); color: var(--btn-primary-color); }
+.btn--primary:hover { background: var(--btn-primary-bg); color: var(--btn-primary-color); }
 .btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
 .btn--ghost:hover { border-color: var(--ink-soft); color: var(--ink); background: var(--bg-soft); }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
@@ -297,7 +324,7 @@ td strong { color: var(--ink); }
 .nav { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; flex-wrap: wrap; }
 .nav a { color: var(--ink-soft); text-decoration: none; font-weight: 540; font-size: 0.95rem; padding: 0.45em 0.7em; border-radius: 7px; }
 .nav a:hover { color: var(--ink); background: var(--bg-soft); }
-.nav a[aria-current="page"] { color: var(--accent-ink); background: var(--accent-soft); }
+.nav a[aria-current="page"] { color: var(--btn-primary-color); background: var(--btn-primary-bg); }
 @media (max-width: 860px) {
   .nav { gap: 0; font-size: 0.9rem; }
   .nav a { padding: 0.4em 0.5em; }
@@ -451,12 +478,15 @@ td strong { color: var(--ink); }
    it into a clickable new-tab link when rendered inside Qortium Home ----- */
 a.qdn-link {
   font-family: var(--font-mono); font-size: 0.92em; text-decoration: none;
-  color: var(--accent-ink); background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--btn-primary-color); background: var(--btn-primary-bg);
+  border: 1px solid color-mix(in srgb, var(--btn-primary-bg) 35%, transparent);
   padding: 0.12em 0.45em; border-radius: 6px;
 }
-a.qdn-link:hover { border-color: var(--accent); color: var(--accent-strong); text-decoration: underline; }
+a.qdn-link:hover { border-color: color-mix(in srgb, var(--btn-primary-bg) 50%, transparent); color: var(--btn-primary-color); text-decoration: underline; }
 
 /* ----- misc utilities ----- */
-.skip-link { position: absolute; left: -9999px; top: 0; background: var(--accent); color: #fff; padding: 0.6em 1em; border-radius: 0 0 8px 0; z-index: 100; }
+/* skip-link text colour uses --btn-primary-color so it tracks the same light/dark
+   accent-contrast logic as .btn--primary (dark text in dark mode where accents are
+   pastel; white in light mode where the default accent is dark enough). */
+.skip-link { position: absolute; left: -9999px; top: 0; background: var(--btn-primary-bg); color: var(--btn-primary-color); padding: 0.6em 1em; border-radius: 0 0 8px 0; z-index: 100; }
 .skip-link:focus { left: 0; }

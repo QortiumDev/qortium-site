@@ -32,11 +32,11 @@ const service = process.env.QORTIUM_SITE_QDN_SERVICE ?? DEFAULT_SERVICE;
 const publishDescription = process.env.QORTIUM_SITE_QDN_DESCRIPTION ?? DEFAULT_DESCRIPTION;
 const distPath = path.resolve(repoRoot, process.env.QORTIUM_SITE_DIST_PATH ?? 'dist');
 const apiKeyPath = expandHomePath(
-  process.env.QORTIUM_SITE_NODE_API_KEY_PATH ?? '~/git/qortium/preview/apikey.txt',
+  process.env.QORTIUM_SITE_NODE_API_KEY_PATH ?? '~/.config/qortium-core/runtime/apikey.txt',
 );
 const previewAccountsPath = expandHomePath(
   process.env.QORTIUM_SITE_PREVIEW_ACCOUNTS_PATH ??
-    '~/git/qortium/preview/secrets/initial-minting-accounts.json',
+    '~/qortium/git/qortium-core/preview/secrets/initial-minting-accounts.json',
 );
 
 function expandHomePath(filePath) {

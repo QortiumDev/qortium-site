@@ -189,27 +189,85 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     <script is:inline>
       (function () {
-        var inApp = window._qdnContext === 'render';
+        var hasQdnBridge = typeof window.qdnRequest === 'function';
 
-        // --- qdn:// references -> clickable new-tab links (inside Home only) ---
-        // Home auto-intercepts <a href="qdn://…"> clicks and opens them in a new
-        // in-app tab; a plain browser/gateway keeps the inert <code> rendering.
-        if (inApp) {
-          var refs = document.querySelectorAll('code.qdn-ref[data-qdn]');
-          Array.prototype.forEach.call(refs, function (code) {
-            var res = code.getAttribute('data-qdn');
-            if (!res) return;
+        // --- qdn:// references ---
+        // Qortium Home injects qdnRequest into WEBSITE render views. Use the
+        // bridge there; otherwise keep the code rendering and make it copyable.
+        var refs = document.querySelectorAll('code.qdn-ref[data-qdn]');
+        Array.prototype.forEach.call(refs, function (code) {
+          var res = code.getAttribute('data-qdn');
+          if (!res) return;
+
+          if (hasQdnBridge) {
             var a = document.createElement('a');
             a.className = 'qdn-link';
-            a.href = res;
-            a.rel = 'noopener noreferrer';
             a.setAttribute('data-qdn', res);
+            a.setAttribute('role', 'link');
+            a.setAttribute('tabindex', '0');
             a.textContent = code.textContent;
+            function openQdn(e) {
+              if (e) e.preventDefault();
+              window.qdnRequest({ action: 'OPEN_NEW_TAB', address: res }).catch(function () {});
+            }
+            a.addEventListener('click', openQdn);
+            a.addEventListener('keydown', function (e) {
+              if (e.key === 'Enter' || e.key === ' ') openQdn(e);
+            });
             code.parentNode.replaceChild(a, code);
+            return;
+          }
+
+          var originalText = code.textContent;
+          var resetTimer = null;
+          code.setAttribute('role', 'button');
+          code.setAttribute('tabindex', '0');
+          code.setAttribute('title', 'Copy QDN address');
+          code.setAttribute('aria-live', 'polite');
+          code.setAttribute('data-copyable', 'true');
+
+          function showCopied() {
+            if (resetTimer) window.clearTimeout(resetTimer);
+            code.setAttribute('data-state', 'copied');
+            code.textContent = 'Copied!';
+            resetTimer = window.setTimeout(function () {
+              code.removeAttribute('data-state');
+              code.textContent = originalText;
+            }, 1200);
+          }
+
+          function copyFallback() {
+            try {
+              var ta = document.createElement('textarea');
+              ta.value = res;
+              ta.setAttribute('readonly', '');
+              ta.style.position = 'absolute';
+              ta.style.left = '-9999px';
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand('copy');
+              document.body.removeChild(ta);
+              showCopied();
+            } catch (e) {}
+          }
+
+          function copyQdn(e) {
+            if (e) e.preventDefault();
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(res).then(showCopied, copyFallback);
+            } else {
+              copyFallback();
+            }
+          }
+
+          code.addEventListener('click', copyQdn);
+          code.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') copyQdn(e);
           });
-        }
+        });
 
         // --- external http(s) links ---
+        var inApp = window._qdnContext === 'render';
         var modal = document.getElementById('ext-modal');
         var urlEl = document.getElementById('ext-modal-url');
         var copyBtn = document.getElementById('ext-modal-copy');

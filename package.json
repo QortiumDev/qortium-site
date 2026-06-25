@@ -13,7 +13,10 @@
     "qdn:publish": "node scripts/publish-qdn.mjs",
     "qdn:publish:build": "astro build && node scripts/publish-qdn.mjs",
     "site:deploy": "bash scripts/deploy-site.sh --no-build",
-    "site:deploy:build": "bash scripts/deploy-site.sh"
+    "site:deploy:build": "bash scripts/deploy-site.sh",
+    "release:preview": "bash scripts/release-site.sh --previewnet",
+    "release:vps": "bash scripts/release-site.sh --vps",
+    "release:all": "bash scripts/release-site.sh --all"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.1.0",

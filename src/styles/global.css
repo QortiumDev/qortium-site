@@ -475,14 +475,42 @@ td strong { color: var(--ink); }
 .ext-modal__actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
 /* ----- qdn:// reference — inline code by default; the BaseLayout enhancer turns
-   it into a clickable new-tab link when rendered inside Qortium Home ----- */
+   it into a bridge-backed new-tab link in Qortium Home, or a copy button elsewhere. ----- */
 a.qdn-link {
   font-family: var(--font-mono); font-size: 0.92em; text-decoration: none;
   color: var(--btn-primary-color); background: var(--btn-primary-bg);
   border: 1px solid color-mix(in srgb, var(--btn-primary-bg) 35%, transparent);
   padding: 0.12em 0.45em; border-radius: 6px;
+  cursor: pointer;
 }
-a.qdn-link:hover { border-color: color-mix(in srgb, var(--btn-primary-bg) 50%, transparent); color: var(--btn-primary-color); text-decoration: underline; }
+a.qdn-link:hover,
+a.qdn-link:focus-visible {
+  border-color: color-mix(in srgb, var(--btn-primary-bg) 50%, transparent);
+  color: var(--btn-primary-color);
+  text-decoration: underline;
+  outline: none;
+}
+a.qdn-link:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+code.qdn-ref[data-copyable="true"] {
+  cursor: pointer;
+  border: 1px solid var(--line);
+  transition: background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+code.qdn-ref[data-copyable="true"]:hover,
+code.qdn-ref[data-copyable="true"]:focus-visible {
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+  outline: none;
+}
+code.qdn-ref[data-copyable="true"]:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+code.qdn-ref[data-copyable="true"][data-state="copied"] {
+  color: var(--ok);
+  background: var(--ok-soft);
+  border-color: color-mix(in srgb, var(--ok) 42%, var(--line));
+}
 
 /* ----- misc utilities ----- */
 /* skip-link text colour uses --btn-primary-color so it tracks the same light/dark

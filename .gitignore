@@ -4,6 +4,12 @@ dist/
 *.log
 .DS_Store
 
+# Secrets / stray runtime artifacts (never commit)
+*.jks
+QortiumKeyStore.jks
+qortium-backup/
+.secrets/
+
 # Python
 __pycache__/
 *.pyc

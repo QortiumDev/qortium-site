@@ -51,6 +51,8 @@ straight to `compare/index.html` with no redirect.
 - Design tokens and every CSS class are in `src/styles/global.css`.
 - Shared shell: `src/layouts/BaseLayout.astro` (head/meta/OG/JSON-LD/canonical),
   `src/components/Header.astro`, `Footer.astro`, `Logo.astro`.
+- Contributor workflow and Work Log guidance lives in
+  [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Before launch (open items)
 

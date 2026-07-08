@@ -1,16 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import QdnLink from '../components/QdnLink.astro';
+import ChatMark from '../components/ChatMark.astro';
+import TrustMark from '../components/TrustMark.astro';
+import AppMark from '../components/AppMark.astro';
 import { APPS, absUrl, withBase } from '../data/site';
 
 const title = 'Qortium Apps';
 const description =
   'QDN Q-Apps published on the network and opened inside Qortium Home, with no separate installs.';
-
-const publishers = [
-  { name: 'QuickMythril', apps: APPS.filter((app) => app.publisher === 'QuickMythril') },
-  { name: '7R15', apps: APPS.filter((app) => app.publisher === '7R15') },
-];
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -40,46 +38,35 @@ const jsonLd = {
     </div>
   </section>
 
-  {publishers.map((group) => (
-    <section class="section">
-      <div class="container">
-        <h2>{group.name}</h2>
-        <div class="grid grid--4">
-          {group.apps.map((app) => (
-            <div class="card">
-              <div class="tile__head tile__head--top">
-                <span class="card__mark">
-                  <img
-                    class:list={[
-                      'app-icon',
-                      app.iconStyle === 'line' && 'app-icon--line',
-                    ]}
-                    src={withBase(`/apps/${app.iconSlug}.webp`)}
-                    width="44"
-                    height="44"
-                    loading="lazy"
-                    decoding="async"
-                    alt={`${app.name} app icon`}
-                  />
-                </span>
-                <div>
-                  <h3>{app.name}</h3>
-                  <span class="badge">{app.publisher}</span>
-                </div>
-              </div>
-              <p class="muted">{app.description}</p>
-              <p class="muted">Open <QdnLink resource={app.qdnResource} /> in Home.</p>
-              {app.page && (
-                <div class="btn-row">
-                  <a class="btn btn--ghost" href={withBase(app.page)}>
-                    {app.name} page
-                  </a>
-                </div>
-              )}
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--4">
+        {APPS.map((app) => (
+          <div class="card">
+            <div class="tile__head tile__head--top">
+              <span class="card__mark">
+                {app.mark === 'chat' ? (
+                  <ChatMark size={40} title="Qortium Chat" />
+                ) : app.mark === 'trust' ? (
+                  <TrustMark size={40} title="Qortium Trust" />
+                ) : (
+                  <AppMark app={app.mark} size={40} />
+                )}
+              </span>
+              <h3>{app.name}</h3>
             </div>
-          ))}
-        </div>
+            <p class="muted">{app.description}</p>
+            <p class="muted">Open <QdnLink resource={app.qdnResource} /> in Home.</p>
+            {app.page && (
+              <div class="btn-row">
+                <a class="btn btn--ghost" href={withBase(app.page)}>
+                  {app.name} page
+                </a>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </section>
-  ))}
+    </div>
+  </section>
 </BaseLayout>

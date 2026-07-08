@@ -5,6 +5,7 @@ import CoreMark from '../components/CoreMark.astro';
 import HomeMark from '../components/HomeMark.astro';
 import ChatMark from '../components/ChatMark.astro';
 import TrustMark from '../components/TrustMark.astro';
+import AppMark from '../components/AppMark.astro';
 import { withBase, LINKS, absUrl } from '../data/site';
 
 const title = 'Qortium | A community-run internet platform';
@@ -143,19 +144,10 @@ const jsonLd = [
         </a>
         <a class="card card--link" href={withBase('/apps')}>
           <div class="tile__head">
-            <span class="card__mark">
-              <img
-                src={withBase('/apps/apps.webp')}
-                width="40"
-                height="40"
-                loading="lazy"
-                decoding="async"
-                alt="Qortium Apps"
-              />
-            </span>
+            <span class="card__mark"><AppMark app="apps" size={40} title="Qortium apps" /></span>
             <h3>More apps</h3>
           </div>
-          <p class="muted">Wallet, Names, Groups, Profiles, Chain Explorer, Help, and more — 16 apps in all, open right inside Home.</p>
+          <p class="muted">Wallet, Names, Groups, Profiles, Chain Explorer, Help, and more — all open right inside Home.</p>
         </a>
       </div>
     </div>

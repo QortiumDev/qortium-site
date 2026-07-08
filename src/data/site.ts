@@ -84,6 +84,7 @@ export const NAV: { label: string; href: string }[] = [
   { label: 'Home', href: '/home' },
   { label: 'Chat', href: '/chat' },
   { label: 'Trust', href: '/trust' },
+  { label: 'Apps', href: '/apps' },
   { label: 'Downloads', href: '/downloads' },
 ];
 
@@ -173,6 +174,158 @@ export const TRUST = {
   qdnResource: 'qdn://APP/Trust/Trust',
   runsInside: 'Qortium Home',
 } as const;
+
+/**
+ * QDN Q-Apps shown on /apps. Icons are public assets at /apps/<iconSlug>.webp
+ * and must be linked with withBase() from pages. `iconStyle: "line"` marks the
+ * near-black transparent line-art icons that need dark-theme treatment; full
+ * color art must not be filtered.
+ */
+export const APPS: {
+  name: string;
+  publisher: 'QuickMythril' | '7R15';
+  iconSlug: string;
+  iconStyle: 'line' | 'color';
+  description: string;
+  qdnResource: string;
+  page?: string;
+}[] = [
+  {
+    name: 'Chat',
+    publisher: 'QuickMythril',
+    iconSlug: 'chat',
+    iconStyle: 'line',
+    description: 'QDN chat app — one-to-one messages and group rooms.',
+    qdnResource: CHAT.qdnResource,
+    page: '/chat',
+  },
+  {
+    name: 'Trust',
+    publisher: 'QuickMythril',
+    iconSlug: 'trust',
+    iconStyle: 'line',
+    description:
+      'Explore the on-chain trust network and rate accounts in Home; read-only in a plain browser.',
+    qdnResource: TRUST.qdnResource,
+    page: '/trust',
+  },
+  {
+    name: 'Help',
+    publisher: 'QuickMythril',
+    iconSlug: 'help',
+    iconStyle: 'line',
+    description:
+      'Help and feedback app for issues, ideas, replies, edits, completion status, and shareable links.',
+    qdnResource: 'qdn://APP/Help/Help',
+  },
+  {
+    name: 'Minting',
+    publisher: 'QuickMythril',
+    iconSlug: 'minting',
+    iconStyle: 'line',
+    description: 'Shows node minting state and recent signers.',
+    qdnResource: 'qdn://APP/Minting/Minting',
+  },
+  {
+    name: 'Network',
+    publisher: 'QuickMythril',
+    iconSlug: 'network',
+    iconStyle: 'line',
+    description: 'Network topology viewer, including I2P connections.',
+    qdnResource: 'qdn://APP/Network/Network',
+  },
+  {
+    name: 'Node',
+    publisher: 'QuickMythril',
+    iconSlug: 'node',
+    iconStyle: 'line',
+    description:
+      'Inspect a running Core node — status, peers, diagnostics, and bounded settings edits.',
+    qdnResource: 'qdn://APP/Node/Node',
+  },
+  {
+    name: 'Emulator',
+    publisher: 'QuickMythril',
+    iconSlug: 'emulator',
+    iconStyle: 'line',
+    description:
+      'Browses Qortal-hosted game metadata and launches ROMs through Home bridge actions.',
+    qdnResource: 'qdn://APP/Emulator/Emulator',
+  },
+  {
+    name: 'ChibiHub',
+    publisher: 'QuickMythril',
+    iconSlug: 'chibihub',
+    iconStyle: 'color',
+    description:
+      'A tiny gateway-style companion — account unlock, dashboard, and chat, with the Qubino mascot.',
+    qdnResource: 'qdn://APP/ChibiHub/ChibiHub',
+  },
+  {
+    name: 'Apps',
+    publisher: '7R15',
+    iconSlug: 'apps',
+    iconStyle: 'color',
+    description: 'Qortium app browser and launcher.',
+    qdnResource: 'qdn://APP/Apps/Apps',
+  },
+  {
+    name: 'Wallet',
+    publisher: '7R15',
+    iconSlug: 'wallet',
+    iconStyle: 'color',
+    description: 'Multi-coin crypto wallet — send and receive, history, and address book.',
+    qdnResource: 'qdn://APP/Wallet/Wallet',
+  },
+  {
+    name: 'Library',
+    publisher: '7R15',
+    iconSlug: 'library',
+    iconStyle: 'color',
+    description: 'QDN document reader and library.',
+    qdnResource: 'qdn://APP/Library/Library',
+  },
+  {
+    name: 'Publish',
+    publisher: '7R15',
+    iconSlug: 'publish',
+    iconStyle: 'color',
+    description: 'QDN resource following, blocking, and publishing.',
+    qdnResource: 'qdn://APP/Publish/Publish',
+  },
+  {
+    name: 'Profile',
+    publisher: '7R15',
+    iconSlug: 'profile',
+    iconStyle: 'color',
+    description: 'Account profiles and stats.',
+    qdnResource: 'qdn://APP/Profile/Profile',
+  },
+  {
+    name: 'Names',
+    publisher: '7R15',
+    iconSlug: 'names',
+    iconStyle: 'color',
+    description: 'Name registration and marketplace.',
+    qdnResource: 'qdn://APP/Names/Names',
+  },
+  {
+    name: 'Groups',
+    publisher: '7R15',
+    iconSlug: 'groups',
+    iconStyle: 'color',
+    description: 'Group discovery and management.',
+    qdnResource: 'qdn://APP/Groups/Groups',
+  },
+  {
+    name: 'Chain',
+    publisher: '7R15',
+    iconSlug: 'chain',
+    iconStyle: 'color',
+    description: 'Block explorer and transaction viewer.',
+    qdnResource: 'qdn://APP/Chain/Chain',
+  },
+];
 
 /** Previewnet facts. */
 export const PREVIEWNET = {

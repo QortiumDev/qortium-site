@@ -38,6 +38,10 @@ const connectivity = [
     h: 'Most private (I2P only)',
     p: 'Send every connection through I2P and your real internet address is never exposed to peers. The strongest privacy, in exchange for a bit more overhead.',
   },
+  {
+    h: 'Steadier when peers are scarce',
+    p: 'Large QDN publishes stream straight through Core instead of loading into memory, and Core protects itself when only a few peers are online — so the network stays reliable.',
+  },
 ];
 
 const directions = [
@@ -149,7 +153,8 @@ const jsonLd = {
           <h3>Reputation built into accounts</h3>
           <p class="muted">
             Accounts earn reputation that shapes their part in minting and voting,
-            helping keep things fair — see Trust.
+            helping keep things fair — and apps can read ratings for accounts and
+            published resources alike. See Trust.
           </p>
         </a>
         {directions.map((d) => (

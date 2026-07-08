@@ -25,6 +25,10 @@ const highlights = [
     h: 'Hard to fake',
     p: 'You cannot prop up your own reputation with a pile of fake accounts. Scores have to be earned from real participants.',
   },
+  {
+    h: 'Rate accounts from right inside Home',
+    p: 'Trust isn\'t just for looking things up — open it inside Qortium Home and you can rate accounts yourself. You approve every rating, and signing never leaves Home. Open it in a plain browser and it stays read-only.',
+  },
 ];
 
 const jsonLd = {
@@ -108,7 +112,9 @@ const jsonLd = {
       <h2>Get started</h2>
       <div class="card">
         <p class="muted">
-          Open Trust inside Qortium Home (<QdnLink resource={TRUST.qdnResource} />).
+          Open Trust inside Qortium Home (<QdnLink resource={TRUST.qdnResource} />)
+          to view the trust graph and rate accounts. In a plain browser it
+          stays read-only.
         </p>
         <div class="btn-row">
           <a class="btn btn--ghost" href={LINKS.trustRepo}>Source repo</a>

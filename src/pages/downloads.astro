@@ -36,6 +36,10 @@ const jsonLd = {
         <ReleaseTag class="badge badge--preview" repo={RELEASES.home.repoSlug} />
         {RELEASES.home.platforms.join(', ')}. License <code>{RELEASES.home.license}</code>.
       </p>
+      <p class="muted">
+        macOS builds include a universal DMG plus legacy DMGs for macOS 11 and
+        macOS 10.15, so older Macs are covered too. No iOS build yet.
+      </p>
       <div class="btn-row">
         <a class="btn btn--primary" href={RELEASES.home.releases}>Get Qortium Home</a>
       </div>
@@ -67,6 +71,11 @@ const jsonLd = {
           </p>
         </div>
       </div>
+      <p class="muted measure">
+        Help, Wallet, Names, Groups, Profiles, Chain Explorer, Minting, Network,
+        Node, and more also open inside Home as QDN apps — no separate downloads
+        for any of them. <a href={withBase('/apps')}>See all apps</a>.
+      </p>
     </div>
   </section>
 

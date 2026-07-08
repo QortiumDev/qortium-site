@@ -5,6 +5,7 @@ import CoreMark from '../components/CoreMark.astro';
 import HomeMark from '../components/HomeMark.astro';
 import ChatMark from '../components/ChatMark.astro';
 import TrustMark from '../components/TrustMark.astro';
+import AppMark from '../components/AppMark.astro';
 import { withBase, LINKS, absUrl } from '../data/site';
 
 const title = 'Qortium | A community-run internet platform';
@@ -111,7 +112,7 @@ const jsonLd = [
   <!-- 4. PRODUCT SPLIT -->
   <section class="section">
     <div class="container">
-      <h2>Core, Home, Chat, Trust</h2>
+      <h2>Core, Home, and the app suite</h2>
       <div class="grid grid--4">
         <a class="card card--link" href={withBase('/core')}>
           <div class="tile__head">
@@ -140,6 +141,13 @@ const jsonLd = [
             <h3>Qortium Trust</h3>
           </div>
           <p class="muted">Check who you can rely on and build your own reputation over time.</p>
+        </a>
+        <a class="card card--link" href={withBase('/apps')}>
+          <div class="tile__head">
+            <span class="card__mark"><AppMark app="apps" size={40} title="Qortium apps" /></span>
+            <h3>More apps</h3>
+          </div>
+          <p class="muted">Wallet, Names, Groups, Profiles, Chain Explorer, Help, and more — all open right inside Home.</p>
         </a>
       </div>
     </div>

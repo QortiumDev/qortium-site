@@ -84,6 +84,7 @@ export const NAV: { label: string; href: string }[] = [
   { label: 'Home', href: '/home' },
   { label: 'Chat', href: '/chat' },
   { label: 'Trust', href: '/trust' },
+  { label: 'Apps', href: '/apps' },
   { label: 'Downloads', href: '/downloads' },
 ];
 
@@ -173,6 +174,109 @@ export const TRUST = {
   qdnResource: 'qdn://APP/Trust/Trust',
   runsInside: 'Qortium Home',
 } as const;
+
+/**
+ * QDN Q-Apps shown on /apps, listed alphabetically by name. `mark` is the
+ * AppMark registry key used to render each card's icon (Chat and Trust use
+ * the dedicated ChatMark / TrustMark components instead).
+ */
+export const APPS: {
+  name: string;
+  mark: string;
+  description: string;
+  qdnResource: string;
+  page?: string;
+}[] = [
+  {
+    name: 'Apps',
+    mark: 'apps',
+    description: 'Qortium app browser and launcher.',
+    qdnResource: 'qdn://APP/Apps/Apps',
+  },
+  {
+    name: 'Chain',
+    mark: 'chain',
+    description: 'Block explorer and transaction viewer.',
+    qdnResource: 'qdn://APP/Chain/Chain',
+  },
+  {
+    name: 'Chat',
+    mark: 'chat',
+    description: 'QDN chat app — one-to-one messages and group rooms.',
+    qdnResource: CHAT.qdnResource,
+    page: '/chat',
+  },
+  {
+    name: 'Groups',
+    mark: 'groups',
+    description: 'Group discovery and management.',
+    qdnResource: 'qdn://APP/Groups/Groups',
+  },
+  {
+    name: 'Help',
+    mark: 'help',
+    description:
+      'Help and feedback app for issues, ideas, replies, edits, completion status, and shareable links.',
+    qdnResource: 'qdn://APP/Help/Help',
+  },
+  {
+    name: 'Library',
+    mark: 'library',
+    description: 'QDN document reader and library.',
+    qdnResource: 'qdn://APP/Library/Library',
+  },
+  {
+    name: 'Minting',
+    mark: 'minting',
+    description: 'Shows node minting state and recent signers.',
+    qdnResource: 'qdn://APP/Minting/Minting',
+  },
+  {
+    name: 'Names',
+    mark: 'names',
+    description: 'Name registration and marketplace.',
+    qdnResource: 'qdn://APP/Names/Names',
+  },
+  {
+    name: 'Network',
+    mark: 'network',
+    description: 'Network topology viewer, including I2P connections.',
+    qdnResource: 'qdn://APP/Network/Network',
+  },
+  {
+    name: 'Node',
+    mark: 'node',
+    description:
+      'Inspect a running Core node — status, peers, diagnostics, and bounded settings edits.',
+    qdnResource: 'qdn://APP/Node/Node',
+  },
+  {
+    name: 'Profile',
+    mark: 'profile',
+    description: 'Account profiles and stats.',
+    qdnResource: 'qdn://APP/Profile/Profile',
+  },
+  {
+    name: 'Publish',
+    mark: 'publish',
+    description: 'QDN resource following, blocking, and publishing.',
+    qdnResource: 'qdn://APP/Publish/Publish',
+  },
+  {
+    name: 'Trust',
+    mark: 'trust',
+    description:
+      'Explore the on-chain trust network and rate accounts in Home; read-only in a plain browser.',
+    qdnResource: TRUST.qdnResource,
+    page: '/trust',
+  },
+  {
+    name: 'Wallet',
+    mark: 'wallet',
+    description: 'Multi-coin crypto wallet — send and receive, history, and address book.',
+    qdnResource: 'qdn://APP/Wallet/Wallet',
+  },
+];
 
 /** Previewnet facts. */
 export const PREVIEWNET = {

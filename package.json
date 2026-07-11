@@ -1,7 +1,7 @@
 {
   "name": "qortium-site",
   "type": "module",
-  "version": "0.1.0",
+  "version": "1.4.0",
   "private": true,
   "description": "Qortium promotional website — a cleaner chain baseline with a focused QDN home.",
   "scripts": {

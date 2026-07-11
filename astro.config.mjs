@@ -1,7 +1,10 @@
 // @ts-check
+import { readFileSync, writeFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+
+const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 
 // The site is published to QDN and shown through the Core render endpoint
 // (/render/WEBSITE/<name>...). That renderer injects a <base href> at the
@@ -32,6 +35,17 @@ export default defineConfig({
         return item;
       },
     }),
+    {
+      name: 'qortium-app-manifest',
+      hooks: {
+        'astro:build:done': ({ dir }) => {
+          writeFileSync(
+            new URL('qortium-app.json', dir),
+            `${JSON.stringify({ name: 'Qortium', version: packageJson.version }, null, 2)}\n`,
+          );
+        },
+      },
+    },
   ],
   build: {
     inlineStylesheets: 'auto',

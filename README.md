@@ -1,62 +1,85 @@
 # Qortium site
 
-Promotional / explanatory website for **Qortium** — a stripped-down fork of
-Qortal Core with a focused QDN home app. Built from the design plan in
-[`deep-research-report.md`](./deep-research-report.md).
+The public website for Qortium. It explains the current Core, Home, Chat, Trust,
+and app ecosystem, compares Qortium's goals with Qortal's, and links to releases
+and QDN resources. The production site is <https://qortium.app>.
 
-Content-first static site: **Astro + MDX**, no client JS framework. Restrained
-developer-product aesthetic (line-art house mark, monochrome ink + one signal
-accent), candid about preview maturity, framing Qortal as *different goals and
-tradeoffs* rather than a replacement.
+The site is built with Astro and MDX as static HTML. It is served both from the
+VPS web roots behind `qortium.app` and as `qdn://WEBSITE/Qortium/Qortium`.
 
-## View the site
+## Pages and app catalog
 
-- <https://qortium.app> — primary home
+Current routes are:
 
-Mirrors (the same published site, served from Qortium/Qortal nodes):
+- `/` — overview
+- `/compare` — Qortium and Qortal goals and tradeoffs
+- `/core`, `/home`, `/chat`, and `/trust` — component and app overviews
+- `/apps` — the current QDN app catalog
+- `/downloads` — Core and Home downloads
 
-- <http://185.207.104.78:24891/render/WEBSITE/Qortium/Qortium>
-- <http://146.103.42.59:24891/render/WEBSITE/Qortium/Qortium>
-- <https://qortal.link/Qortium>
-- <https://qortal.name/Qortium>
+The app catalog currently lists Apps, Chain, Chat, Groups, Help, Library,
+Minting, Names, Network, Node, Profile, Publish, Trust, and Wallet. Navigation,
+links, release metadata, and that catalog live in `src/data/site.ts`.
 
-## Run locally
+When rendered inside Qortium Home, QDN references use the `qdnRequest` bridge's
+`OPEN_NEW_TAB` action. In a plain browser or public gateway, the same references
+remain copyable and external web links open normally.
+
+## QAVS and display settings
+
+The site is at QAVS `1.4.0`: the `1.4` portion is its minimum Qortium platform
+level and the patch number tracks this site release. Astro's
+`qortium-app-manifest` build hook reads `package.json` and emits
+`dist/qortium-app.json` with the name `Qortium` and the current version.
+
+The rendered site follows Home theme, accent, and text-size settings. It has its
+own website layout and does not implement the QDN app Classic, Modern, or Fun UI
+style modes.
+
+## Develop and build
 
 ```sh
 npm install
-npm run dev        # http://localhost:4321/Qortium/
+npm run dev       # Astro dev server at http://localhost:4321/
+npm run check     # Astro and TypeScript diagnostics
+npm run build     # static output in dist/
+npm run preview   # preview dist/
 ```
+
+`astro.config.mjs` deliberately has no base prefix. It uses relative assets and
+`format: 'file'`, producing flat files such as `compare.html`; `withBase()` in
+`src/data/site.ts` creates matching relative links for both QDN and ordinary
+static hosting.
+
+## Publish and deploy
+
+Direct package scripts are available for each normal target:
 
 ```sh
-npm run build      # static output in dist/
-npm run preview    # serve the production build
-npm run check      # astro type / diagnostics check
+npm run qdn:publish:build  # build, then publish previewnet WEBSITE/Qortium/Qortium
+npm run qdn:publish        # publish the existing dist/
+npm run site:deploy:build  # build, then deploy to both VPS web seeds
+npm run site:deploy        # deploy the existing dist/
 ```
 
-The site is configured for a **QDN sub-path deploy** at
-`https://qortal.link/Qortium` — see `base: '/Qortium'` in `astro.config.mjs`.
-All internal links go through `withBase()` in `src/data/site.ts`; output uses
-directory format with trailing-slash URLs (`/Qortium/compare/`) so paths map
-straight to `compare/index.html` with no redirect.
+The QDN publisher defaults to the local Previewnet Core at
+`http://127.0.0.1:24891` and the account file at
+`~/qortium/git/qortium-core/preview/secrets/initial-minting-accounts.json`.
+Environment overrides use the `QORTIUM_SITE_` prefix. The identified render URL
+is `http://127.0.0.1:24891/render/WEBSITE/Qortium/Qortium`.
 
-## Pages
+`scripts/release-site.sh` provides unified release targets:
 
-`/` Overview · `/compare` (the load-bearing comparison) · `/core` · `/home` ·
-`/chat` · `/trust` · `/downloads`.
+```sh
+npm run release:preview                         # previewnet QDN
+npm run release:vps                             # qortium.app VPS seeds
+bash scripts/release-site.sh --mainnet           # Qortal mainnet QDN
+npm run release:all                             # previewnet, mainnet, and VPS
+bash scripts/release-site.sh --previewnet --vps # combined subset
+```
 
-## Editing content / facts
-
-- Nav, links, releases, and the `withBase()` helper live in `src/data/site.ts` —
-  the single source of truth. Update `RELEASES` at each preview release.
-- Design tokens and every CSS class are in `src/styles/global.css`.
-- Shared shell: `src/layouts/BaseLayout.astro` (head/meta/OG/JSON-LD/canonical),
-  `src/components/Header.astro`, `Footer.astro`, `Logo.astro`.
-
-## Before launch (open items)
-
-- Set the real production origin in `astro.config.mjs` / `robots.txt` if it is
-  not `qortal.link/Qortium`.
-- Replace the placeholder OG image (`public/og-default.png`) and add real
-  Qortium Home screenshots (the design plan calls for these on Home/Core).
-- Confirm the GitHub org/repo URLs in `src/data/site.ts` `LINKS` match the
-  published repositories.
+Mainnet publishing is intentionally user-run. It broadcasts a real Qortal
+transaction, requires a wallet and password file through `--wallet` /
+`QORTAL_WALLET` and `--password-file` / `QORTAL_PASSWORD_FILE`, and asks for
+confirmation unless `--yes` is supplied. Use `--dry-run` to inspect a release
+sequence without building, publishing, or deploying.

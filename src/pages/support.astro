@@ -1,0 +1,275 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SUPPORT, LINKS } from '../data/site';
+
+const title = 'Support Qortium';
+const description =
+  'Qortium has real recurring costs behind it. Voluntary support keeps releases, testing, and the Previewnet infrastructure running.';
+
+const costs = [
+  {
+    item: 'Regxa VPS',
+    covers: 'Previewnet seed node, QDN data, and the qortium.app gateway',
+    amount: '$15 / month',
+  },
+  {
+    item: 'Netcup VPS',
+    covers: 'Second Previewnet seed node, for redundancy across providers',
+    amount: 'about $7 / month',
+  },
+  {
+    item: 'AI development tools',
+    covers: 'Two assistant subscriptions used daily for research, implementation, review, testing, and documentation',
+    amount: '$212 / month',
+  },
+  {
+    item: 'Connectivity',
+    covers: 'Phone and network access used for maintenance and testing',
+    amount: '$45 / month',
+  },
+  {
+    item: 'qortium.app domain',
+    covers: 'This website and the public gateway',
+    amount: 'about $37 / year',
+  },
+];
+
+const covered = [
+  ['$5 / month', 'The second seed node moves to a larger plan — more memory headroom on the node that has run out before.'],
+  ['$30 / month', 'All infrastructure is covered: both seed nodes, the gateway, and the domain.'],
+  ['$135 / month', 'Infrastructure plus one of the two development tool subscriptions.'],
+  ['$240 / month', 'Infrastructure plus both.'],
+  ['$300 / month', 'Everything above, with a margin for processing fees and currency conversion.'],
+];
+
+const beyond = [
+  'The main seed node moves to double the CPU, memory, and disk — more headroom for QDN data and the gateway.',
+  'A higher usage tier on the development tools, which currently hit their limits regularly.',
+  'Both tools at that higher tier.',
+];
+
+const boundaries = [
+  {
+    h: 'Everything stays open',
+    p: 'Nothing is paywalled or becomes subscriber-only. Every repository stays open source under its existing license.',
+  },
+  {
+    h: 'No roadmap control',
+    p: 'Support does not buy priority over other users, influence over what gets built, or a private channel.',
+  },
+  {
+    h: 'No private support tier',
+    p: 'Bugs and questions are handled the same way for everyone, in public, wherever they are filed.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: SUPPORT.pageUrl,
+};
+---
+<BaseLayout title={title} description={description} path="/support" jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-head">
+        <h1>Support the work</h1>
+      </div>
+      <p class="lede measure">
+        I&rsquo;m QuickMythril. I help maintain Qortium &mdash; the Core node,
+        the Home desktop and Android app, a number of the QDN apps, and the
+        Previewnet seed nodes and gateway that keep it reachable. Others work on
+        it too. Keeping it running costs real money every month, and this page
+        is where that is visible and where you can help cover it.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={SUPPORT.kofi}>Support on Ko-fi</a>
+        <a class="btn btn--ghost" href={SUPPORT.liberapay}>Support on Liberapay</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What your support goes towards</h2>
+      <p class="muted measure">
+        These are the recurring costs behind Qortium development and the public
+        Previewnet infrastructure. Amounts are approximate and change with
+        provider pricing.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Cost</th>
+              <th>What it covers</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {costs.map((c) => (
+              <tr>
+                <td><strong>{c.item}</strong></td>
+                <td>{c.covers}</td>
+                <td>{c.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted measure">
+        That is roughly <strong>$279 per month</strong>, plus the yearly domain
+        charge. The target for this page is <strong>$300 per month</strong>.
+        The two development tool subscriptions are the largest line by far, and
+        they are listed deliberately rather than hidden under &ldquo;tools&rdquo;
+        &mdash; they are general-purpose developer tools used across all of this
+        work, not dedicated project infrastructure. AI-assisted changes go
+        through the same review and testing as everything else.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What each level covers</h2>
+      <p class="muted measure">
+        Support adds up in a specific order, and the first step is small and
+        concrete rather than a distant goal.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Monthly total</th>
+              <th>What it covers</th>
+            </tr>
+          </thead>
+          <tbody>
+            {covered.map(([amount, what]) => (
+              <tr>
+                <td><strong>{amount}</strong></td>
+                <td>{what}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <h3>Past the target</h3>
+      <p class="muted measure">
+        Support beyond the running costs goes into making the infrastructure and
+        tooling better, committed only once it has held steady for a few months:
+      </p>
+      <ul class="measure muted">
+        {beyond.map((b) => <li>{b}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Ways to support</h2>
+      <p class="muted measure">
+        Common amounts are <strong>$3</strong>, <strong>$8</strong>, or
+        <strong>$20</strong> a month, but any amount helps and both platforms
+        let you choose your own. A direct card option is being set up and will
+        appear here once it is live.
+      </p>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>Ko-fi</h3>
+          <p class="muted">
+            One-time or monthly support, paid through PayPal. Monthly support
+            renews automatically through PayPal&rsquo;s Automatic Payments.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={SUPPORT.kofi}>Open Ko-fi</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Liberapay</h3>
+          <p class="muted">
+            Open-source funding platform that takes no cut &mdash; only the
+            payment processor&rsquo;s fee applies. Payments currently run
+            through PayPal, which asks you to confirm each renewal rather than
+            charging automatically.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--ghost" href={SUPPORT.liberapay}>Open Liberapay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What support does and does not buy</h2>
+      <div class="grid grid--2">
+        {boundaries.map((c) => (
+          <div class="card">
+            <h3>{c.h}</h3>
+            <p class="muted">{c.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Billing, refunds, and the details</h2>
+      <div class="card">
+        <p class="muted">
+          <strong>Billing and cancellation.</strong> Recurring support is billed
+          once a month by the platform you choose, starting the day you sign up,
+          and continues until you cancel. Cancel any time in your own account on
+          that platform, without contacting me. Cancelling stops future
+          payments; the period already paid for is not prorated. Amounts are in
+          US dollars, and your bank may apply its own conversion rate and fees.
+        </p>
+        <p class="muted">
+          <strong>Refunds.</strong> If you were charged by mistake, changed your
+          mind, or something here was not what you expected, email me within 30
+          days and I will refund it in full &mdash; no explanation needed.
+          Refunds return to the payment method you used and usually appear
+          within 5&ndash;10 business days.
+        </p>
+        <p class="muted">
+          <strong>Contact.</strong> Questions about supporting the work,
+          billing, or refunds go to
+          <a href={`mailto:${SUPPORT.email}`}>{SUPPORT.email}</a>, answered
+          personally and usually within a few days. Bugs and feature requests
+          belong on the issue tracker of the relevant repository instead, where
+          they stay public and searchable.
+        </p>
+        <p class="muted">
+          <strong>Privacy.</strong> Payments are handled entirely by the
+          platform you choose &mdash; your card number, bank details, and
+          billing address stay with them and are never seen or stored here.
+          What is visible is the name or handle you supported under, the amount,
+          and any message you send. Email you send is kept to reply and for
+          payment records; supporter information is never sold, rented, or
+          shared, and there is no marketing email. This site sets no tracking
+          cookies and runs no analytics, though version numbers on some pages
+          are fetched from GitHub as the page loads.
+        </p>
+        <p class="muted">
+          <strong>Terms.</strong> Support here is voluntary. It is not a
+          purchase of software, a licence, a service contract, or a promise that
+          any feature will be built or that the network will keep running.
+          Qortium is preview software, provided as-is under the open source
+          licences in its repositories. Support is <strong>not a tax-deductible
+          charitable donation</strong> &mdash; this is an individual developer,
+          not a registered charity. Qortium is an independent project: it is not
+          Qortal, and it is not affiliated with or endorsed by the Qortal
+          project.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href={LINKS.siteRepo}>Source for this site</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

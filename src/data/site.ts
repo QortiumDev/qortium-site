@@ -110,6 +110,20 @@ export const LINKS = {
 } as const;
 
 /**
+ * Maintainer support rails shown on /support. Only rails that actually accept
+ * money today belong here — a listed-but-dead destination is worse than an
+ * absent one. That page is also the business URL on file with the card
+ * processor, so its billing / refund / contact / privacy copy is load-bearing.
+ * Keep it accurate.
+ */
+export const SUPPORT = {
+  kofi: 'https://ko-fi.com/quickmythril',
+  liberapay: 'https://liberapay.com/QuickMythril',
+  email: 'quickmythril@protonmail.com',
+  pageUrl: absUrl('/support'),
+} as const;
+
+/**
  * Release facts. The current version is NOT hardcoded — it is fetched at build
  * time from GitHub via `fetchLatestTag(repoSlug)` (src/lib/releases.ts) and
  * hidden if GitHub is unreachable. `repoSlug` is the owner/name used for that.

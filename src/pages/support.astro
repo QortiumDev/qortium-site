@@ -1,0 +1,309 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SUPPORT, LINKS, withBase } from '../data/site';
+
+const title = 'Support Qortium';
+const description =
+  'Qortium is maintained by one developer with real recurring costs. Voluntary support keeps releases, testing, and the Previewnet infrastructure running.';
+
+const tiers = [
+  {
+    amount: '$3 / month',
+    name: 'Keep it running',
+    p: 'Helps cover the recurring cost of keeping the work active.',
+  },
+  {
+    amount: '$8 / month',
+    name: 'Share the monthly burn',
+    p: 'Covers a meaningful share of tools, infrastructure, and maintenance.',
+  },
+  {
+    amount: '$20 / month',
+    name: 'Back the infrastructure',
+    p: 'Materially reduces the monthly risk of running the seed nodes and gateway.',
+  },
+];
+
+const boundaries = [
+  {
+    h: 'Everything stays open',
+    p: 'No feature is paywalled, and nothing here becomes subscriber-only. Every repository stays open source under its existing license.',
+  },
+  {
+    h: 'No roadmap control',
+    p: 'Support does not buy priority over other users, influence over what gets built, or a private channel to me.',
+  },
+  {
+    h: 'No private support tier',
+    p: 'Bug reports and questions are handled the same way for everyone, in public, wherever they are filed.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: SUPPORT.pageUrl,
+};
+---
+<BaseLayout title={title} description={description} path="/support" jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-head">
+        <h1>Support the work</h1>
+      </div>
+      <p class="lede measure">
+        I&rsquo;m QuickMythril, and I maintain Qortium &mdash; the Core node, the
+        Home desktop and Android app, the QDN apps, and the Previewnet seed
+        nodes and gateway that keep it reachable. That work has real recurring
+        costs. This page is how I make those costs visible and let people help
+        cover them, without putting anything behind a paywall.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={SUPPORT.kofi}>Support on Ko-fi</a>
+        <a class="btn btn--ghost" href={SUPPORT.liberapay}>Support on Liberapay</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What the money actually goes to</h2>
+      <p class="muted measure">
+        These are the recurring costs behind Qortium development and the public
+        Previewnet infrastructure. I pay them out of pocket today. Amounts are
+        approximate and change with exchange rates and provider pricing.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Cost</th>
+              <th>What it covers</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Regxa VPS</strong></td>
+              <td>Previewnet seed node, QDN data, and the qortium.app gateway</td>
+              <td>$15 / month</td>
+            </tr>
+            <tr>
+              <td><strong>Netcup VPS</strong></td>
+              <td>Second Previewnet seed node, for redundancy across providers</td>
+              <td>about $7 / month</td>
+            </tr>
+            <tr>
+              <td><strong>AI development tools</strong></td>
+              <td>
+                Two assistant subscriptions used daily for research,
+                implementation, review, testing, and documentation
+              </td>
+              <td>$212 / month</td>
+            </tr>
+            <tr>
+              <td><strong>Connectivity</strong></td>
+              <td>Phone and network access used for maintenance and testing</td>
+              <td>$45 / month</td>
+            </tr>
+            <tr>
+              <td><strong>qortium.app domain</strong></td>
+              <td>This website and the public gateway</td>
+              <td>about €32 / year</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted measure">
+        That comes to roughly <strong>$279 per month</strong>, plus the annual
+        domain charge. The target for this page is <strong>$300 per month</strong>,
+        which leaves a small margin for processing fees and currency
+        conversion. Anything beyond that goes to the same place the rest does:
+        release stability, testing, and reducing maintenance debt.
+      </p>
+      <p class="muted measure">
+        The two AI subscriptions are the largest line by far, and I list them
+        deliberately rather than hiding them in &ldquo;tools.&rdquo; They are
+        general-purpose developer tools I use across all of this work, not
+        dedicated project infrastructure. AI-assisted changes go through the
+        same review and testing as everything else.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Suggested amounts</h2>
+      <p class="muted measure">
+        Any amount helps, and these are only suggestions &mdash; both platforms
+        below let you choose your own. The first milestone is small and
+        concrete: at <strong>$5 per month</strong> the second seed node moves to
+        a larger plan, which directly addresses the memory pressure that has
+        taken it down before.
+      </p>
+      <div class="grid grid--2">
+        {tiers.map((t) => (
+          <div class="card">
+            <h3>{t.amount}</h3>
+            <p><strong>{t.name}</strong></p>
+            <p class="muted">{t.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Ways to support</h2>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>Ko-fi</h3>
+          <p class="muted">
+            One-time or monthly support, paid through PayPal. Monthly support
+            renews automatically through PayPal&rsquo;s Automatic Payments.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={SUPPORT.kofi}>Open Ko-fi</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Liberapay</h3>
+          <p class="muted">
+            Open-source funding platform that takes no cut &mdash; only the
+            payment processor&rsquo;s fee applies. Payments currently run
+            through PayPal, which asks you to confirm each renewal rather than
+            charging automatically.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--ghost" href={SUPPORT.liberapay}>Open Liberapay</a>
+          </div>
+        </div>
+      </div>
+      <p class="muted measure">
+        A direct card option is being set up and will appear here once it is
+        live. If you would rather support the work another way, email me at the
+        address below.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What support does and does not buy</h2>
+      <div class="grid grid--2">
+        {boundaries.map((c) => (
+          <div class="card">
+            <h3>{c.h}</h3>
+            <p class="muted">{c.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Billing, cancellation, and refunds</h2>
+      <div class="card">
+        <p class="muted">
+          <strong>Recurring support</strong> is billed once a month by the
+          platform you choose, starting on the day you sign up, and continues
+          until you cancel.
+        </p>
+        <p class="muted">
+          <strong>Cancelling</strong> is done in your own account on that
+          platform, at any time, without contacting me. Cancellation stops
+          future payments; the period you have already paid for is not
+          prorated.
+        </p>
+        <p class="muted">
+          <strong>Refunds:</strong> if you were charged by mistake, changed your
+          mind, or something on this page was not what you expected, email me
+          within 30 days of the payment and I will refund it in full. No
+          explanation required. Refunds go back to the payment method you used
+          and typically take 5&ndash;10 business days to appear.
+        </p>
+        <p class="muted">
+          <strong>Currency:</strong> all amounts on this page are in US dollars
+          unless stated otherwise. Your bank may apply its own conversion rate
+          and fees if you pay in another currency.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Contact</h2>
+      <div class="card">
+        <p class="muted">
+          Questions about supporting this work, billing, or refunds go to
+          <a href={`mailto:${SUPPORT.email}`}>{SUPPORT.email}</a>. I answer
+          personally, usually within a few days.
+        </p>
+        <p class="muted">
+          For bugs and feature requests, please use the issue tracker on the
+          relevant repository instead &mdash; it keeps the discussion public and
+          searchable for everyone else.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href={LINKS.siteRepo}>Source for this site</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Privacy and your data</h2>
+      <div class="card">
+        <p class="muted">
+          Payments are handled entirely by the platform you choose. I never see
+          or store your card number, bank details, or billing address &mdash;
+          those stay with the payment provider. What I do see is the name or
+          handle you supported under, the amount, and any message you send with
+          it.
+        </p>
+        <p class="muted">
+          If you email me, I keep that email to reply to you and for my own
+          records of payments and refunds. I do not sell, rent, or share
+          supporter information with anyone, and I do not send marketing email.
+          Ask me to delete your details and I will, except where I have to keep
+          a record of a payment.
+        </p>
+        <p class="muted">
+          This website sets no tracking cookies and runs no analytics. Version
+          numbers shown on some pages are fetched from GitHub when the page
+          loads, which means GitHub sees that request.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Terms</h2>
+      <div class="card">
+        <p class="muted">
+          Support on this page is <strong>voluntary</strong>. It is not a
+          purchase of software, a licence, a service contract, or a promise that
+          any particular feature will be built or that the network will keep
+          running. Qortium is preview software, provided as-is, under the open
+          source licences in its repositories.
+        </p>
+        <p class="muted">
+          Support is <strong>not a tax-deductible charitable donation</strong>.
+          I am an individual developer, not a registered charity, and nothing
+          here should be treated as a donation to a non-profit.
+        </p>
+        <p class="muted">
+          Qortium is an independent project. It is not Qortal, and it is not
+          affiliated with or endorsed by the Qortal project.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -85,8 +85,8 @@ const jsonLd = {
         is where that is visible and where you can help cover it.
       </p>
       <div class="btn-row">
-        <a class="btn btn--primary" href={SUPPORT.kofi}>Support on Ko-fi</a>
-        <a class="btn btn--ghost" href={SUPPORT.liberapay}>Support on Liberapay</a>
+        <a class="btn btn--primary" href="#ways">Choose an amount</a>
+        <a class="btn btn--ghost" href={SUPPORT.card.oneTime}>Give once</a>
       </div>
     </div>
   </section>
@@ -167,14 +167,29 @@ const jsonLd = {
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="ways">
     <div class="container">
       <h2>Ways to support</h2>
       <p class="muted measure">
-        Common amounts are <strong>$3</strong>, <strong>$8</strong>, or
-        <strong>$20</strong> a month, but any amount helps and both platforms
-        let you choose your own. A direct card option is being set up and will
-        appear here once it is live.
+        Monthly support by card or bank is the most useful, because it is what
+        makes the running costs predictable. Any amount helps &mdash; these are
+        just the common ones.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={SUPPORT.card.monthly3}>$3 / month</a>
+        <a class="btn btn--primary" href={SUPPORT.card.monthly8}>$8 / month</a>
+        <a class="btn btn--primary" href={SUPPORT.card.monthly20}>$20 / month</a>
+        <a class="btn btn--ghost" href={SUPPORT.card.oneTime}>Give once, any amount</a>
+      </div>
+      <p class="muted measure">
+        These take cards, Apple Pay and Google Pay, bank payments, Cash App
+        Pay, and Klarna. Monthly support renews automatically, and you can
+        change or cancel it yourself from the link in your receipt email.
+      </p>
+      <h3>Other platforms</h3>
+      <p class="muted measure">
+        If you already use one of these, or prefer to pay through PayPal, they
+        work just as well.
       </p>
       <div class="grid grid--2">
         <div class="card">
@@ -223,11 +238,13 @@ const jsonLd = {
       <div class="card">
         <p class="muted">
           <strong>Billing and cancellation.</strong> Recurring support is billed
-          once a month by the platform you choose, starting the day you sign up,
-          and continues until you cancel. Cancel any time in your own account on
-          that platform, without contacting me. Cancelling stops future
-          payments; the period already paid for is not prorated. Amounts are in
-          US dollars, and your bank may apply its own conversion rate and fees.
+          once a month, starting the day you sign up, and continues until you
+          cancel. For card and bank support, manage or cancel it yourself from
+          the link in your receipt email; on Ko-fi or Liberapay, do it in your
+          account there. Either way you never have to contact me. Cancelling
+          stops future payments; the period already paid for is not prorated.
+          Amounts are in US dollars, and your bank may apply its own conversion
+          rate and fees.
         </p>
         <p class="muted">
           <strong>Refunds.</strong> If you were charged by mistake, changed your

@@ -121,6 +121,19 @@ export const SUPPORT = {
   liberapay: 'https://liberapay.com/QuickMythril',
   email: 'quickmythril@protonmail.com',
   pageUrl: absUrl('/support'),
+  /**
+   * Stripe Payment Links. Unlike PayPal's dashboard share links (documented as
+   * valid ~6 months), these do not expire. Each returns to the support page on
+   * completion. Supporters manage or cancel a monthly plan from the link in
+   * their receipt email (Stripe's customer portal) — the billing copy below
+   * promises that, so do not remove the portal without changing the copy.
+   */
+  card: {
+    monthly3: 'https://buy.stripe.com/00wbJ16AYabxfZed2D3Nm00',
+    monthly8: 'https://buy.stripe.com/14A14n8J6erN28ogeP3Nm01',
+    monthly20: 'https://buy.stripe.com/7sYcN58J63N95kA4w73Nm02',
+    oneTime: 'https://donate.stripe.com/4gM6oH8J66ZlaEU9Qr3Nm03',
+  },
 } as const;
 
 /**

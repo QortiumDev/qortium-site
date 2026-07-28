@@ -235,7 +235,8 @@ const jsonLd = {
       <p class="muted measure">
         These take cards, Apple Pay and Google Pay, bank payments, Cash App
         Pay, and Klarna. Monthly support renews automatically, and you can
-        change or cancel it yourself from the link in your receipt email.
+        change or cancel it yourself any time from the
+        <a href={SUPPORT.portal}>billing portal</a>.
       </p>
       <h3>Other platforms</h3>
       <p class="muted measure">
@@ -333,12 +334,14 @@ const jsonLd = {
         <p class="muted">
           <strong>Billing and cancellation.</strong> Recurring support is billed
           once a month, starting the day you sign up, and continues until you
-          cancel. For card and bank support, manage or cancel it yourself from
-          the link in your receipt email; on Ko-fi or Liberapay, do it in your
-          account there. Either way you never have to contact me. Cancelling
-          stops future payments; the period already paid for is not prorated.
-          Amounts are in US dollars, and your bank may apply its own conversion
-          rate and fees.
+          cancel. For card and bank support, open the
+          <a href={SUPPORT.portal}>billing portal</a>, enter the email you used,
+          and Stripe sends you a link to manage or cancel it &mdash; on Ko-fi or
+          Liberapay, do it in your account there. Either way you never have to
+          contact me. Cancelling stops future payments and you keep access
+          until the end of the period you have already paid for; that period is
+          not prorated. Amounts are in US dollars, and your bank may apply its
+          own conversion rate and fees.
         </p>
         <p class="muted">
           <strong>Refunds.</strong> If you were charged by mistake, changed your

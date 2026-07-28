@@ -42,10 +42,36 @@ const covered = [
   ['$300 / month', 'Everything above, with a margin for processing fees and currency conversion.'],
 ];
 
-const beyond = [
-  'The main seed node moves to double the CPU, memory, and disk — more headroom for QDN data and the gateway.',
-  'A higher usage tier on the development tools, which currently hit their limits regularly.',
-  'Both tools at that higher tier.',
+const upgrades = [
+  {
+    what: 'Netcup seed node',
+    now: '2 vCPU / 4 GB / 128 GB',
+    next: '4 vCPU / 8 GB / 256 GB',
+    cost: 'about $5 / month',
+  },
+  {
+    what: 'Regxa seed node',
+    now: '2 vCPU / 4 GB / 120 GB',
+    next: '4 vCPU / 8 GB / 240 GB',
+    cost: '$15 / month',
+  },
+  {
+    what: 'Development tooling',
+    now: 'mid usage tier',
+    next: '4x the usage limit',
+    cost: '$100 / month each',
+  },
+];
+
+// Approximate share of a $10/month contribution that reaches the work, after the
+// platform's cut and typical processing fees. Bank payments are the outlier:
+// ACH is 0.8% capped at $5, against roughly 3% for a card.
+const fees = [
+  { method: 'Bank payment (here)', cut: 'no platform fee', gets: 'about $9.90' },
+  { method: 'Card (here)', cut: 'no platform fee', gets: 'about $9.40' },
+  { method: 'Liberapay', cut: 'no platform fee', gets: 'about $9.40' },
+  { method: 'Ko-fi', cut: '5%', gets: 'about $8.90' },
+  { method: 'Patreon (planned)', cut: '10%', gets: 'about $8.40' },
 ];
 
 const boundaries = [
@@ -158,12 +184,37 @@ const jsonLd = {
       </div>
       <h3>Past the target</h3>
       <p class="muted measure">
-        Support beyond the running costs goes into making the infrastructure and
-        tooling better, committed only once it has held steady for a few months:
+        Support beyond the running costs goes into better seed nodes and more
+        development capacity — committed only once it has held steady for a few
+        months, not the moment it is first reached.
       </p>
-      <ul class="measure muted">
-        {beyond.map((b) => <li>{b}</li>)}
-      </ul>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Upgrade</th>
+              <th>Now</th>
+              <th>Next</th>
+              <th>Extra cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {upgrades.map((u) => (
+              <tr>
+                <td><strong>{u.what}</strong></td>
+                <td>{u.now}</td>
+                <td>{u.next}</td>
+                <td>{u.cost}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted measure">
+        The seed nodes are the clearest win: doubling the smaller one costs
+        about $5 a month and directly addresses the memory pressure that has
+        taken it offline before.
+      </p>
     </div>
   </section>
 
@@ -214,7 +265,50 @@ const jsonLd = {
             <a class="btn btn--ghost" href={SUPPORT.liberapay}>Open Liberapay</a>
           </div>
         </div>
+        <div class="card">
+          <h3>Patreon</h3>
+          <p class="muted">
+            Planned, but not open yet. It carries the highest platform fee of
+            any option here, so it will be added last rather than first. There
+            is nothing to click yet &mdash; the options above all work today.
+          </p>
+        </div>
       </div>
+
+      <h3>Which method gets the most through</h3>
+      <p class="muted measure">
+        Every platform takes something, and I would rather you knew than
+        guessed. Roughly, out of a $10 monthly contribution:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Platform's cut</th>
+              <th>Reaches the work</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fees.map((f) => (
+              <tr>
+                <td><strong>{f.method}</strong></td>
+                <td>{f.cut}</td>
+                <td>{f.gets}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted measure">
+        Figures are approximate &mdash; processing fees vary by country, card,
+        and payment type. The one worth knowing: <strong>paying by bank costs
+        about a third of what a card costs</strong>, because bank payments are
+        charged at 0.8% capped at $5 while cards are around 3%. On the larger
+        amounts that difference is real money. Pick whatever is easiest for
+        you, though &mdash; a card contribution you actually make beats a bank
+        transfer you do not.
+      </p>
     </div>
   </section>
 

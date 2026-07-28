@@ -128,6 +128,14 @@ export const SUPPORT = {
    * their receipt email (Stripe's customer portal) — the billing copy below
    * promises that, so do not remove the portal without changing the copy.
    */
+  /**
+   * Stripe's no-code customer portal login link. Supporters enter their email,
+   * Stripe mails them a session link, and they can cancel or update from there.
+   * This is NOT automatic: receipt emails contain no portal link (verified by
+   * reading a live receipt on 2026-07-28), so the cancellation promise in the
+   * billing copy depends on this link staying on the page.
+   */
+  portal: 'https://billing.stripe.com/p/login/00wbJ16AYabxfZed2D3Nm00',
   card: {
     monthly3: 'https://buy.stripe.com/00wbJ16AYabxfZed2D3Nm00',
     monthly8: 'https://buy.stripe.com/14A14n8J6erN28ogeP3Nm01',

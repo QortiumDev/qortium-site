@@ -19,6 +19,7 @@ const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.met
 export default defineConfig({
   // Canonical brand domain (the site is multi-homed across QDN + this domain).
   site: 'https://qortium.app',
+  compressHTML: false,
   trailingSlash: 'ignore',
   integrations: [
     mdx(),

@@ -512,6 +512,37 @@ code.qdn-ref[data-copyable="true"][data-state="copied"] {
   border-color: color-mix(in srgb, var(--ok) 42%, var(--line));
 }
 
+/* ----- crypto address block (support page) — selectable text by default; the
+   support-page enhancer promotes it to a click-to-copy button using the same
+   data-copyable / data-state contract as code.qdn-ref above. ----- */
+code.addr {
+  display: block; width: fit-content; max-width: 100%;
+  word-break: break-all; user-select: all;
+  background: var(--bg-sunk); border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.5em 0.7em; margin: 0.35rem 0 0.25rem;
+  color: var(--ink-soft);
+}
+code.addr[data-copyable="true"] {
+  cursor: pointer;
+  transition: background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+code.addr[data-copyable="true"]:hover,
+code.addr[data-copyable="true"]:focus-visible {
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+  outline: none;
+}
+code.addr[data-copyable="true"]:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+code.addr[data-copyable="true"][data-state="copied"] {
+  color: var(--ok);
+  background: var(--ok-soft);
+  border-color: color-mix(in srgb, var(--ok) 42%, var(--line));
+}
+
 /* ----- misc utilities ----- */
 /* skip-link text colour uses --btn-primary-color so it tracks the same light/dark
    accent-contrast logic as .btn--primary (dark text in dark mode where accents are

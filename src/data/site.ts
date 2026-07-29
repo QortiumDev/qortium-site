@@ -145,6 +145,34 @@ export const SUPPORT = {
 } as const;
 
 /**
+ * Direct crypto support shown on /support. IMPORTANT: Qortium Previewnet has no
+ * native coin, so the QORT addresses below live on the QORTAL MAINNET chain —
+ * the page copy must keep saying so explicitly. Crypto goes straight to the
+ * listed recipient's own chain address (7R15's goes to him, not through
+ * QuickMythril), it is irreversible, and it is NOT covered by the Stripe /
+ * Ko-fi / Liberapay billing + refund copy, which stays scoped to those rails.
+ */
+export const CRYPTO = {
+  quickmythril: {
+    /** QORT address on the Qortal mainnet chain. */
+    qortAddress: 'QT4zHex8JEULmBhYmKd5UhpiNA46T5wUko',
+    /** QuickMythril's QDN site — more coins are listed there. */
+    qdnSiteGateway: 'https://qdn.qortium.app/WEBSITE/QuickMythril/qm-site',
+    qdnSiteResource: 'qdn://WEBSITE/QuickMythril/qm-site',
+  },
+  tris: {
+    /** Registered Qortal name. Address verified against the Qortal mainnet
+     *  name registry on 2026-07-29 (name 7R15M3G157U5 owns it). */
+    name: '7R15M3G157U5',
+    /** QORT address on the Qortal mainnet chain. */
+    qortAddress: 'QTqnNyDrUSdeH8QhwXqB6bxoGtLUjCvd4R',
+    /** His Donation app, live on Qortium Previewnet QDN. */
+    donationAppGateway: 'https://qdn.qortium.app/APP/7R15M3G157U5/Donation',
+    donationAppResource: 'qdn://APP/7R15M3G157U5/Donation',
+  },
+} as const;
+
+/**
  * Release facts. The current version is NOT hardcoded — it is fetched at build
  * time from GitHub via `fetchLatestTag(repoSlug)` (src/lib/releases.ts) and
  * hidden if GitHub is unreachable. `repoSlug` is the owner/name used for that.

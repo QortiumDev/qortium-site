@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SUPPORT, LINKS } from '../data/site';
+import QdnLink from '../components/QdnLink.astro';
+import { SUPPORT, CRYPTO, LINKS } from '../data/site';
 
 const title = 'Support Qortium';
 const description =
@@ -106,13 +107,17 @@ const jsonLd = {
       <p class="lede measure">
         I&rsquo;m QuickMythril. I help maintain Qortium &mdash; the Core node,
         the Home desktop and Android app, a number of the QDN apps, and the
-        Previewnet seed nodes and gateway that keep it reachable. Others work on
-        it too. Keeping it running costs real money every month, and this page
-        is where that is visible and where you can help cover it.
+        Previewnet seed nodes and gateway that keep it reachable.
+        <strong>7R15M3G157U5 also helps maintain Qortium</strong> &mdash; much
+        of the platform&rsquo;s rebuild from the Qortal split is his work.
+        Others contribute too. Keeping it running costs real money every month,
+        and this page is where that is visible and where you can help cover it
+        &mdash; or <a href="#support-7r15">support 7R15 directly</a>.
       </p>
       <div class="btn-row">
         <a class="btn btn--primary" href="#ways">Choose an amount</a>
         <a class="btn btn--ghost" href={SUPPORT.card.oneTime}>Give once</a>
+        <a class="btn btn--ghost" href="#crypto">Send crypto</a>
       </div>
     </div>
   </section>
@@ -313,6 +318,73 @@ const jsonLd = {
     </div>
   </section>
 
+  <section class="section" id="crypto">
+    <div class="container">
+      <h2>Send crypto</h2>
+      <p class="muted measure">
+        You can also send QORT to me directly. One thing to understand first:
+        <strong>Qortium Previewnet has no native coin</strong>, so this is not a
+        Previewnet address &mdash; it is an address on the
+        <strong>Qortal mainnet</strong> chain, and QORT sent to it moves on that
+        chain.
+      </p>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>QORT (Qortal mainnet)</h3>
+          <p class="muted">
+            Send QORT on the Qortal mainnet chain to this address. Click or tap
+            it to copy:
+          </p>
+          <code class="addr" data-copy>{CRYPTO.quickmythril.qortAddress}</code>
+        </div>
+        <div class="card">
+          <h3>Other coins</h3>
+          <p class="muted">
+            More coins are listed on
+            <a
+              href={CRYPTO.quickmythril.qdnSiteGateway}
+              data-qdn-href={CRYPTO.quickmythril.qdnSiteResource}
+            >my QDN site</a>, and that list is being expanded. Inside Qortium,
+            the same site is
+            <QdnLink resource={CRYPTO.quickmythril.qdnSiteResource} />.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="support-7r15">
+    <div class="container">
+      <h2>Support 7R15</h2>
+      <p class="muted measure">
+        7R15M3G157U5&rsquo;s support options are crypto-only for now &mdash;
+        more options may come later. Anything you send here goes directly to
+        him, not through me.
+      </p>
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>QORT (Qortal mainnet)</h3>
+          <p class="muted">
+            Send QORT on the Qortal mainnet chain to his address. Click or tap
+            it to copy:
+          </p>
+          <code class="addr" data-copy>{CRYPTO.tris.qortAddress}</code>
+        </div>
+        <div class="card">
+          <h3>Donation app</h3>
+          <p class="muted">
+            His Donation app is live on Qortium Previewnet QDN &mdash; open
+            <a
+              href={CRYPTO.tris.donationAppGateway}
+              data-qdn-href={CRYPTO.tris.donationAppResource}
+            >the Donation app</a> in a browser, or inside Qortium at
+            <QdnLink resource={CRYPTO.tris.donationAppResource} />.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
       <h2>What support does and does not buy</h2>
@@ -330,6 +402,11 @@ const jsonLd = {
   <section class="section">
     <div class="container">
       <h2>Billing, refunds, and the details</h2>
+      <p class="muted measure">
+        Everything in this section applies to the card, bank, Ko-fi, and
+        Liberapay options above. Crypto works differently &mdash; see the note
+        below.
+      </p>
       <div class="card">
         <p class="muted">
           <strong>Billing and cancellation.</strong> Recurring support is billed
@@ -349,6 +426,14 @@ const jsonLd = {
           days and I will refund it in full &mdash; no explanation needed.
           Refunds return to the payment method you used and usually appear
           within 5&ndash;10 business days.
+        </p>
+        <p class="muted">
+          <strong>Crypto.</strong> Crypto payments are irreversible. They go
+          directly to the listed recipient&rsquo;s chain address &mdash; mine or
+          7R15&rsquo;s &mdash; and are not covered by the refund policy above,
+          for either of us. Double-check the address and the chain before
+          sending: the QORT addresses on this page are on the Qortal mainnet
+          chain, not Qortium Previewnet.
         </p>
         <p class="muted">
           <strong>Contact.</strong> Questions about supporting the work,
@@ -386,4 +471,83 @@ const jsonLd = {
       </div>
     </div>
   </section>
+
+  <!-- Progressive enhancement, both parts a harmless no-op on clearnet:
+       1) qdn:// links — anchors carrying data-qdn-href get their https gateway
+          href swapped for the qdn:// URI when the page is served by Qortium
+          Core (render or gateway path). Detection checks for the window._qdn*
+          globals Core's HTMLParser injects on those paths (_qdnContext plus
+          _qdnService — see HTMLParser.java); Core's injected q-apps script
+          intercepts clicks on qdn:// hrefs and routes them natively. This runs
+          before BaseLayout's end-of-body external-link handler, so swapped
+          anchors are no longer http(s) and skip the copy-URL modal.
+       2) crypto addresses — code.addr[data-copy] blocks become click-to-copy
+          buttons (same behavior/styling contract as BaseLayout's qdn-ref copy);
+          without JS they stay selectable text. -->
+  <script is:inline>
+    (function () {
+      var ctx = window._qdnContext;
+      var inQortium =
+        typeof ctx === 'string' && ctx.length > 0 &&
+        typeof window._qdnService !== 'undefined';
+      if (inQortium) {
+        var links = document.querySelectorAll('a[data-qdn-href]');
+        Array.prototype.forEach.call(links, function (a) {
+          var qdn = a.getAttribute('data-qdn-href');
+          if (qdn && qdn.indexOf('qdn://') === 0) a.setAttribute('href', qdn);
+        });
+      }
+
+      var addrs = document.querySelectorAll('code.addr[data-copy]');
+      Array.prototype.forEach.call(addrs, function (code) {
+        var value = (code.textContent || '').trim();
+        if (!value) return;
+        var resetTimer = null;
+        code.setAttribute('role', 'button');
+        code.setAttribute('tabindex', '0');
+        code.setAttribute('title', 'Copy address');
+        code.setAttribute('aria-live', 'polite');
+        code.setAttribute('data-copyable', 'true');
+
+        function showCopied() {
+          if (resetTimer) window.clearTimeout(resetTimer);
+          code.setAttribute('data-state', 'copied');
+          code.textContent = 'Copied!';
+          resetTimer = window.setTimeout(function () {
+            code.removeAttribute('data-state');
+            code.textContent = value;
+          }, 1200);
+        }
+
+        function copyFallback() {
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = value;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'absolute';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showCopied();
+          } catch (e) {}
+        }
+
+        function copyAddr(e) {
+          if (e) e.preventDefault();
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(value).then(showCopied, copyFallback);
+          } else {
+            copyFallback();
+          }
+        }
+
+        code.addEventListener('click', copyAddr);
+        code.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') copyAddr(e);
+        });
+      });
+    })();
+  </script>
 </BaseLayout>

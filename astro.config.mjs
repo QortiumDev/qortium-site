@@ -26,6 +26,9 @@ export default defineConfig({
     // Emit sitemap URLs that match the flat .html files actually built, so the
     // listed URLs resolve on a plain static host and on QDN (format: 'file').
     sitemap({
+      // /thanks is a post-payment landing page (PayPal's auto-return target).
+      // It is noindex in the layout; keep it out of the sitemap to match.
+      filter: (page) => !/\/thanks(\.html)?\/?$/.test(page),
       serialize(item) {
         const root = 'https://qortium.app';
         if (item.url === root || item.url === root + '/') {

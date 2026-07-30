@@ -12,8 +12,12 @@ interface Props {
   /** Optional JSON-LD object(s) to embed. */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   ogImage?: string;
+  /** Keep this page out of search results — for landing pages reached after a
+   *  payment, which have no standalone value. Pages using this should also be
+   *  filtered out of the sitemap in astro.config.mjs. */
+  noindex?: boolean;
 }
-const { title, description, path = '/', jsonLd, ogImage } = Astro.props;
+const { title, description, path = '/', jsonLd, ogImage, noindex = false } = Astro.props;
 
 // Canonical / OG absolute URLs use the public gateway path (not the relative
 // in-page links). In-page assets/links use withBase() (relative).
@@ -100,6 +104,7 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     </script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={withBase('/favicon.ico')} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
@@ -179,7 +184,7 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
       <div class="ext-modal__panel">
         <button type="button" class="ext-modal__x" data-ext-close aria-label="Close">&times;</button>
         <p class="ext-modal__title" id="ext-modal-title">Open this link in your browser</p>
-        <p class="ext-modal__hint muted">This link can&rsquo;t open here directly. Copy the address and paste it into your web browser.</p>
+        <p class="ext-modal__hint muted" id="ext-modal-hint">This link can&rsquo;t open here directly. Copy the address and paste it into your web browser.</p>
         <code class="ext-modal__url" id="ext-modal-url"></code>
         <div class="ext-modal__actions">
           <button type="button" class="btn btn--primary" id="ext-modal-copy">Copy link</button>
@@ -271,12 +276,29 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         var modal = document.getElementById('ext-modal');
         var urlEl = document.getElementById('ext-modal-url');
         var copyBtn = document.getElementById('ext-modal-copy');
+        var titleEl = document.getElementById('ext-modal-title');
+        var hintEl = document.getElementById('ext-modal-hint');
         var lastFocus = null;
 
-        function openModal(url) {
+        var COPY_LINK = {
+          title: 'Open this link in your browser',
+          hint: 'This link can’t open here directly. Copy the address and paste it into your web browser.',
+          button: 'Copy link',
+        };
+        var COPY_EMAIL = {
+          title: 'Copy this email address',
+          hint: 'A mail app can’t open from here. Copy the address and paste it into your email.',
+          button: 'Copy address',
+        };
+
+        // `mode` decides the wording only — the copy mechanics are identical.
+        function openModal(url, mode) {
           if (!modal) return;
+          var m = mode === 'email' ? COPY_EMAIL : COPY_LINK;
+          if (titleEl) titleEl.textContent = m.title;
+          if (hintEl) hintEl.textContent = m.hint;
           urlEl.textContent = url;
-          if (copyBtn) copyBtn.textContent = 'Copy link';
+          if (copyBtn) copyBtn.textContent = m.button;
           modal.hidden = false;
           lastFocus = document.activeElement;
           if (copyBtn) copyBtn.focus();
@@ -359,6 +381,23 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             });
           }
         });
+
+        // --- mailto: links ---
+        // Home/Hub blocks these the same way it blocks external http(s), but the
+        // handler above only matches http(s), so in-app a mailto click used to do
+        // nothing at all — silently, with no way to reach the address. Show the
+        // copy modal with the bare address instead. Standalone and on the public
+        // gateway, leave them alone: the browser's mail handler works there.
+        if (inApp) {
+          var mailLinks = document.querySelectorAll('a[href^="mailto:"]');
+          Array.prototype.forEach.call(mailLinks, function (a) {
+            a.addEventListener('click', function (e) {
+              e.preventDefault();
+              var addr = a.getAttribute('href').replace(/^mailto:/i, '').split('?')[0];
+              openModal(decodeURIComponent(addr), 'email');
+            });
+          });
+        }
       })();
     </script>
   </body>

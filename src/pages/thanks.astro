@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SUPPORT, LINKS, withBase } from '../data/site';
+
+// Landing page for PayPal's auto-return, which is an ACCOUNT-WIDE setting: it
+// catches one-time payments and monthly subscriptions alike, and it fires for
+// Ko-fi/Liberapay only if those ever route here too. So this page must not
+// assume which rail, which amount, or whether anything recurring was set up —
+// keep it true for every case. It is intentionally noindex and kept out of the
+// sitemap: it has no standalone value and should not turn up in a search.
+const title = 'Thank you';
+const description = 'Your support for Qortium came through. What happens next, and how to change or cancel it.';
+---
+<BaseLayout title={title} description={description} path="/thanks" noindex>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-head">
+        <h1>Thank you</h1>
+      </div>
+      <p class="lede measure">
+        That genuinely helps. Support goes straight to the running costs behind
+        Qortium &mdash; the seed nodes, the gateway, the domain, and the tools
+        used to build and test it &mdash; and those costs are listed openly on
+        the <a href={withBase('/support')}>support page</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--2">
+        <div class="card">
+          <h3>Your receipt</h3>
+          <p class="muted">
+            PayPal emails it &mdash; it comes from them, not from me, so check
+            your spam folder before assuming it did not arrive. It is the record
+            of what you paid, and it is worth keeping.
+          </p>
+        </div>
+        <div class="card">
+          <h3>If you set up monthly support</h3>
+          <p class="muted">
+            It renews once a month until you cancel, and you can stop it
+            yourself at any time from
+            <strong>Settings &rsaquo; Payments &rsaquo; Automatic payments</strong>
+            in your PayPal account &mdash; or from your account on Ko-fi or
+            Liberapay if you used one of those. You never have to contact me to
+            cancel. A one-time payment sets up nothing recurring and needs no
+            action at all.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Changed your mind</h3>
+          <p class="muted">
+            Email me within 30 days and I will refund it in full, no
+            explanation needed &mdash;
+            <a href={`mailto:${SUPPORT.email}`}>{SUPPORT.email}</a>. That
+            applies to a mistaken amount, a duplicate, or simply a change of
+            heart. Crypto is the exception: those payments are irreversible.
+          </p>
+        </div>
+        <div class="card">
+          <h3>What this does not buy</h3>
+          <p class="muted">
+            Nothing changes about how you are treated: nothing is paywalled,
+            support buys no influence over what gets built, and bugs and
+            questions are handled in public for everyone the same way. That is
+            deliberate, and it is spelled out on the
+            <a href={withBase('/support')}>support page</a>.
+          </p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={withBase('/')}>Back to Qortium</a>
+        <a class="btn btn--ghost" href={withBase('/downloads')}>Downloads</a>
+        <a class="btn btn--ghost" href={LINKS.siteRepo}>Source for this site</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

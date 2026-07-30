@@ -64,15 +64,15 @@ const upgrades = [
   },
 ];
 
-// Approximate share of a $10/month contribution that reaches the work, after the
-// platform's cut and typical processing fees. Bank payments are the outlier:
-// ACH is 0.8% capped at $5, against roughly 3% for a card.
+// Approximate share of a $10 contribution that reaches the work, after the
+// platform's cut and PayPal's processing fee. Every rail here settles through
+// PayPal, so the processing fee is the same on all of them (US commercial rate,
+// 3.49% + $0.49) and only the platform's cut varies. Figures are rounded and
+// deliberately conservative — do not present them as exact.
 const fees = [
-  { method: 'Bank payment (here)', cut: 'no platform fee', gets: 'about $9.90' },
-  { method: 'Card (here)', cut: 'no platform fee', gets: 'about $9.40' },
-  { method: 'Liberapay', cut: 'no platform fee', gets: 'about $9.40' },
-  { method: 'Ko-fi', cut: '5%', gets: 'about $8.90' },
-  { method: 'Patreon (planned)', cut: '10%', gets: 'about $8.40' },
+  { method: 'PayPal (here)', cut: 'no platform fee', gets: 'about $9.15' },
+  { method: 'Liberapay', cut: 'no platform fee', gets: 'about $9.15' },
+  { method: 'Ko-fi', cut: '5%', gets: 'about $8.65' },
 ];
 
 const boundaries = [
@@ -116,7 +116,7 @@ const jsonLd = {
       </p>
       <div class="btn-row">
         <a class="btn btn--primary" href="#ways">Choose an amount</a>
-        <a class="btn btn--ghost" href={SUPPORT.card.oneTime}>Give once</a>
+        <a class="btn btn--ghost" href={SUPPORT.paypal.oneTime}>Give once</a>
         <a class="btn btn--ghost" href="#crypto">Send crypto</a>
       </div>
     </div>
@@ -227,26 +227,29 @@ const jsonLd = {
     <div class="container">
       <h2>Ways to support</h2>
       <p class="muted measure">
-        Monthly support by card or bank is the most useful, because it is what
-        makes the running costs predictable. Any amount helps &mdash; these are
-        just the common ones.
+        Monthly support is the most useful, because it is what makes the
+        running costs predictable. Any amount helps &mdash; these are just the
+        common ones.
       </p>
       <div class="btn-row">
-        <a class="btn btn--primary" href={SUPPORT.card.monthly3}>$3 / month</a>
-        <a class="btn btn--primary" href={SUPPORT.card.monthly8}>$8 / month</a>
-        <a class="btn btn--primary" href={SUPPORT.card.monthly20}>$20 / month</a>
-        <a class="btn btn--ghost" href={SUPPORT.card.oneTime}>Give once, any amount</a>
+        <a class="btn btn--primary" href={SUPPORT.paypal.monthly3}>$3 / month</a>
+        <a class="btn btn--primary" href={SUPPORT.paypal.monthly8}>$8 / month</a>
+        <a class="btn btn--primary" href={SUPPORT.paypal.monthly20}>$20 / month</a>
+        <a class="btn btn--ghost" href={SUPPORT.paypal.oneTime}>Give once, any amount</a>
       </div>
       <p class="muted measure">
-        These take cards, Apple Pay and Google Pay, bank payments, Cash App
-        Pay, and Klarna. Monthly support renews automatically, and you can
-        change or cancel it yourself any time from the
-        <a href={SUPPORT.portal}>billing portal</a>.
+        These run through PayPal. You do not need a PayPal account to give once
+        &mdash; that checkout takes debit and credit cards as a guest. Monthly
+        support renews automatically, and you can change or cancel it yourself
+        at any time from
+        <strong>Settings &rsaquo; Payments &rsaquo; Automatic payments</strong>
+        in your PayPal account &mdash; you never have to contact me. The
+        one-time link lets you enter any amount you like, and sets up nothing
+        recurring.
       </p>
       <h3>Other platforms</h3>
       <p class="muted measure">
-        If you already use one of these, or prefer to pay through PayPal, they
-        work just as well.
+        If you already use one of these, they work just as well.
       </p>
       <div class="grid grid--2">
         <div class="card">
@@ -263,21 +266,14 @@ const jsonLd = {
           <h3>Liberapay</h3>
           <p class="muted">
             Open-source funding platform that takes no cut &mdash; only the
-            payment processor&rsquo;s fee applies. Payments currently run
-            through PayPal, which asks you to confirm each renewal rather than
-            charging automatically.
+            payment processor&rsquo;s fee applies. Payments run through PayPal,
+            which asks you to confirm each renewal rather than charging
+            automatically, so it needs a little more from you than the options
+            above.
           </p>
           <div class="btn-row">
             <a class="btn btn--ghost" href={SUPPORT.liberapay}>Open Liberapay</a>
           </div>
-        </div>
-        <div class="card">
-          <h3>Patreon</h3>
-          <p class="muted">
-            Planned, but not open yet. It carries the highest platform fee of
-            any option here, so it will be added last rather than first. There
-            is nothing to click yet &mdash; the options above all work today.
-          </p>
         </div>
       </div>
 
@@ -307,13 +303,12 @@ const jsonLd = {
         </table>
       </div>
       <p class="muted measure">
-        Figures are approximate &mdash; processing fees vary by country, card,
-        and payment type. The one worth knowing: <strong>paying by bank costs
-        about a third of what a card costs</strong>, because bank payments are
-        charged at 0.8% capped at $5 while cards are around 3%. On the larger
-        amounts that difference is real money. Pick whatever is easiest for
-        you, though &mdash; a card contribution you actually make beats a bank
-        transfer you do not.
+        Figures are approximate &mdash; processing fees vary by country and
+        payment type. Everything here settles through PayPal, so the processing
+        fee is much the same across all of them and the only real difference is
+        the platform&rsquo;s cut on top. Pick whatever is easiest for you,
+        though &mdash; a contribution you actually make beats a cheaper one you
+        do not.
       </p>
     </div>
   </section>
@@ -403,22 +398,21 @@ const jsonLd = {
     <div class="container">
       <h2>Billing, refunds, and the details</h2>
       <p class="muted measure">
-        Everything in this section applies to the card, bank, Ko-fi, and
-        Liberapay options above. Crypto works differently &mdash; see the note
-        below.
+        Everything in this section applies to the PayPal, Ko-fi, and Liberapay
+        options above. Crypto works differently &mdash; see the note below.
       </p>
       <div class="card">
         <p class="muted">
           <strong>Billing and cancellation.</strong> Recurring support is billed
           once a month, starting the day you sign up, and continues until you
-          cancel. For card and bank support, open the
-          <a href={SUPPORT.portal}>billing portal</a>, enter the email you used,
-          and Stripe sends you a link to manage or cancel it &mdash; on Ko-fi or
-          Liberapay, do it in your account there. Either way you never have to
-          contact me. Cancelling stops future payments and you keep access
-          until the end of the period you have already paid for; that period is
-          not prorated. Amounts are in US dollars, and your bank may apply its
-          own conversion rate and fees.
+          cancel. For the monthly options above, cancel from
+          <strong>Settings &rsaquo; Payments &rsaquo; Automatic payments</strong>
+          in your PayPal account &mdash; on Ko-fi or Liberapay, do it in your
+          account there. Either way you never have to contact me. Cancelling
+          stops future payments and you keep access until the end of the period
+          you have already paid for; that period is not prorated. Amounts are in
+          US dollars, and your bank or card issuer may apply its own conversion
+          rate and fees.
         </p>
         <p class="muted">
           <strong>Refunds.</strong> If you were charged by mistake, changed your
@@ -447,8 +441,9 @@ const jsonLd = {
           <strong>Privacy.</strong> Payments are handled entirely by the
           platform you choose &mdash; your card number, bank details, and
           billing address stay with them and are never seen or stored here.
-          What is visible is the name or handle you supported under, the amount,
-          and any message you send. Email you send is kept to reply and for
+          What I do see, because PayPal shows it to whoever receives a payment,
+          is the name and email address on your PayPal account, the amount, and
+          any message you send. Email you send is kept to reply and for
           payment records; supporter information is never sold, rented, or
           shared, and there is no marketing email. This site sets no tracking
           cookies and runs no analytics, though version numbers on some pages

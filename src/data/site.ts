@@ -112,35 +112,51 @@ export const LINKS = {
 /**
  * Maintainer support rails shown on /support. Only rails that actually accept
  * money today belong here — a listed-but-dead destination is worse than an
- * absent one. That page is also the business URL on file with the card
- * processor, so its billing / refund / contact / privacy copy is load-bearing.
- * Keep it accurate.
+ * absent one. The billing / refund / contact / privacy copy on that page is
+ * load-bearing, so it must describe the rails below and nothing else.
+ *
+ * STRIPE IS GONE (2026-07-30). The account was terminated on a risk finding
+ * and the appeal was denied, so the four Payment Links, the customer portal,
+ * and card + ACH acceptance are all dead — as is the Liberapay card rail and
+ * the Ko-fi Stripe connection, which ran on that same connected account.
+ * GitHub Sponsors is blocked for the same reason (individual payouts run on
+ * Stripe Connect Express), so do not add it, or any other Stripe-Connect
+ * platform, as a replacement. Everything here now settles through PayPal,
+ * which makes PayPal a single point of failure for all fiat support: never
+ * self-test these rails with a real card. Detail:
+ * ~/AGENTS/personal-finance/income-funding-launch-log.md, 2026-07-30 entry.
  */
 export const SUPPORT = {
   kofi: 'https://ko-fi.com/quickmythril',
   liberapay: 'https://liberapay.com/QuickMythril',
   email: 'quickmythril@protonmail.com',
   pageUrl: absUrl('/support'),
-  /**
-   * Stripe Payment Links. Unlike PayPal's dashboard share links (documented as
-   * valid ~6 months), these do not expire. Each returns to the support page on
-   * completion. Supporters manage or cancel a monthly plan from the link in
-   * their receipt email (Stripe's customer portal) — the billing copy below
-   * promises that, so do not remove the portal without changing the copy.
-   */
-  /**
-   * Stripe's no-code customer portal login link. Supporters enter their email,
-   * Stripe mails them a session link, and they can cancel or update from there.
-   * This is NOT automatic: receipt emails contain no portal link (verified by
-   * reading a live receipt on 2026-07-28), so the cancellation promise in the
-   * billing copy depends on this link staying on the page.
-   */
-  portal: 'https://billing.stripe.com/p/login/00wbJ16AYabxfZed2D3Nm00',
-  card: {
-    monthly3: 'https://buy.stripe.com/00wbJ16AYabxfZed2D3Nm00',
-    monthly8: 'https://buy.stripe.com/14A14n8J6erN28ogeP3Nm01',
-    monthly20: 'https://buy.stripe.com/7sYcN58J63N95kA4w73Nm02',
-    oneTime: 'https://donate.stripe.com/4gM6oH8J66ZlaEU9Qr3Nm03',
+  paypal: {
+    /**
+     * PayPal payment link, variable price ("customer chooses the amount"), so
+     * one link covers the whole one-time range. Created and verified live
+     * 2026-07-30. It is a no-code payment link rather than a plan, so there is
+     * nothing recurring for a supporter to cancel afterwards.
+     */
+    oneTime: 'https://www.paypal.com/ncp/payment/AFMQA6VWRCHNS',
+    /**
+     * The three direct monthly plans, supplied by the owner 2026-07-30.
+     *
+     * CAUTION on this URL shape: `webapps/billing/plans/subscribe?plan_id=` is
+     * the pattern earlier notes flagged as not-documented-permanent when we
+     * built it ourselves from a plan ID. PayPal blocks automated requests to
+     * this endpoint (403 to any user-agent, so no CI or script can check it) —
+     * these must be re-opened in a real browser periodically, and after any
+     * change to the plans, to confirm each still renders its own name and
+     * amount rather than an error. If PayPal ever offers a per-plan share link
+     * from the dashboard instead, prefer that.
+     */
+    monthly3:
+      'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-4LH24594NT9323341NJSTOHI',
+    monthly8:
+      'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-5JJ811920L138222DNJSTO5I',
+    monthly20:
+      'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-5DS99301KT145512GNJSTPHQ',
   },
 } as const;
 
@@ -149,7 +165,7 @@ export const SUPPORT = {
  * native coin, so the QORT addresses below live on the QORTAL MAINNET chain —
  * the page copy must keep saying so explicitly. Crypto goes straight to the
  * listed recipient's own chain address (7R15's goes to him, not through
- * QuickMythril), it is irreversible, and it is NOT covered by the Stripe /
+ * QuickMythril), it is irreversible, and it is NOT covered by the PayPal /
  * Ko-fi / Liberapay billing + refund copy, which stays scoped to those rails.
  */
 export const CRYPTO = {

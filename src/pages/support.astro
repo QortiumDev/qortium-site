@@ -73,7 +73,6 @@ const fees = [
   { method: 'PayPal (here)', cut: 'no platform fee', gets: 'about $9.15' },
   { method: 'Liberapay', cut: 'no platform fee', gets: 'about $9.15' },
   { method: 'Ko-fi', cut: '5%', gets: 'about $8.65' },
-  { method: 'Patreon (planned)', cut: '10%', gets: 'about $8.15' },
 ];
 
 const boundaries = [
@@ -239,8 +238,10 @@ const jsonLd = {
         <a class="btn btn--ghost" href={SUPPORT.paypal.oneTime}>Give once, any amount</a>
       </div>
       <p class="muted measure">
-        These run through PayPal. Monthly support renews automatically, and you
-        can change or cancel it yourself at any time from
+        These run through PayPal. You do not need a PayPal account to give once
+        &mdash; that checkout takes debit and credit cards as a guest. Monthly
+        support renews automatically, and you can change or cancel it yourself
+        at any time from
         <strong>Settings &rsaquo; Payments &rsaquo; Automatic payments</strong>
         in your PayPal account &mdash; you never have to contact me. The
         one-time link lets you enter any amount you like, and sets up nothing
@@ -273,14 +274,6 @@ const jsonLd = {
           <div class="btn-row">
             <a class="btn btn--ghost" href={SUPPORT.liberapay}>Open Liberapay</a>
           </div>
-        </div>
-        <div class="card">
-          <h3>Patreon</h3>
-          <p class="muted">
-            Planned, but not open yet. It carries the highest platform fee of
-            any option here, so it will be added last rather than first. There
-            is nothing to click yet &mdash; the options above all work today.
-          </p>
         </div>
       </div>
 

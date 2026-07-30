@@ -2,12 +2,20 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SUPPORT, LINKS, withBase } from '../data/site';
 
-// Landing page for PayPal's auto-return, which is an ACCOUNT-WIDE setting: it
-// catches one-time payments and monthly subscriptions alike, and it fires for
-// Ko-fi/Liberapay only if those ever route here too. So this page must not
-// assume which rail, which amount, or whether anything recurring was set up —
-// keep it true for every case. It is intentionally noindex and kept out of the
-// sitemap: it has no standalone value and should not turn up in a search.
+// Landing page for PayPal's auto-return. That URL is set PER DESTINATION, not
+// account-wide: each subscription plan has its own, and the payment
+// links/buttons page has one covering its transactions. All of them currently
+// point here, so this page still has to serve one-time and monthly alike —
+// do not assume which rail, which amount, or whether anything recurring was
+// set up. Any NEW plan or payment link needs its auto-return set again.
+//
+// Do NOT reuse this page as a subscription's cancel-return URL: PayPal fires
+// that when someone abandons checkout without paying, and thanking them for a
+// payment that never happened is worse than saying nothing. /support is the
+// right target there.
+//
+// noindex and kept out of the sitemap: it has no standalone value and should
+// not turn up in a search.
 const title = 'Thank you';
 const description = 'Your support for Qortium came through. What happens next, and how to change or cancel it.';
 ---

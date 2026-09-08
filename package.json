@@ -19,7 +19,7 @@
     "release:all": "bash scripts/release-site.sh --all"
   },
   "dependencies": {
-    "@astrojs/mdx": "^7.0.3",
+    "@astrojs/mdx": "^8.0.0",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.1"
   },

@@ -9,13 +9,8 @@ const description =
 
 const costs = [
   {
-    item: 'Regxa VPS',
-    covers: 'Previewnet seed node, QDN data, and the qortium.app gateway',
-    amount: '$15 / month',
-  },
-  {
     item: 'Netcup VPS',
-    covers: 'Second Previewnet seed node, for redundancy across providers',
+    covers: 'Managed Previewnet seed node, QDN data, the public gateway, and network snapshots',
     amount: 'about $7 / month',
   },
   {
@@ -36,8 +31,8 @@ const costs = [
 ];
 
 const covered = [
-  ['$5 / month', 'The second seed node moves to a larger plan — more memory headroom on the node that has run out before.'],
-  ['$30 / month', 'All infrastructure is covered: both seed nodes, the gateway, and the domain.'],
+  ['$5 / month', 'The Netcup seed node moves to a larger plan — more memory headroom on the node that has run out before.'],
+  ['$30 / month', 'All infrastructure is covered: the Netcup seed node, the gateway, and the domain.'],
   ['$135 / month', 'Infrastructure plus one of the two development tool subscriptions.'],
   ['$240 / month', 'Infrastructure plus both.'],
   ['$300 / month', 'Everything above, with a margin for processing fees and currency conversion.'],
@@ -49,12 +44,6 @@ const upgrades = [
     now: '2 vCPU / 4 GB / 128 GB',
     next: '4 vCPU / 8 GB / 256 GB',
     cost: 'about $5 / month',
-  },
-  {
-    what: 'Regxa seed node',
-    now: '2 vCPU / 4 GB / 120 GB',
-    next: '4 vCPU / 8 GB / 240 GB',
-    cost: '$15 / month',
   },
   {
     what: 'Development tooling',
@@ -107,7 +96,7 @@ const jsonLd = {
       <p class="lede measure">
         I&rsquo;m QuickMythril. I help maintain Qortium &mdash; the Core node,
         the Home desktop and Android app, a number of the QDN apps, and the
-        Previewnet seed nodes and gateway that keep it reachable.
+        Previewnet seed and gateway that keep it reachable.
         <strong>7R15M3G157U5 also helps maintain Qortium</strong> &mdash; much
         of the platform&rsquo;s rebuild from the Qortal split is his work.
         Others contribute too. Keeping it running costs real money every month,
@@ -151,7 +140,7 @@ const jsonLd = {
         </table>
       </div>
       <p class="muted measure">
-        That is roughly <strong>$279 per month</strong>, plus the yearly domain
+        That is roughly <strong>$264 per month</strong>, plus the yearly domain
         charge. The target for this page is <strong>$300 per month</strong>.
         The two development tool subscriptions are the largest line by far, and
         they are listed deliberately rather than hidden under &ldquo;tools&rdquo;
@@ -216,7 +205,7 @@ const jsonLd = {
         </table>
       </div>
       <p class="muted measure">
-        The seed nodes are the clearest win: doubling the smaller one costs
+        The Netcup seed node is the clearest infrastructure upgrade: doubling its memory costs
         about $5 a month and directly addresses the memory pressure that has
         taken it offline before.
       </p>

@@ -7,6 +7,12 @@ and QDN resources. The production site is <https://qortium.app>.
 The site is built with Astro and MDX as static HTML. It is served both from the
 VPS web roots behind `qortium.app` and as `qdn://WEBSITE/Qortium/Qortium`.
 
+Netcup is the remaining managed web host. The deployment script defaults to
+Netcup and rejects the retired Regxa target before building or transferring files.
+The support page lists current Netcup hosting costs; the retired VPS is excluded
+from operating costs and upgrade plans. Other costs and the support target are
+unchanged.
+
 ## Pages and app catalog
 
 Current routes are:

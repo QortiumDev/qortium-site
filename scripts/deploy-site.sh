@@ -13,21 +13,19 @@
 # Usage:
 #   scripts/deploy-site.sh               # build, then deploy to all seeds
 #   scripts/deploy-site.sh --no-build    # deploy the current dist/ as-is
-#   scripts/deploy-site.sh regxa         # one seed only (regxa | netcup)
 #   scripts/deploy-site.sh netcup --no-build
 #
 # Requires: rsync, the `npm run build` toolchain, and SSH aliases
-# qortium-regxa / qortium-netcup (see ~/.ssh/config).
+# qortium-netcup (see ~/.ssh/config).
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WEBROOT="/var/www/qortium"
-ALL_SEEDS="regxa netcup"
+ALL_SEEDS="netcup"
 
 # Resolve a seed name to its SSH alias (kept bash-3.2 safe -- no associative arrays).
 seed_host() {
   case "$1" in
-    regxa)  echo "qortium-regxa" ;;
     netcup) echo "qortium-netcup" ;;
     *)      return 1 ;;
   esac
@@ -38,9 +36,10 @@ targets=""
 for arg in "$@"; do
   case "$arg" in
     --no-build)   build=0 ;;
-    regxa|netcup) targets="$targets $arg" ;;
+    regxa) echo "Regxa has been retired; use netcup." >&2; exit 2 ;;
+    netcup) targets="$targets $arg" ;;
     -h|--help)    sed -n '2,24p' "$0"; exit 0 ;;
-    *)            echo "unknown arg: $arg (use regxa | netcup | --no-build)" >&2; exit 2 ;;
+    *)            echo "unknown arg: $arg (use netcup | --no-build)" >&2; exit 2 ;;
   esac
 done
 [ -z "$targets" ] && targets="$ALL_SEEDS"
